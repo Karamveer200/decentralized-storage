@@ -7,9 +7,9 @@ contract FileStorageManager {
     uint256 public availableStorage;
     mapping(string => string) private files;
 
-    event FileStored(string fileName);
+    event FileStored(string fileName, uint256 newAvailableStorage);
     event FileRetrieved(string fileName, string content);
-    event FileDeleted(string fileName);
+    event FileDeleted(string fileName, uint256 newAvailableStorage);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Unauthenticated");
@@ -28,7 +28,7 @@ contract FileStorageManager {
         files[fileName] = content;
         availableStorage -= fileSize;
 
-        emit FileStored(fileName);
+        emit FileStored(fileName, availableStorage);
     }
 
     function retrieveFile(string memory fileName) external view returns (string memory) {
@@ -44,6 +44,6 @@ contract FileStorageManager {
 
         availableStorage += fileSize;
 
-        emit FileDeleted(fileName);
+        emit FileDeleted(fileName, availableStorage);
     }
 }
