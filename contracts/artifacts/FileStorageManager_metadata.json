@@ -28,12 +28,6 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "fileSize",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "newAvailableStorage",
 						"type": "uint256"
 					}
@@ -72,7 +66,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "fileSize",
+						"name": "fileId",
 						"type": "uint256"
 					},
 					{
@@ -109,6 +103,19 @@
 				"name": "deleteFile",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fileIdIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -190,11 +197,11 @@
 	},
 	"sources": {
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0xc4fb2b7c6ca47efcf4e2798e94ab9b572f2ea2bf7e58d2f3902d8bd84119548a",
+			"keccak256": "0xf6e6c3775a9313995caa781341c0ba44570319f51aae85967a9b77cdfe746d08",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://dff35edf94952cc4820dd4a157e88acd7fd32edc36b53e14c119f0ff29cae6e4",
-				"dweb:/ipfs/QmRNgRp4XJfoMR9LHGGpRpuXWQTQGMeE7yraQ3Rv8Uiq9w"
+				"bzz-raw://ae77ab9165cca69ae2e269dab7ff00cfa258c5d9c3a42f62f88ff9d27ffa4369",
+				"dweb:/ipfs/QmXucX1XyVXgXV7hQN3VXVvxBpX7FNSEbN6jFzPoSjqwV7"
 			]
 		}
 	},

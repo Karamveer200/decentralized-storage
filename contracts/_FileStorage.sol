@@ -1,24 +1,22 @@
-
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
 contract FileStorageManager {
     address public owner;
     uint256 public availableStorage;
-    uint256 public fileIdIndex = 0;
-    mapping(string => string) private files; //mapping fileName to fileContent
-    mapping(uint256 => Files) private fileId; //mapping fileId to fileName,fileContent
-    mapping(uint256 => address) private userId; //mapping fileId to userId
+    uint256 public fileIdIndex = 1; // Starting from 1 to avoid using default value 0
+    mapping(string => uint256) private fileNameToFileId; // Mapping from fileName to fileId
+    mapping(uint256 => File) private fileIdToFile; // Mapping from fileId to File
+    mapping(uint256 => address) private fileIdToUserId; // Mapping from fileId to userId
 
-    event FileStored(string fileName, uint256 newAvailableStorage);
-    event FileRetrieved(string fileName, string content);
+    event FileStored(string fileName, uint256 fileId, uint256 newAvailableStorage); // need to return the same file id
+    event FileRetrieved(string fileName, string content);// need to return the same file id
     event FileDeleted(string fileName, uint256 newAvailableStorage);
 
-    struct Files{                          //made a struct so I can map fileName,fileContent
+    struct File { // Struct to store file details
         string content;
         string fileName;
     }
-
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Unauthenticated");
@@ -30,39 +28,39 @@ contract FileStorageManager {
         availableStorage = initialStorage;
     }
 
-    function storeFile(string memory fileName, string memory content) public {
-        
+    function storeFile(string memory fileName, string memory content),  public {// one more argument 
         uint256 fileSize = bytes(content).length;
-        require(availableStorage - fileSize > 0, "No storage available"); //changed to availablestorage-filesize, moved file size above since it was out of scope earlier
+        require(availableStorage >= fileSize, "No storage available");
         
+        uint256 currentFileId = fileIdIndex++;
+        fileNameToFileId[fileName] = currentFileId;
+        fileIdToFile[currentFileId] = File(content, fileName);
+        fileIdToUserId[currentFileId] = msg.sender;
 
-        files[fileName] = content;
         availableStorage -= fileSize;
 
-        fileId[fileIdIndex] = Files(fileName,content); //added mapping from fileId to fileName,fileContent
-        userId[fileIdIndex] = msg.sender; //added mapping from fileId to userId
-
-
-        fileIdIndex++;
-
-        emit FileStored(fileName, availableStorage);
+        emit FileStored(fileName, currentFileId, availableStorage);// pass back the file id from aruments
     }
 
-    function retrieveFile(string memory fileName) external view returns (string memory) {
-        return files[fileName];
+
+    function retrieveFile(string memory fileName) public view returns (string memory) {
+        uint256 fileId = fileNameToFileId[fileName];
+        require(fileId != 0, "File not found");
+        return fileIdToFile[fileId].content;
     }
 
-    function deleteFile(string memory fileName) external onlyOwner {
-        require(bytes(files[fileName]).length > 0, "File not found");
+    function deleteFile(string memory fileName) public {// the id will be passed from the front end, use this 
+        uint256 fileId = fileNameToFileId[fileName];
+        require(fileId != 0, "File not found");
+        require(fileIdToUserId[fileId] == msg.sender || msg.sender == owner, "Unauthorized");
 
-        uint256 fileSize = bytes(files[fileName]).length;
-
-        delete files[fileName];
-        fileIdIndex--;
-        delete userId[fileIdIndex]; //same as store but just deletion
-        delete fileId[fileIdIndex]; //same as store but just deletion
+        uint256 fileSize = bytes(fileIdToFile[fileId].content).length;
 
         availableStorage += fileSize;
+
+        delete fileNameToFileId[fileName];
+        delete fileIdToFile[fileId];
+        delete fileIdToUserId[fileId];
 
         emit FileDeleted(fileName, availableStorage);
     }
