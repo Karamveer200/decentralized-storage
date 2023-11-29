@@ -4,14 +4,13 @@ pragma solidity ^0.8.0;
 contract FileStorageManager {
     address public owner;
     uint256 public availableStorage;
-    uint256 public fileIdIndex = 1; // Starting from 1 to avoid using default value 0
-    mapping(string => uint256) private fileNameToFileId; // Mapping from fileName to fileId
-    mapping(uint256 => File) private fileIdToFile; // Mapping from fileId to File
-    mapping(uint256 => address) private fileIdToUserId; // Mapping from fileId to userId
 
-    event FileStored(string fileName, uint256 fileId, uint256 newAvailableStorage); // need to return the same file id
+    mapping(string => File) private fileIdToFile; // Mapping from fileId to File
+    mapping(string => address) private fileIdToUserId; // Mapping from fileId to userId
+
+    event FileStored(string fileName, string fileId, uint256 newAvailableStorage); // need to return the same file id
     event FileRetrieved(string fileName, string content);// need to return the same file id
-    event FileDeleted(string fileName, uint256 newAvailableStorage);
+    event FileDeleted(uint256 newAvailableStorage);
 
     struct File { // Struct to store file details
         string content;
@@ -28,40 +27,35 @@ contract FileStorageManager {
         availableStorage = initialStorage;
     }
 
-    function storeFile(string memory fileName, string memory content),  public {// one more argument 
+    function storeFile(string memory fileName, string memory content, string memory uniqueId)  public {// one more argument 
         uint256 fileSize = bytes(content).length;
         require(availableStorage >= fileSize, "No storage available");
         
-        uint256 currentFileId = fileIdIndex++;
-        fileNameToFileId[fileName] = currentFileId;
-        fileIdToFile[currentFileId] = File(content, fileName);
-        fileIdToUserId[currentFileId] = msg.sender;
+        fileIdToFile[uniqueId] = File(content, fileName);
+        fileIdToUserId[uniqueId] = msg.sender;
 
         availableStorage -= fileSize;
 
-        emit FileStored(fileName, currentFileId, availableStorage);// pass back the file id from aruments
+        emit FileStored(fileName, uniqueId, availableStorage);// pass back the file id from aruments
     }
 
 
-    function retrieveFile(string memory fileName) public view returns (string memory) {
-        uint256 fileId = fileNameToFileId[fileName];
-        require(fileId != 0, "File not found");
+    function retrieveFile(string memory fileId) public view returns (string memory) {
+        // require(fileId != '', "File not found");
         return fileIdToFile[fileId].content;
     }
 
-    function deleteFile(string memory fileName) public {// the id will be passed from the front end, use this 
-        uint256 fileId = fileNameToFileId[fileName];
-        require(fileId != 0, "File not found");
+    function deleteFile(string memory fileId) public {// the id will be passed from the front end, use this 
+        // require(fileId != 0, "File not found");
         require(fileIdToUserId[fileId] == msg.sender || msg.sender == owner, "Unauthorized");
 
         uint256 fileSize = bytes(fileIdToFile[fileId].content).length;
 
         availableStorage += fileSize;
 
-        delete fileNameToFileId[fileName];
         delete fileIdToFile[fileId];
         delete fileIdToUserId[fileId];
 
-        emit FileDeleted(fileName, availableStorage);
+        emit FileDeleted(availableStorage);
     }
 }
