@@ -41,21 +41,22 @@ contract FileStorageManager {
 
 
     function retrieveFile(string memory fileId) public view returns (string memory) {
-        // require(fileId != '', "File not found");
+        require(bytes(fileIdToFile[fileId].fileName).length > 0, "File not found");
         return fileIdToFile[fileId].content;
     }
 
-    function deleteFile(string memory fileId) public {// the id will be passed from the front end, use this 
-        // require(fileId != 0, "File not found");
+
+    function deleteFile(string memory fileId) public {
+        require(bytes(fileIdToFile[fileId].fileName).length > 0, "File not found");
         require(fileIdToUserId[fileId] == msg.sender || msg.sender == owner, "Unauthorized");
 
         uint256 fileSize = bytes(fileIdToFile[fileId].content).length;
-
         availableStorage += fileSize;
 
         delete fileIdToFile[fileId];
         delete fileIdToUserId[fileId];
 
         emit FileDeleted(availableStorage);
-    }
+}
+
 }
