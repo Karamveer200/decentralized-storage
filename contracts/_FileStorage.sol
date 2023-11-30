@@ -10,7 +10,7 @@ contract FileStorageManager {
 
     event FileStored(string fileName, string fileId, uint256 newAvailableStorage); // need to return the same file id
     event FileRetrieved(string fileName, string content);// need to return the same file id
-    event FileDeleted(uint256 newAvailableStorage);
+    event FileDeleted(string fileId,uint256 newAvailableStorage);
 
     struct File { // Struct to store file details
         string content;
@@ -56,7 +56,7 @@ contract FileStorageManager {
         delete fileIdToFile[fileId];
         delete fileIdToUserId[fileId];
 
-        emit FileDeleted(availableStorage);
+        emit FileDeleted(fileId, availableStorage);
 }
 
 }
