@@ -17,63 +17,6 @@
 				"type": "constructor"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newAvailableStorage",
-						"type": "uint256"
-					}
-				],
-				"name": "FileDeleted",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "fileName",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "content",
-						"type": "string"
-					}
-				],
-				"name": "FileRetrieved",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "fileName",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "fileId",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newAvailableStorage",
-						"type": "uint256"
-					}
-				],
-				"name": "FileStored",
-				"type": "event"
-			},
-			{
 				"inputs": [],
 				"name": "availableStorage",
 				"outputs": [
@@ -147,6 +90,11 @@
 						"internalType": "string",
 						"name": "uniqueId",
 						"type": "string"
+					},
+					{
+						"internalType": "address[]",
+						"name": "storageNodes",
+						"type": "address[]"
 					}
 				],
 				"name": "storeFile",
@@ -182,12 +130,28 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/_FileStorage.sol": {
-			"keccak256": "0x0f368dd064f2affa36f82774ce0240ac4de34cd041f3d1c1dad88238ca19a3aa",
+		"contracts/_ChunkManager.sol": {
+			"keccak256": "0x18ec02be3f95eae57c96258e276c1987e4fcc12d1626b4fc3a88f1f8586034ea",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://5e02fa2a9f7418aee83e909c1523655b382bcea8e3d9518ef0318172dbe2abd1",
-				"dweb:/ipfs/QmZjFj2abD2SZQ9mTASE7Ea4oe4EJCwEJcWLPM9N2ctuK6"
+				"bzz-raw://3694776b8d81c84b84df4adeb1dac572043ade1b362d92e32989078df3a884bb",
+				"dweb:/ipfs/QmbCNxUq4nNxsPPNnsUr63kpGEAqkU2mojv6CgiT5kgaBW"
+			]
+		},
+		"contracts/_FileStorage.sol": {
+			"keccak256": "0xd2650c7c6dfbd4e7dc3b03a0aa3de68f4b919669702ffc54527fbc0f7746f0b0",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://1e97f3794226d122696a1f830132a63fb7a0480d9256de703f0b0a41494de3f1",
+				"dweb:/ipfs/QmV9L7HgDL6ke7wu1CdiSGSRdmdysmodBZ8hmawVhLju4U"
+			]
+		},
+		"hardhat/console.sol": {
+			"keccak256": "0x7434453e6d3b7d0e5d0eb7846ffdbc27f0ccf3b163591263739b628074dc103a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://49355f780520494d1d5a0f01858385e51bb5280ce0ecfb960f16995065dca395",
+				"dweb:/ipfs/QmSwJ6C5QLz6xKeQZS8wbwjU1KxRFTYfwbGmtzisd5sRW4"
 			]
 		}
 	},

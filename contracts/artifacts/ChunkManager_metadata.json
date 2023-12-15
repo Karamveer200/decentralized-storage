@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/ChunkManager.sol": "ChunkManager"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/ChunkManager.sol": {
+			"keccak256": "0x18ec02be3f95eae57c96258e276c1987e4fcc12d1626b4fc3a88f1f8586034ea",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://3694776b8d81c84b84df4adeb1dac572043ade1b362d92e32989078df3a884bb",
+				"dweb:/ipfs/QmbCNxUq4nNxsPPNnsUr63kpGEAqkU2mojv6CgiT5kgaBW"
+			]
+		}
+	},
+	"version": 1
+}
