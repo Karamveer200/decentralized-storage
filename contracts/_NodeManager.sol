@@ -30,7 +30,6 @@ contract NodeManager {
         return allNodes;
     }
 
-    
     function findAvailableNode(uint256 _chunkSize) internal view returns (address) {
         uint256 numNodes = allNodes.length;
         uint256 sizeOffset = 50;
