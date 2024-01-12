@@ -6,11 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -45,19 +40,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "fileId",
-						"type": "string"
-					}
-				],
-				"name": "deleteFile",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -98,38 +80,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "fileId",
-						"type": "string"
-					}
-				],
-				"name": "retrieveFile",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -143,29 +93,6 @@
 					}
 				],
 				"name": "storeChunkInNode",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "fileName",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "content",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "uniqueId",
-						"type": "string"
-					}
-				],
-				"name": "storeFile",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -202,7 +129,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/_FileStorage.sol": "FileStorageManager"
+			"contracts/_NodeManager.sol": "NodeManager"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -216,22 +143,6 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x18ec02be3f95eae57c96258e276c1987e4fcc12d1626b4fc3a88f1f8586034ea",
-			"license": "GPL-3.0",
-			"urls": [
-				"bzz-raw://3694776b8d81c84b84df4adeb1dac572043ade1b362d92e32989078df3a884bb",
-				"dweb:/ipfs/QmbCNxUq4nNxsPPNnsUr63kpGEAqkU2mojv6CgiT5kgaBW"
-			]
-		},
-		"contracts/_FileStorage.sol": {
-			"keccak256": "0xfaa6472d99159eecde096d1eddda025a8cce67b2dcb773d8dbf8e999f0159a3f",
-			"license": "GPL-3.0",
-			"urls": [
-				"bzz-raw://9feab0f38f88ba607bfe99a479a463c366d5061da73e69bb160170d7261cf11b",
-				"dweb:/ipfs/QmZt7C6krahZaTurGK7dUr81oFT9tU5jJ42RWD4Kemq5Jy"
-			]
-		},
 		"contracts/_NodeManager.sol": {
 			"keccak256": "0x418ee5f2a5bfed8de0e52a233b1f1d802b66deeafc0173a052b88bc3b1f16ee4",
 			"license": "GPL-3.0",
