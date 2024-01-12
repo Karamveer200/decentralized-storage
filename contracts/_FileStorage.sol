@@ -11,10 +11,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
     mapping(string => FileMetadata) private fileIdToMetadata;
 
     // Mapping from fileId to storage node
-    mapping(string => address[]) private fileIdToNode;
-
-    // Mapping from fileId to chunks
-    mapping(string => string[]) private fileIdToChunks; 
+    mapping(string => address[]) private fileIdToNodesAddresses;
 
     struct FileMetadata {
         string fileName;
@@ -37,7 +34,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         // Chunk the content and store the chunk IDs
         string[] memory chunks = chunkContent(content);
-        fileIdToChunks[uniqueId] = chunks;
 
         // Iterate through each chunk and distribute them to nodes
         for (uint256 i = 0; i < chunks.length; i++) {
@@ -45,7 +41,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
             address selectedNodeAddress = findAvailableNode(chunkSize);
 
             require(selectedNodeAddress != address(0), "No available nodes");
-            fileIdToNode[uniqueId].push(selectedNodeAddress);
+            fileIdToNodesAddresses[uniqueId].push(selectedNodeAddress);
 
             storeChunkInNode(selectedNodeAddress, chunks[i]);
 
@@ -58,11 +54,17 @@ contract FileStorageManager is ChunkManager, NodeManager {
         require(fileIdToMetadata[fileId].fileSize > 0, "File not found");
 
         // Retrieve chunks from storage nodes
-        string[] memory chunks = fileIdToChunks[fileId];
-        require(chunks.length > 0, "No chunks found for the file");
+        address[] memory storageNodes = fileIdToNodesAddresses[fileId];
+        string [] memory chunksArr;
+
+        for (uint256 i = 0; i < storageNodes.length; i++) {
+            address selectedNodeAddress = storageNodes[i];
+
+            // chunksArr.push(retrieveChunkInNode(selectedNodeAddress, fileId));
+        }
 
         // Concatenate chunks into a single string
-        string memory concatenatedContent = concatenateChunks(chunks);
+        string memory concatenatedContent = concatenateChunks(chunksArr);
 
         return concatenatedContent;
     }
@@ -71,11 +73,16 @@ contract FileStorageManager is ChunkManager, NodeManager {
         require(fileIdToMetadata[fileId].fileSize > 0, "File not found");
         require(msg.sender == owner, "Unauthorized");
 
-        // Also call File deletion in the node itself
+        address[] memory storageNodes = fileIdToNodesAddresses[fileId];
+
+        // Deletion of chunk in the node itself
+        for (uint256 i = 0; i < storageNodes.length; i++) {
+            address selectedNodeAddress = storageNodes[i];
+            deleteChunkInNode(selectedNodeAddress, fileId);
+        }
 
         // Delete file metadata, node mapping, and chunks
         delete fileIdToMetadata[fileId];
-        delete fileIdToNode[fileId];
-        delete fileIdToChunks[fileId];
+        delete fileIdToNodesAddresses[fileId];
     }
 }

@@ -25,9 +25,20 @@ contract NodeManager {
         // TODO: Store the chunk in Node
     }
 
+    function retrieveChunkInNode(address _nodeAddress, string memory _fileId) public view returns (string memory) {
+        // TODO: Retrieve the chunk in Node
+    }
+
+    function deleteChunkInNode(address _nodeAddress, string memory _fileId) public view returns (string memory) {
+        // TODO: Delete the chunk in Node
+    }
 
     function getAllNodes() public view returns (address[] memory) {
         return allNodes;
+    }
+
+    function getNodeByAddress(address _nodeAddress) public view returns (Node memory) {
+        return nodes[_nodeAddress];
     }
 
     function findAvailableNode(uint256 _chunkSize) internal view returns (address) {
