@@ -43,6 +43,49 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "deleteChunkInNode",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_chunkSize",
+						"type": "uint256"
+					}
+				],
+				"name": "findAvailableNode",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "getAllNodes",
 				"outputs": [
@@ -50,6 +93,37 @@
 						"internalType": "address[]",
 						"name": "",
 						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					}
+				],
+				"name": "getNodeByAddress",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "nodeAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "availableStorage",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct NodeManager.Node",
+						"name": "",
+						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
@@ -74,6 +148,30 @@
 						"internalType": "uint256",
 						"name": "availableStorage",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "retrieveChunkInNode",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -144,11 +242,11 @@
 	},
 	"sources": {
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x418ee5f2a5bfed8de0e52a233b1f1d802b66deeafc0173a052b88bc3b1f16ee4",
+			"keccak256": "0x141cd01ff2dd4517e5c28a9d90019230c99f6a6c200910972c1bafa74d67db26",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://de785009d38c6b84d7e42a012c63e4c98f801399d6a74fc906c1346ff9f6ce8c",
-				"dweb:/ipfs/QmbZhFdZSehsvmRj4mDxXuMb6LMQDYbUeX4ocSRpqzo9Az"
+				"bzz-raw://807ba4ada6dd5ba5c3f01dc07088d9d7a642fb988c9d9ff64e0cdc82c904a18c",
+				"dweb:/ipfs/QmehKSTczcK1YKK1ZoE89jFUHxKBqixzFjm3Z8k1Q645Yx"
 			]
 		}
 	},

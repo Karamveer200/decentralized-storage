@@ -4,7 +4,46 @@
 	},
 	"language": "Solidity",
 	"output": {
-		"abi": [],
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "content",
+						"type": "string"
+					}
+				],
+				"name": "chunkContent",
+				"outputs": [
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string[]",
+						"name": "chunks",
+						"type": "string[]"
+					}
+				],
+				"name": "concatenateChunks",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {},
@@ -18,7 +57,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/ChunkManager.sol": "ChunkManager"
+			"contracts/_ChunkManager.sol": "ChunkManager"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -32,12 +71,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/ChunkManager.sol": {
-			"keccak256": "0x18ec02be3f95eae57c96258e276c1987e4fcc12d1626b4fc3a88f1f8586034ea",
+		"contracts/_ChunkManager.sol": {
+			"keccak256": "0x9158fe3ec4521b24ff2ef07aa0daa0d954500b5f879ffef60332d3f7c048f09c",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3694776b8d81c84b84df4adeb1dac572043ade1b362d92e32989078df3a884bb",
-				"dweb:/ipfs/QmbCNxUq4nNxsPPNnsUr63kpGEAqkU2mojv6CgiT5kgaBW"
+				"bzz-raw://b59e13716cece6d22cda8b1c15a43e9b8918152918e3ca7df934170848d17960",
+				"dweb:/ipfs/QmSAMEps8S3sqkUeW5oj2uF6kAhN13M6F5aCGJwX9fAgro"
 			]
 		}
 	},

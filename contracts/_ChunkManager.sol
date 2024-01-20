@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract ChunkManager {
-   function chunkContent(string memory content) internal pure returns (string[] memory) {
+   function chunkContent(string memory content) public pure returns (string[] memory) {                           //Changed to public for testing
         uint256 chunkSize = 32;
         uint256 numChunks = (bytes(content).length + chunkSize - 1) / chunkSize;
         string[] memory chunks = new string[](numChunks);
@@ -23,7 +23,7 @@ contract ChunkManager {
         return chunks;
     }
 
-    function concatenateChunks(string[] memory chunks) internal pure returns (string memory) {
+    function concatenateChunks(string[] memory chunks) public pure returns (string memory) {                              //Changed to public for testing
         uint256 totalLength = 0;
         for (uint256 i = 0; i < chunks.length; i++) {
             totalLength += bytes(chunks[i]).length;
