@@ -38,15 +38,29 @@ contract FileStorageManager is ChunkManager, NodeManager {
         // Iterate through each chunk and distribute them to nodes
         for (uint256 i = 0; i < chunks.length; i++) {
             uint256 chunkSize = bytes(chunks[i]).length;
-            address selectedNodeAddress = findAvailableNode(chunkSize);
 
-            require(selectedNodeAddress != address(0), "No available nodes");
-            fileIdToNodesAddresses[uniqueId].push(selectedNodeAddress);
+            uint256 chunkDuplicationCounter = 0;
+            uint256 maxDuplication = 3;
 
-            storeChunkInNode(selectedNodeAddress, chunks[i]);
+            if (allNodes.length < 3){
+                maxDuplication = allNodes.length;
+            }
 
-            // Update available storage of the current node
-            updateAvailableStorage(selectedNodeAddress, nodes[selectedNodeAddress].availableStorage - chunkSize);
+            while (chunkDuplicationCounter < maxDuplication) {
+                chunkDuplicationCounter++;
+                
+                address selectedNodeAddress = findAvailableNode(chunkSize);
+
+                require(selectedNodeAddress != address(0), "No available nodes");
+
+                fileIdToNodesAddresses[uniqueId].push(selectedNodeAddress);
+
+                storeChunkInNode(selectedNodeAddress, chunks[i]);
+
+                // Update available storage of the current node
+                updateAvailableStorage(selectedNodeAddress, nodes[selectedNodeAddress].availableStorage - chunkSize);
+            }
+           
         }
     }
 

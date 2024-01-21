@@ -353,27 +353,27 @@
 	},
 	"sources": {
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x9158fe3ec4521b24ff2ef07aa0daa0d954500b5f879ffef60332d3f7c048f09c",
+			"keccak256": "0xf78cfefe0847e3a4afc34639d74ca2f992165aa8dadab9eb3b110c8a92c52a87",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://b59e13716cece6d22cda8b1c15a43e9b8918152918e3ca7df934170848d17960",
-				"dweb:/ipfs/QmSAMEps8S3sqkUeW5oj2uF6kAhN13M6F5aCGJwX9fAgro"
+				"bzz-raw://a7f392094274d5c8369ebd8c0d125dcd1e1e713106e657ee87039957d62720a5",
+				"dweb:/ipfs/QmcqMtzVU88xtsLuF2uMUtbbsVyzXgsJTyCmV4Dk56kPBA"
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0xd3cf8e8b9f35304c59a6f3fe018af31c7bb0fb96eb1c57684298ecc18f489c75",
+			"keccak256": "0x5fa238e3c534774eb307461a2bec079152fa5eb9e00f6c5f9bf14e5665a072bf",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://96105dd9c18de60b1db6ad32b096b39ef469c29e578ef9b48bbe72dff2f24c4d",
-				"dweb:/ipfs/QmTsERYaGBCwnQTEczQpDe77YsuLuj19uTYzdbNQiDEvUY"
+				"bzz-raw://0ddc4b718f966cec770a6315006cd5585e526f05d862090ddb4003251adaf5a0",
+				"dweb:/ipfs/QmYYyQcxBcGUZQr6cRsYe1dUSPDSMGkcEdnw92qPxbrUSR"
 			]
 		},
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x141cd01ff2dd4517e5c28a9d90019230c99f6a6c200910972c1bafa74d67db26",
+			"keccak256": "0xd50fd8931b58ad8afa1ab1630bd6865dcef021ebce86e9e4aa5d3e452625a93e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://807ba4ada6dd5ba5c3f01dc07088d9d7a642fb988c9d9ff64e0cdc82c904a18c",
-				"dweb:/ipfs/QmehKSTczcK1YKK1ZoE89jFUHxKBqixzFjm3Z8k1Q645Yx"
+				"bzz-raw://10139ee9abdfd505fa018781b035c6b33298164ae7995bd3074b80251bdb3ed4",
+				"dweb:/ipfs/QmbGMRVaQ49cc1xscFMZkjKBYx9yc4EexbLfcJbNEXZzL7"
 			]
 		}
 	},
