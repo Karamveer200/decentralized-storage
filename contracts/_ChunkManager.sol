@@ -2,6 +2,8 @@
 pragma solidity ^0.8.0;
 
 contract ChunkManager {
+    
+
    function chunkContent(string memory content) public pure returns (string[] memory) {                           //Changed to public for testing
         uint256 chunkSize = 32;
         uint256 numChunks = (bytes(content).length + chunkSize - 1) / chunkSize;

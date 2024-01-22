@@ -69,12 +69,12 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         // Retrieve chunks from storage nodes
         address[] memory storageNodes = fileIdToNodesAddresses[fileId];
-        string [] memory chunksArr;
+        string [] memory chunksArr;                                 //string[] memory chunksArr = new string[](storageNodes.length); ,maybe this might work
 
         for (uint256 i = 0; i < storageNodes.length; i++) {
             // address selectedNodeAddress = storageNodes[i];
 
-            // chunksArr.push(retrieveChunkInNode(selectedNodeAddress, fileId));
+            // chunksArr.push(retrieveChunkInNode(selectedNodeAddress, fileId));            //cant push, need to use maybe string memory retreivedChunk....
         }
 
         // Concatenate chunks into a single string

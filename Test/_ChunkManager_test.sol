@@ -4,12 +4,6 @@ pragma solidity >=0.4.22 <0.9.0;
 
 // This import is automatically injected by Remix
 import "remix_tests.sol"; 
-
-// This import is required to use custom transaction context
-// Although it may fail compilation in 'Solidity Compiler' plugin
-// But it will work fine in 'Solidity Unit Testing' plugin
-
-import "remix_accounts.sol";
 import "../contracts/_ChunkManager.sol";
 
 contract ChunkManagerTest {
@@ -22,17 +16,21 @@ contract ChunkManagerTest {
         chunkManager = new ChunkManager();
     }
 
+    event logNumber (uint256);
+
+
     // Test chunking functionality
     function testChunkContent() public {
-        string memory content = "This is a test content.";
+        string memory content = "Testing content.";
         string[] memory chunks = chunkManager.chunkContent(content);
-
-        // Assert the number of chunks
-        Assert.equal(chunks.length, 2, "Number of chunks should be 2");
+        uint256 numberOfChunks = chunks.length;
+        emit logNumber(numberOfChunks);            
+        
+        Assert.equal(chunks.length, 1, "incorrect");
+ 
 
         // Assert the content of each chunk
-        Assert.equal(chunks[0], "This is a test content.", "Incorrect content in the first chunk");
-        Assert.equal(chunks[1], "", "Second chunk should be empty");
+        Assert.equal(chunks[0], content, "Incorrect content in the first chunk");
     }
 
     // Test concatenation functionality

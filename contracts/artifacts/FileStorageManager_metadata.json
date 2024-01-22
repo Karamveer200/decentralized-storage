@@ -11,6 +11,19 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "logString",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -262,7 +275,7 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -361,11 +374,11 @@
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0x5fa238e3c534774eb307461a2bec079152fa5eb9e00f6c5f9bf14e5665a072bf",
+			"keccak256": "0x5aa7bf8930d34ece956665976cc849f2b18ce4eacebbd6e33396d06d3b7eb034",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://0ddc4b718f966cec770a6315006cd5585e526f05d862090ddb4003251adaf5a0",
-				"dweb:/ipfs/QmYYyQcxBcGUZQr6cRsYe1dUSPDSMGkcEdnw92qPxbrUSR"
+				"bzz-raw://53950802878a200ffe3ceb8751e69c5a205dd82e12545d8be7df81d538e3e7cd",
+				"dweb:/ipfs/QmQmJBtyYGYvihzFp9afmqvshDzUNgop6VPEYgzsM49goW"
 			]
 		},
 		"contracts/_NodeManager.sol": {

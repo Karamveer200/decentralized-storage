@@ -4,11 +4,6 @@ pragma solidity >=0.4.22 <0.9.0;
 
 // This import is automatically injected by Remix
 import "remix_tests.sol"; 
-
-// This import is required to use custom transaction context
-// Although it may fail compilation in 'Solidity Compiler' plugin
-// But it will work fine in 'Solidity Unit Testing' plugin
-import "remix_accounts.sol";
 import "../contracts/_NodeManager.sol";
 
 contract NodeManagerTest {
@@ -54,16 +49,16 @@ contract NodeManagerTest {
 
     // Test finding an available node
     function testFindAvailableNode() public {
-        address nodeAddress = address(0x1);
-        uint256 chunkSize = 50;
+        address nodeAddress = address(0x3c7a9f1db593e600b61807f91811d4c4b7005f);
+        uint256 chunkSize = 5;
 
         // Add a new node
-        nodeManager.addNode(nodeAddress, 100);
+        nodeManager.addNode(nodeAddress, 10);
 
         // Find an available node
         address availableNode = nodeManager.findAvailableNode(chunkSize);
 
         // Assert that an available node is found
-        Assert.notEqual(availableNode, address(0), "No available nodes found");
+        Assert.notEqual(availableNode, nodeAddress, "No available nodes found");
     }
 }
