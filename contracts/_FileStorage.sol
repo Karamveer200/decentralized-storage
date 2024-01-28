@@ -16,11 +16,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 uploadTime,
         address uploader
     );
-    
-    event FileRemoved(
-        address uploader,
-        uint256 fileId
-    );
+
+    event FileRemoved(address uploader, uint256 fileId);
 
     struct FileMetadata {
         uint256 fileId;
@@ -35,8 +32,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
     // Mapping from address to FileMetadata
     mapping(address => FileMetadata[]) private addressToFile;
 
-    uint256 public fileIdCount = 0;
-
     constructor() NodeManager() {
         owner = msg.sender;
     }
@@ -45,6 +40,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _fileName,
         string memory _fileType,
         string memory _fileHash,
+        uint256 _uniqueId,
         uint256 _fileSize
     ) public {
         require(msg.sender != address(0));
@@ -53,11 +49,9 @@ contract FileStorageManager is ChunkManager, NodeManager {
         require(bytes(_fileHash).length > 0);
         require(_fileSize > 0);
 
-        fileIdCount++;
-
         addressToFile[msg.sender].push(
             FileMetadata(
-                fileIdCount,
+                _uniqueId,
                 _fileName,
                 _fileType,
                 _fileHash,
@@ -68,7 +62,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         );
 
         emit FileUploaded(
-            fileIdCount,
+            _uniqueId,
             _fileName,
             _fileType,
             _fileHash,
@@ -78,18 +72,14 @@ contract FileStorageManager is ChunkManager, NodeManager {
         );
     }
 
-    function retrieveFile(uint256 _fileId)
-        public
-        view
-        returns (string memory)
-    {
+    function retrieveFile(uint256 _fileId) public view returns (string memory) {
         require(
             addressToFile[msg.sender][_fileId].ownerAddress == msg.sender,
             "Unauthenticated or file not found"
         );
-        
+
         // Return file hash
-        return addressToFile[msg.sender][_fileId].fileHash; 
+        return addressToFile[msg.sender][_fileId].fileHash;
     }
 
     function deleteFile(uint256 _fileId) public {
@@ -101,8 +91,12 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 lastIndex = addressToFile[msg.sender].length - 1;
 
         if (_fileId != lastIndex) {
-            FileMetadata storage lastFile = addressToFile[msg.sender][lastIndex];
-            FileMetadata storage fileToRemove = addressToFile[msg.sender][_fileId];
+            FileMetadata storage lastFile = addressToFile[msg.sender][
+                lastIndex
+            ];
+            FileMetadata storage fileToRemove = addressToFile[msg.sender][
+                _fileId
+            ];
 
             // SWAP last and fileId index
             addressToFile[msg.sender][_fileId] = lastFile;
@@ -111,8 +105,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         // Delete last index as its the intended file
         addressToFile[msg.sender].pop();
-
-        fileIdCount--;
 
         emit FileRemoved(msg.sender, _fileId);
     }
