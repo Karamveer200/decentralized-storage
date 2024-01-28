@@ -7,96 +7,113 @@ import "./_NodeManager.sol";
 contract FileStorageManager is ChunkManager, NodeManager {
     address public owner;
 
-    // Mapping from fileId to FileMetadata  
-    mapping(string => FileMetadata) private fileIdToMetadata;
-
-    // Mapping from fileId to storage node
-    mapping(string => address[]) private fileIdToNodesAddresses;
+    event FileUploaded(
+        uint256 fileId,
+        string fileName,
+        string fileType,
+        string fileHash,
+        uint256 fileSize,
+        uint256 uploadTime,
+        address uploader
+    );
+    
+    event FileRemoved(
+        address uploader,
+        uint256 fileId
+    );
 
     struct FileMetadata {
+        uint256 fileId;
         string fileName;
+        string fileType;
+        string fileHash;
         uint256 fileSize;
+        uint256 uploadTime;
+        address ownerAddress;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Unauthenticated");
-        _;
-    }
+    // Mapping from address to FileMetadata
+    mapping(address => FileMetadata[]) private addressToFile;
+
+    uint256 public fileIdCount = 0;
 
     constructor() NodeManager() {
         owner = msg.sender;
     }
 
-    function storeFile(string memory fileName, string memory content, string memory uniqueId) public {
-        uint256 fileSize = bytes(content).length;
+    function storeFile(
+        string memory _fileName,
+        string memory _fileType,
+        string memory _fileHash,
+        uint256 _fileSize
+    ) public {
+        require(msg.sender != address(0));
+        require(bytes(_fileType).length > 0);
+        require(bytes(_fileName).length > 0);
+        require(bytes(_fileHash).length > 0);
+        require(_fileSize > 0);
 
-        fileIdToMetadata[uniqueId] = FileMetadata(fileName, fileSize);
+        fileIdCount++;
 
-        // Chunk the content and store the chunk IDs
-        string[] memory chunks = chunkContent(content);
+        addressToFile[msg.sender].push(
+            FileMetadata(
+                fileIdCount,
+                _fileName,
+                _fileType,
+                _fileHash,
+                _fileSize,
+                block.timestamp,
+                msg.sender
+            )
+        );
 
-        // Iterate through each chunk and distribute them to nodes
-        for (uint256 i = 0; i < chunks.length; i++) {
-            uint256 chunkSize = bytes(chunks[i]).length;
-
-            uint256 chunkDuplicationCounter = 0;
-            uint256 maxDuplication = 3;
-
-            if (allNodes.length < 3){
-                maxDuplication = allNodes.length;
-            }
-
-            while (chunkDuplicationCounter < maxDuplication) {
-                chunkDuplicationCounter++;
-                
-                address selectedNodeAddress = findAvailableNode(chunkSize);
-
-                require(selectedNodeAddress != address(0), "No available nodes");
-
-                fileIdToNodesAddresses[uniqueId].push(selectedNodeAddress);
-
-                storeChunkInNode(selectedNodeAddress, chunks[i]);
-
-                // Update available storage of the current node
-                updateAvailableStorage(selectedNodeAddress, nodes[selectedNodeAddress].availableStorage - chunkSize);
-            }
-           
-        }
+        emit FileUploaded(
+            fileIdCount,
+            _fileName,
+            _fileType,
+            _fileHash,
+            _fileSize,
+            block.timestamp,
+            msg.sender
+        );
     }
 
-    function retrieveFile(string memory fileId) public view returns (string memory) {
-        require(fileIdToMetadata[fileId].fileSize > 0, "File not found");
-
-        // Retrieve chunks from storage nodes
-        address[] memory storageNodes = fileIdToNodesAddresses[fileId];
-        string [] memory chunksArr;                                 //string[] memory chunksArr = new string[](storageNodes.length); ,maybe this might work
-
-        for (uint256 i = 0; i < storageNodes.length; i++) {
-            // address selectedNodeAddress = storageNodes[i];
-
-            // chunksArr.push(retrieveChunkInNode(selectedNodeAddress, fileId));            //cant push, need to use maybe string memory retreivedChunk....
-        }
-
-        // Concatenate chunks into a single string
-        string memory concatenatedContent = concatenateChunks(chunksArr);
-
-        return concatenatedContent;
+    function retrieveFile(uint256 _fileId)
+        public
+        view
+        returns (string memory)
+    {
+        require(
+            addressToFile[msg.sender][_fileId].ownerAddress == msg.sender,
+            "Unauthenticated or file not found"
+        );
+        
+        // Return file hash
+        return addressToFile[msg.sender][_fileId].fileHash; 
     }
 
-    function deleteFile(string memory fileId) public {
-        require(fileIdToMetadata[fileId].fileSize > 0, "File not found");
-        require(msg.sender == owner, "Unauthorized");
+    function deleteFile(uint256 _fileId) public {
+        require(
+            _fileId >= 0 && _fileId < addressToFile[msg.sender].length,
+            "Invalid file id"
+        );
 
-        address[] memory storageNodes = fileIdToNodesAddresses[fileId];
+        uint256 lastIndex = addressToFile[msg.sender].length - 1;
 
-        // Deletion of chunk in the node itself
-        for (uint256 i = 0; i < storageNodes.length; i++) {
-            address selectedNodeAddress = storageNodes[i];
-            deleteChunkInNode(selectedNodeAddress, fileId);
+        if (_fileId != lastIndex) {
+            FileMetadata storage lastFile = addressToFile[msg.sender][lastIndex];
+            FileMetadata storage fileToRemove = addressToFile[msg.sender][_fileId];
+
+            // SWAP last and fileId index
+            addressToFile[msg.sender][_fileId] = lastFile;
+            addressToFile[msg.sender][lastIndex] = fileToRemove;
         }
 
-        // Delete file metadata, node mapping, and chunks
-        delete fileIdToMetadata[fileId];
-        delete fileIdToNodesAddresses[fileId];
+        // Delete last index as its the intended file
+        addressToFile[msg.sender].pop();
+
+        fileIdCount--;
+
+        emit FileRemoved(msg.sender, _fileId);
     }
 }
