@@ -6,54 +6,66 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"internalType": "string[]",
+						"name": "stringArray",
+						"type": "string[]"
+					}
+				],
+				"name": "createHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "maxChunkSize",
+				"outputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "logNumber",
-				"type": "event"
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "content",
-						"type": "string"
-					}
-				],
-				"name": "chunkContent",
+				"inputs": [],
+				"name": "numMaxChunksDuplication",
 				"outputs": [
 					{
-						"internalType": "string[]",
+						"internalType": "uint256",
 						"name": "",
-						"type": "string[]"
+						"type": "uint256"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [
 					{
-						"internalType": "string[]",
-						"name": "chunks",
-						"type": "string[]"
-					}
-				],
-				"name": "concatenateChunks",
-				"outputs": [
+						"internalType": "bytes32",
+						"name": "_fileHash",
+						"type": "bytes32"
+					},
 					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "_uniqueId",
+						"type": "uint256"
 					}
 				],
-				"stateMutability": "pure",
+				"name": "storeFileHash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -85,11 +97,11 @@
 	},
 	"sources": {
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x40185faa372095a0c6236ce8a3b5a22947db04582b027437b5a867d84b44939d",
+			"keccak256": "0x2b58e7c988e41db8eb68d679a9c335b9e7cb1c6cebbd8ccdbc3ae28608719313",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://448cf6ff5b7f96a21352bdc7eb5b6866548f78152aa95db372e7a0faa9dff539",
-				"dweb:/ipfs/QmaEkrsAUk3QnH6DapVLNdv1a8LHcsRK986Q4d3b3p3puz"
+				"bzz-raw://6ffe08f1a7ec6c757a34827ef9a4df95f974b4a72bfd7cabb23c59de92139718",
+				"dweb:/ipfs/QmdL2RV9oTHe86HpkhCgjQTHCcckbSpVyzVQDFYwuv8orz"
 			]
 		}
 	},

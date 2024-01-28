@@ -52,9 +52,9 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
+						"internalType": "bytes32",
 						"name": "fileHash",
-						"type": "string"
+						"type": "bytes32"
 					},
 					{
 						"indexed": false,
@@ -118,36 +118,17 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "content",
-						"type": "string"
-					}
-				],
-				"name": "chunkContent",
-				"outputs": [
-					{
 						"internalType": "string[]",
-						"name": "",
+						"name": "stringArray",
 						"type": "string[]"
 					}
 				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string[]",
-						"name": "chunks",
-						"type": "string[]"
-					}
-				],
-				"name": "concatenateChunks",
+				"name": "createHash",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "bytes32",
 						"name": "",
-						"type": "string"
+						"type": "bytes32"
 					}
 				],
 				"stateMutability": "pure",
@@ -188,19 +169,6 @@
 				"name": "deleteFile",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "fileIdCount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -268,12 +236,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "getNumMaxDuplicationCount",
+				"name": "maxChunkSize",
 				"outputs": [
 					{
-						"internalType": "uint104",
+						"internalType": "uint256",
 						"name": "",
-						"type": "uint104"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -308,9 +276,9 @@
 				"name": "numMaxChunksDuplication",
 				"outputs": [
 					{
-						"internalType": "uint104",
+						"internalType": "uint256",
 						"name": "",
-						"type": "uint104"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -364,9 +332,9 @@
 				"name": "retrieveFile",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "bytes32",
 						"name": "",
-						"type": "string"
+						"type": "bytes32"
 					}
 				],
 				"stateMutability": "view",
@@ -393,6 +361,11 @@
 			{
 				"inputs": [
 					{
+						"internalType": "string[]",
+						"name": "_chunksArr",
+						"type": "string[]"
+					},
+					{
 						"internalType": "string",
 						"name": "_fileName",
 						"type": "string"
@@ -404,8 +377,13 @@
 					},
 					{
 						"internalType": "string",
-						"name": "_fileHash",
+						"name": "_fileEncoding",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_uniqueId",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -414,6 +392,73 @@
 					}
 				],
 				"name": "storeFile",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_fileHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_uniqueId",
+						"type": "uint256"
+					}
+				],
+				"name": "storeFileHash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileType",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_fileHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileEncoding",
+						"type": "string"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_fileStorageNodeAddress",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_uniqueId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_fileSize",
+						"type": "uint256"
+					}
+				],
+				"name": "storeFileMetadata",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -465,19 +510,19 @@
 	},
 	"sources": {
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x90a250f69180d33942e1849174443df8931010d8db85af13f2ae6a8aded94c35",
+			"keccak256": "0x2b58e7c988e41db8eb68d679a9c335b9e7cb1c6cebbd8ccdbc3ae28608719313",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://f330b666d092448294ff4bda7043343d5febcdee6997cb3f46639d42f7bb16c9",
-				"dweb:/ipfs/Qmc1xnLn896cinj6E5TxRkwzZD88q4Do7iDGj2CGgzFmsL"
+				"bzz-raw://6ffe08f1a7ec6c757a34827ef9a4df95f974b4a72bfd7cabb23c59de92139718",
+				"dweb:/ipfs/QmdL2RV9oTHe86HpkhCgjQTHCcckbSpVyzVQDFYwuv8orz"
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0x842a239e141ced3140810d4435858dd6a1b4e262f736f16ae11d950a83d6816a",
+			"keccak256": "0x6e19868e8ca235b9bb8cac0aaf983653a05e570f2d43b526cdab536b76a04514",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://1d306093fdb58df44364ce215e091fc332480ab148a9b594d9691472f5b15b01",
-				"dweb:/ipfs/QmXHmALtQSWEs1vU2CZsPqEsmTRXp7n7HcaLEfHtQRyiSN"
+				"bzz-raw://076ee85ee47f93bc629b6e25135bbd9d9fe933629a6b50f75a512abbc022438b",
+				"dweb:/ipfs/QmUqhrHUZzUw1Qx1JBCxoYpGAT6Yp6dB9aAYHqwfGDw2PJ"
 			]
 		},
 		"contracts/_NodeManager.sol": {
