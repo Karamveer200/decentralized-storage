@@ -21,9 +21,9 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "fileId",
-						"type": "uint256"
+						"type": "string"
 					}
 				],
 				"name": "FileRemoved",
@@ -34,9 +34,9 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "fileId",
-						"type": "uint256"
+						"type": "string"
 					},
 					{
 						"indexed": false,
@@ -161,9 +161,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "_fileId",
-						"type": "uint256"
+						"type": "string"
 					}
 				],
 				"name": "deleteFile",
@@ -381,9 +381,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "_uniqueId",
-						"type": "uint256"
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -410,9 +410,9 @@
 						"type": "bytes32"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "_uniqueId",
-						"type": "uint256"
+						"type": "string"
 					}
 				],
 				"name": "storeFileHash",
@@ -448,9 +448,9 @@
 						"type": "address[]"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "_uniqueId",
-						"type": "uint256"
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -510,19 +510,19 @@
 	},
 	"sources": {
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x2b58e7c988e41db8eb68d679a9c335b9e7cb1c6cebbd8ccdbc3ae28608719313",
+			"keccak256": "0x74f45ced43336946d0375d00f81c83a466107d40d353b99fde0e39b4f5838a63",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://6ffe08f1a7ec6c757a34827ef9a4df95f974b4a72bfd7cabb23c59de92139718",
-				"dweb:/ipfs/QmdL2RV9oTHe86HpkhCgjQTHCcckbSpVyzVQDFYwuv8orz"
+				"bzz-raw://4f2883fde757679ed34e173abdfefa1345c47edeb219d8616e313bc04b0aa8f4",
+				"dweb:/ipfs/QmT27ZCqKivSMHWXcuX94RPUR7HtkXUWBMZaWwurw8CmM7"
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0x6e19868e8ca235b9bb8cac0aaf983653a05e570f2d43b526cdab536b76a04514",
+			"keccak256": "0x66095fc15a9fcb9004a0e311c5a105af3851dff79e6c323d949159f8b49b55af",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://076ee85ee47f93bc629b6e25135bbd9d9fe933629a6b50f75a512abbc022438b",
-				"dweb:/ipfs/QmUqhrHUZzUw1Qx1JBCxoYpGAT6Yp6dB9aAYHqwfGDw2PJ"
+				"bzz-raw://220365953463036976dcfd609efa96c76d4e7014f2ee3d879b7aaad42238c746",
+				"dweb:/ipfs/QmYrsJLKF5cKBx7MPm94EtUZifkdGt8DhYAwmcbeDSBn3S"
 			]
 		},
 		"contracts/_NodeManager.sol": {

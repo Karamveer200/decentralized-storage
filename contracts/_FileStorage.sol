@@ -8,7 +8,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
     address public owner;
 
     event FileUploaded(
-        uint256 fileId,
+        string fileId,
         string fileName,
         string fileType,
         bytes32 fileHash,
@@ -17,10 +17,10 @@ contract FileStorageManager is ChunkManager, NodeManager {
         address uploader
     );
 
-    event FileRemoved(address uploader, uint256 fileId);
+    event FileRemoved(address uploader, string fileId);
 
     struct FileMetadata {
-        uint256 fileId;
+        string fileId;
         string fileName;
         string fileType;
         bytes32 fileHash;
@@ -39,15 +39,14 @@ contract FileStorageManager is ChunkManager, NodeManager {
         owner = msg.sender;
     }
 
-    function storeFile (
+    function storeFile(
         string[] memory _chunksArr,
         string memory _fileName,
         string memory _fileType,
         string memory _fileEncoding,
-        uint256 _uniqueId,
+        string memory _uniqueId,
         uint256 _fileSize
     ) public returns (address[] memory) {
-        
         // Iterate through each chunk and distribute them to nodes
         for (uint256 i = 0; i < _chunksArr.length; i++) {
             uint256 chunkSize = bytes(_chunksArr[i]).length;
@@ -106,7 +105,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         bytes32 _fileHash,
         string memory _fileEncoding,
         address[] memory _fileStorageNodeAddress,
-        uint256 _uniqueId,
+        string memory _uniqueId,
         uint256 _fileSize
     ) public {
         require(msg.sender != address(0));
@@ -115,7 +114,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         require(bytes32(_fileHash).length > 0);
         require(_fileStorageNodeAddress.length > 0);
         require(_fileSize > 0);
-        require(_uniqueId > 0);
+        require(bytes(_uniqueId).length > 0);
 
         delete nodeAddressOfChunks;
 
@@ -154,31 +153,26 @@ contract FileStorageManager is ChunkManager, NodeManager {
         return addressToFile[msg.sender][_fileId].fileHash;
     }
 
-    function deleteFile(uint256 _fileId) public {
-        require(
-            _fileId >= 0 && addressToFile[msg.sender].length > 0,
-            "Invalid file id"
-        );
+    function deleteFile(string memory _fileId) public {
+        require(addressToFile[msg.sender].length > 0, "Invalid file id");
 
-        FileMetadata[] storage filesArr = addressToFile[msg.sender];
+        FileMetadata[] memory filesArr = addressToFile[msg.sender];
 
         uint256 lastIndex = filesArr.length - 1;
 
-        if (_fileId != lastIndex) {
-            FileMetadata storage lastFile = filesArr[lastIndex];
+        FileMetadata memory lastFile = filesArr[lastIndex];
 
-            FileMetadata memory fileToRemove;
+        FileMetadata memory fileToRemove;
 
-            for (uint256 i = 0; i < filesArr.length; i++) {
-                if (filesArr[i].fileId == _fileId) {
-                    fileToRemove = filesArr[i];
-                }
+        // SWAP last and fileId index
+
+        for (uint256 i = 0; i < filesArr.length; i++) {
+            if (compareStrings(filesArr[i].fileId, _fileId)) {
+                fileToRemove = filesArr[i];
+                addressToFile[msg.sender][i] = lastFile;
             }
-
-            // SWAP last and fileId index
-            addressToFile[msg.sender][_fileId] = lastFile;
-            addressToFile[msg.sender][lastIndex] = fileToRemove;
         }
+        addressToFile[msg.sender][lastIndex] = fileToRemove;
 
         // Delete last index as its the intended file
         addressToFile[msg.sender].pop();
@@ -196,5 +190,13 @@ contract FileStorageManager is ChunkManager, NodeManager {
             }
         }
         return false;
+    }
+
+    function compareStrings(string memory a, string memory b)
+        internal
+        pure
+        returns (bool)
+    {
+        return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
     }
 }
