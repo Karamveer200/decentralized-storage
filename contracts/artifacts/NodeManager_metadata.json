@@ -6,45 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "logAddress",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "logAddress2",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "logNumber",
-				"type": "event"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -95,8 +56,14 @@
 					}
 				],
 				"name": "deleteChunkInNode",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -105,11 +72,6 @@
 						"internalType": "uint256",
 						"name": "_chunkSize",
 						"type": "uint256"
-					},
-					{
-						"internalType": "address[]",
-						"name": "addressOfChunks",
-						"type": "address[]"
 					}
 				],
 				"name": "findAvailableNode",
@@ -120,7 +82,7 @@
 						"type": "address"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -162,30 +124,6 @@
 						"internalType": "struct NodeManager.Node",
 						"name": "",
 						"type": "tuple"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"name": "nodeChunks",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -250,14 +188,27 @@
 						"internalType": "string",
 						"name": "_chunk",
 						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_fileId",
-						"type": "string"
 					}
 				],
 				"name": "storeChunkInNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_newStorage",
+						"type": "uint256"
+					}
+				],
+				"name": "updateAvailableStorage",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -291,11 +242,11 @@
 	},
 	"sources": {
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x561a5533adfd250a341a54812890ff572dbee79c4ae8e9a97999f2bbe15825b7",
+			"keccak256": "0xd50fd8931b58ad8afa1ab1630bd6865dcef021ebce86e9e4aa5d3e452625a93e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3e110c6e22f32102ef9d594af11ce5155cbdbca0cedc612188ddacf9c4285c33",
-				"dweb:/ipfs/QmYCL5NhWwS2RejjmoZK3sBWbpy8wH2KWJDWnM3SqfrN7u"
+				"bzz-raw://10139ee9abdfd505fa018781b035c6b33298164ae7995bd3074b80251bdb3ed4",
+				"dweb:/ipfs/QmbGMRVaQ49cc1xscFMZkjKBYx9yc4EexbLfcJbNEXZzL7"
 			]
 		}
 	},

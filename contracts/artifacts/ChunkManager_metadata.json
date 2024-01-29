@@ -97,11 +97,11 @@
 	},
 	"sources": {
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x42c2af194ab893aae834efb3f71b1ffe4505efe7220fe88ce9993c4bb71394df",
+			"keccak256": "0x74f45ced43336946d0375d00f81c83a466107d40d353b99fde0e39b4f5838a63",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://b22c9e81b3c35cc129505e7bbddef6899a2a05cc74952ac650b224b93d9036c2",
-				"dweb:/ipfs/QmYkCpY52tWvBA8FxqhgHtNhbjxA1vJNYyim7r3D9TvD2J"
+				"bzz-raw://4f2883fde757679ed34e173abdfefa1345c47edeb219d8616e313bc04b0aa8f4",
+				"dweb:/ipfs/QmT27ZCqKivSMHWXcuX94RPUR7HtkXUWBMZaWwurw8CmM7"
 			]
 		}
 	},
