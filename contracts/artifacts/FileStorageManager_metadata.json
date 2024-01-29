@@ -210,6 +210,11 @@
 						"internalType": "uint256",
 						"name": "_chunkSize",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "chunkStorageNodeTempAddress",
+						"type": "address[]"
 					}
 				],
 				"name": "findAvailableNode",
@@ -283,11 +288,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
 						"internalType": "string",
 						"name": "",
 						"type": "string"
@@ -298,12 +298,12 @@
 						"type": "uint256"
 					}
 				],
-				"name": "nodeChunks",
+				"name": "nodeChunksAddresses",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "address",
 						"name": "",
-						"type": "string"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -362,22 +362,17 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_nodeAddress",
-						"type": "address"
-					},
-					{
 						"internalType": "string",
 						"name": "_fileId",
 						"type": "string"
 					}
 				],
-				"name": "retrieveChunkInNode",
+				"name": "retrieveChunkNodeAddresses",
 				"outputs": [
 					{
-						"internalType": "string[]",
+						"internalType": "address[]",
 						"name": "",
-						"type": "string[]"
+						"type": "address[]"
 					}
 				],
 				"stateMutability": "view",
@@ -391,52 +386,64 @@
 						"type": "string"
 					}
 				],
-				"name": "retrieveFileHash",
+				"name": "retrieveFileDetails",
 				"outputs": [
 					{
 						"components": [
 							{
-								"internalType": "string",
-								"name": "fileId",
-								"type": "string"
+								"components": [
+									{
+										"internalType": "string",
+										"name": "fileId",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "fileName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "fileType",
+										"type": "string"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "fileHash",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint256",
+										"name": "fileSize",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "uploadTime",
+										"type": "uint256"
+									},
+									{
+										"internalType": "address",
+										"name": "ownerAddress",
+										"type": "address"
+									},
+									{
+										"internalType": "string",
+										"name": "fileEncoding",
+										"type": "string"
+									}
+								],
+								"internalType": "struct FileStorageManager.FileMetadata",
+								"name": "file",
+								"type": "tuple"
 							},
 							{
-								"internalType": "string",
-								"name": "fileName",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "fileType",
-								"type": "string"
-							},
-							{
-								"internalType": "bytes32",
-								"name": "fileHash",
-								"type": "bytes32"
-							},
-							{
-								"internalType": "uint256",
-								"name": "fileSize",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "uploadTime",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address",
-								"name": "ownerAddress",
-								"type": "address"
-							},
-							{
-								"internalType": "string",
-								"name": "fileEncoding",
-								"type": "string"
+								"internalType": "address[]",
+								"name": "chunkNodeAddresses",
+								"type": "address[]"
 							}
 						],
-						"internalType": "struct FileStorageManager.FileMetadata",
+						"internalType": "struct FileStorageManager.FileRetrieve",
 						"name": "",
 						"type": "tuple"
 					}
@@ -460,6 +467,11 @@
 						"internalType": "string",
 						"name": "_fileId",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "order",
+						"type": "uint256"
 					}
 				],
 				"name": "storeChunkInNode",
@@ -560,19 +572,19 @@
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0x2cac1d2eb637e2cad1a375bee1caea7621645af01a9d96955bc377f32d372842",
+			"keccak256": "0x774ec55b331eb20918575b980bd05b0e4f2857d138d12783861bdf0818e0a941",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fc4e5e7dd0f233073b3cf3c3772cd453d83324ff8650c5d5b20d5f9682281adf",
-				"dweb:/ipfs/Qmey796N5XTErzCmE4r5uWkiyV2H1iyNivgBNxShAzSqRR"
+				"bzz-raw://6a80e3204bb94acfdcf7e4b1359a176718e7db35606bb4a69dd614a2c1aae0ea",
+				"dweb:/ipfs/Qmb4Uuzakq7Vyr5GGuqLxhajJWy48SDjwsZBx56d9fhe5S"
 			]
 		},
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x546e7cf53f7b64f1ee366e4ec2f3cf8238f1896125c8556de7dfd211c9137a2f",
+			"keccak256": "0x1db877a6a9af5fb4066aad4c6b680d8049f0edae7cfd26b276d747deade17fb5",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3aae10b52ddc47383dca9ceb1a2361780fc3c770bfeae0c41afdf6794600645c",
-				"dweb:/ipfs/QmSX5VCgLtom4JLXKWrKzdaN6ev1QyL6rsKaSEpxWFjH9N"
+				"bzz-raw://80aa0585c78776e9efc3b7c5fdedb37bea3e669d38106833e561c18ce26745a1",
+				"dweb:/ipfs/QmdV6XdJitz7MQNGNHhzbm3zBfpQ74xSTbAS567HiWSky9"
 			]
 		},
 		"hardhat/console.sol": {

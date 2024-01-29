@@ -40,6 +40,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
     // Mapping from address to FileMetadata
     mapping(address => FileMetadata[]) private addressToFile;
+    mapping(string => string) private fileIdToFileHash;
     mapping(address => mapping(string => mapping(uint256 => address[])))
         private nodeAddressOfChunks;
 
@@ -59,6 +60,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         console.log("00000", _chunksArr.length);
 
         require(allNodes.length != 0, "No available nodes found");
+        require(bytes(fileIdToFileHash[_uniqueId]).length == 0, "Duplicate File Id");
 
         for (uint256 i = 0; i < _chunksArr.length; i++) {
             delete chunkStorageNodeTempAddress;
@@ -76,7 +78,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
             console.log("11111", chunkDuplicationCounter, maxDuplicationNum);
 
             while (chunkDuplicationCounter < maxDuplicationNum) {
-                address selectedNodeAddress = findAvailableNode(chunkSize);
+                address selectedNodeAddress = findAvailableNode(chunkSize, chunkStorageNodeTempAddress);
 
                 console.log("22222", selectedNodeAddress);
 
@@ -156,7 +158,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         );
     }
 
-    function retrieveFileHash(string memory _fileId)
+    function retrieveFileDetails(string memory _fileId)
         public
         view
         returns (FileRetrieve memory)

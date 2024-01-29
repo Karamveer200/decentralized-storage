@@ -68,10 +68,7 @@ contract NodeManager {
         view
         returns (address[] memory)
     {
-        require(
-            nodeChunksAddresses[_fileId].length > 0,
-            "Node does not exist"
-        );
+        require(nodeChunksAddresses[_fileId].length > 0, "Node does not exist");
 
         // Retrieve and return the chunk data from the separate mapping for the given fileId and node address
         return nodeChunksAddresses[_fileId];
@@ -101,7 +98,10 @@ contract NodeManager {
         return nodes[_nodeAddress];
     }
 
-    function findAvailableNode(uint256 _chunkSize) public returns (address) {
+    function findAvailableNode(
+        uint256 _chunkSize,
+        address[] memory chunkStorageNodeTempAddress
+    ) public returns (address) {
         uint256 numNodes = allNodes.length;
         uint256 sizeOffset = 50;
 
@@ -111,14 +111,40 @@ contract NodeManager {
 
         // Generate a pseudo-random index using blockhash
         uint256 randomIndex = uint256(blockhash(block.number - 1)) % numNodes;
+        uint256 i = 0;
+        uint256 loopTimeoutCount = 0;
+        uint256 BREAK_LOOP_COUNT = 1000;
 
         // Iterate through the nodes starting from the pseudo-random index
-        for (uint256 i = 0; i < numNodes; i++) {
+        while (loopTimeoutCount < BREAK_LOOP_COUNT) {
             address node = allNodes[(randomIndex + i) % numNodes];
             emit logNumber(randomIndex);
+
             if (nodes[node].availableStorage > _chunkSize + sizeOffset) {
-                // Randomly return the first node found with available storage
-                return node;
+                bool isUniqueNode = true;
+
+                for (
+                    uint256 j = 0;
+                    j < chunkStorageNodeTempAddress.length;
+                    j++
+                ) {
+                    if (chunkStorageNodeTempAddress[j] == node) {
+                        isUniqueNode = false;
+                    }
+                }
+
+                if (isUniqueNode) {
+                    // Randomly return the first unique node found with available storage
+                    loopTimeoutCount = BREAK_LOOP_COUNT;
+                    return node;
+                }
+            }
+
+            i++;
+            loopTimeoutCount++;
+
+            if (i == numNodes) {
+                i = 0;
             }
         }
         // No available nodes

@@ -105,6 +105,11 @@
 						"internalType": "uint256",
 						"name": "_chunkSize",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "chunkStorageNodeTempAddress",
+						"type": "address[]"
 					}
 				],
 				"name": "findAvailableNode",
@@ -286,11 +291,11 @@
 	},
 	"sources": {
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x3b491c0a1aeb230d0dd1ce8a8606cba9710368d8ff59b5e38eeaa3ee5652e38f",
+			"keccak256": "0x1db877a6a9af5fb4066aad4c6b680d8049f0edae7cfd26b276d747deade17fb5",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://049094ebf8bb6ba86d9936655bd2c0cbb6be6568a88b91ddc54d6f63ed88671c",
-				"dweb:/ipfs/QmcxJbTdkE9JxtqFvaXP7qmNg2vqanzJzwamYJt3kppopb"
+				"bzz-raw://80aa0585c78776e9efc3b7c5fdedb37bea3e669d38106833e561c18ce26745a1",
+				"dweb:/ipfs/QmdV6XdJitz7MQNGNHhzbm3zBfpQ74xSTbAS567HiWSky9"
 			]
 		}
 	},
