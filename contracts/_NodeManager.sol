@@ -11,16 +11,21 @@ contract NodeManager {
     event logAddress2(address);
     event logNumber(uint256);
 
-
     mapping(address => Node) public nodes;
-    mapping(address => mapping(string => string)) public nodeChunks; // Mapping from node address to fileId to chunk data
+
+    // Mapping from node address to fileId to chunk data
+    mapping(string => address[]) public nodeChunksAddresses;
+
     address[] public allNodes;
 
     //
 
     function addNode(address _nodeAddress, uint256 _initialStorage) public {
-        require(nodes[address(_nodeAddress)].nodeAddress == address(0), "Node already exists");
-        
+        require(
+            nodes[address(_nodeAddress)].nodeAddress == address(0),
+            "Node already exists"
+        );
+
         // Create a new Node and initialize it
         nodes[address(_nodeAddress)] = Node({
             nodeAddress: address(_nodeAddress),
@@ -30,37 +35,69 @@ contract NodeManager {
         allNodes.push(address(_nodeAddress));
     }
 
-    function updateAvailableStorage(address _nodeAddress, uint256 _newStorage) internal {
-        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+    function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
+        internal
+    {
+        require(
+            nodes[_nodeAddress].nodeAddress != address(0),
+            "Node does not exist"
+        );
         nodes[_nodeAddress].availableStorage = _newStorage;
     }
 
-    function storeChunkInNode(address _nodeAddress, string memory _chunk, string memory _fileId) public {
-        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+    function storeChunkInNode(
+        address _nodeAddress,
+        string memory _chunk,
+        string memory _fileId,
+        uint256 order
+    ) public {
+        require(
+            nodes[_nodeAddress].nodeAddress != address(0),
+            "Node does not exist"
+        );
 
         // Store the chunk data in the separate mapping for the given fileId and node address
-        nodeChunks[_nodeAddress][_fileId] = _chunk;
+
+        if (!isAddressPresent(_nodeAddress, nodeChunksAddresses[_fileId])) {
+            nodeChunksAddresses[_fileId].push(_nodeAddress);
+        }
     }
 
-    function retrieveChunkInNode(address _nodeAddress, string memory _fileId) public view returns (string memory) {
-        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+    function retrieveChunkNodeAddresses(string memory _fileId)
+        public
+        view
+        returns (address[] memory)
+    {
+        require(
+            nodeChunksAddresses[_fileId].length > 0,
+            "Node does not exist"
+        );
 
         // Retrieve and return the chunk data from the separate mapping for the given fileId and node address
-        return nodeChunks[_nodeAddress][_fileId];
+        return nodeChunksAddresses[_fileId];
     }
 
-    function deleteChunkInNode(address _nodeAddress, string memory _fileId) public {
-        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+    function deleteChunkInNode(address _nodeAddress, string memory _fileId)
+        public
+    {
+        require(
+            nodes[_nodeAddress].nodeAddress != address(0),
+            "Node does not exist"
+        );
 
         // Delete the chunk data from the separate mapping for the given fileId and node address
-        delete nodeChunks[_nodeAddress][_fileId];
+        delete nodeChunksAddresses[_fileId];
     }
 
     function getAllNodes() public view returns (address[] memory) {
         return allNodes;
     }
 
-    function getNodeByAddress(address _nodeAddress) public view returns (Node memory) {
+    function getNodeByAddress(address _nodeAddress)
+        public
+        view
+        returns (Node memory)
+    {
         return nodes[_nodeAddress];
     }
 
@@ -85,6 +122,18 @@ contract NodeManager {
             }
         }
         // No available nodes
-        return address(0); 
+        return address(0);
+    }
+
+    function isAddressPresent(
+        address nodeAddress,
+        address[] memory fileStorageNodeAddresses
+    ) internal pure returns (bool) {
+        for (uint256 i = 0; i < fileStorageNodeAddresses.length; i++) {
+            if (fileStorageNodeAddresses[i] == nodeAddress) {
+                return true;
+            }
+        }
+        return false;
     }
 }

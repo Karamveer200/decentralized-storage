@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./_ChunkManager.sol";
 import "./_NodeManager.sol";
+import "hardhat/console.sol";
 
 contract FileStorageManager is ChunkManager, NodeManager {
     address public owner;
@@ -19,7 +20,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
     event FileRemoved(address uploader, string fileId);
 
-
     struct FileMetadata {
         string fileId;
         string fileName;
@@ -29,6 +29,11 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 uploadTime;
         address ownerAddress;
         string fileEncoding;
+    }
+
+    struct FileRetrieve {
+        FileMetadata file;
+        address[] chunkNodeAddresses;
     }
 
     address[] chunkStorageNodeTempAddress;
@@ -51,6 +56,10 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 _fileSize
     ) public {
         // Iterate through each chunk and distribute them to nodes
+        console.log("00000", _chunksArr.length);
+
+        require(allNodes.length != 0, "No available nodes found");
+
         for (uint256 i = 0; i < _chunksArr.length; i++) {
             delete chunkStorageNodeTempAddress;
 
@@ -58,58 +67,36 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
             uint256 chunkDuplicationCounter = 0;
 
-            uint256 breakLoopTimeoutCount = 0;
-
             uint256 maxDuplicationNum = numMaxChunksDuplication;
 
             if (allNodes.length < 3) {
                 maxDuplicationNum = allNodes.length;
             }
 
+            console.log("11111", chunkDuplicationCounter, maxDuplicationNum);
+
             while (chunkDuplicationCounter < maxDuplicationNum) {
-                require(
-                    breakLoopTimeoutCount < 20,
-                    "Invalid Storage operation"
-                );
-                
                 address selectedNodeAddress = findAvailableNode(chunkSize);
-                
-                require(
-                    selectedNodeAddress != address(0),
-                    "No available nodes"
-                );
+
+                console.log("22222", selectedNodeAddress);
 
                 emit logAddress(selectedNodeAddress);
 
-                if (
-                    !isAddressPresent(
-                        selectedNodeAddress,
-                        chunkStorageNodeTempAddress
-                    )
-                ) {
-                    breakLoopTimeoutCount = 0;
-                    chunkStorageNodeTempAddress.push(selectedNodeAddress);
+                chunkStorageNodeTempAddress.push(selectedNodeAddress);
 
-                    emit logAddress2(selectedNodeAddress);
+                emit logAddress2(selectedNodeAddress);
 
-                    chunkDuplicationCounter++;
+                chunkDuplicationCounter++;
 
-                    // Pass the file ID along with node address and chunk data
-                    storeChunkInNode(
-                        selectedNodeAddress,
-                        _chunksArr[i],
-                        _uniqueId
-                    );
+                // Pass the file ID along with node address and chunk data
+                storeChunkInNode(selectedNodeAddress, _chunksArr[i], _uniqueId, i);
 
-                    // Update available storage of the current node
-                    updateAvailableStorage(
-                        selectedNodeAddress,
-                        nodes[selectedNodeAddress].availableStorage - chunkSize
-                    );
-                }
-                else{
-                    breakLoopTimeoutCount++;
-                }
+                // Update available storage of the current node
+                updateAvailableStorage(
+                    selectedNodeAddress,
+                    nodes[selectedNodeAddress].availableStorage - chunkSize
+                );
+
                 // emit logAddress(selectedNodeAddress);
             }
         }
@@ -172,19 +159,21 @@ contract FileStorageManager is ChunkManager, NodeManager {
     function retrieveFileHash(string memory _fileId)
         public
         view
-        returns (FileMetadata memory)
+        returns (FileRetrieve memory)
     {
-        // Return File meta data
+        // Return File meta data and chunk node addresses
 
         FileMetadata[] memory filesArr = addressToFile[msg.sender];
 
         for (uint256 i = 0; i < filesArr.length; i++) {
             if (compareStrings(filesArr[i].fileId, _fileId)) {
-                return filesArr[i];
+                return FileRetrieve(filesArr[i], retrieveChunkNodeAddresses(_fileId));
             }
         }
 
-        return FileMetadata("", "", "", bytes32(0), 0, 0, address(0), "");
+        address [] memory dummyAddr;
+        FileMetadata memory dummy = FileMetadata("", "", "", bytes32(0), 0, 0, address(0), "");
+        return FileRetrieve(dummy, dummyAddr);
     }
 
     function deleteFile(string memory _fileId) public {
@@ -212,18 +201,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
         addressToFile[msg.sender].pop();
 
         emit FileRemoved(msg.sender, _fileId);
-    }
-
-    function isAddressPresent(
-        address nodeAddress,
-        address[] memory fileStorageNodeAddresses
-    ) internal pure returns (bool) {
-        for (uint256 i = 0; i < fileStorageNodeAddresses.length; i++) {
-            if (fileStorageNodeAddresses[i] == nodeAddress) {
-                return true;
-            }
-        }
-        return false;
     }
 
     function compareStrings(string memory a, string memory b)
