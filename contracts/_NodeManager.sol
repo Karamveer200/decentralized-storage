@@ -23,7 +23,7 @@ contract NodeManager {
     function addNode(address _nodeAddress, uint256 _initialStorage) public {
         require(
             nodes[address(_nodeAddress)].nodeAddress == address(0),
-            "Node already exists"
+            "addNode: Invalid _nodeAddress - Node Already exists"
         );
 
         // Create a new Node and initialize it
@@ -40,7 +40,7 @@ contract NodeManager {
     {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
-            "Node does not exist"
+            "updateAvailableStorage: Invalid _nodeAddress - Node Does NOT exist"
         );
         nodes[_nodeAddress].availableStorage = _newStorage;
     }
@@ -53,7 +53,7 @@ contract NodeManager {
     ) public {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
-            "Node does not exist"
+            "storeChunkInNode: Invalid _nodeAddress - Node Does NOT exist"
         );
 
         // Store the chunk data in the separate mapping for the given fileId and node address
@@ -68,18 +68,19 @@ contract NodeManager {
         view
         returns (address[] memory)
     {
-        require(nodeChunksAddresses[_fileId].length > 0, "Node does not exist");
+        require(
+            nodeChunksAddresses[_fileId].length > 0,
+            "retrieveChunkNodeAddresses: Invalid _nodeAddress - Node Does NOT exist"
+        );
 
         // Retrieve and return the chunk data from the separate mapping for the given fileId and node address
         return nodeChunksAddresses[_fileId];
     }
 
-    function deleteChunkInNode(address _nodeAddress, string memory _fileId)
-        public
-    {
+    function deleteChunkInNode(string memory _fileId) public {
         require(
-            nodes[_nodeAddress].nodeAddress != address(0),
-            "Node does not exist"
+            bytes(_fileId).length > 0,
+            "deleteChunkInNode: Invalid _fileId"
         );
 
         // Delete the chunk data from the separate mapping for the given fileId and node address

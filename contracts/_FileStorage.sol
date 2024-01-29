@@ -40,7 +40,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
     // Mapping from address to FileMetadata
     mapping(address => FileMetadata[]) private addressToFile;
-    mapping(string => string) private fileIdToFileHash;
     mapping(address => mapping(string => mapping(uint256 => address[])))
         private nodeAddressOfChunks;
 
@@ -57,10 +56,12 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 _fileSize
     ) public {
         // Iterate through each chunk and distribute them to nodes
-        console.log("00000", _chunksArr.length);
 
-        require(allNodes.length != 0, "No available nodes found");
-        require(bytes(fileIdToFileHash[_uniqueId]).length == 0, "Duplicate File Id");
+        require(allNodes.length != 0, "storeFile: No available nodes found");
+        require(
+            bytes32(getFileHash(_uniqueId)) == bytes32(0),
+            "storeFile: Duplicate File Id"
+        );
 
         for (uint256 i = 0; i < _chunksArr.length; i++) {
             delete chunkStorageNodeTempAddress;
@@ -75,12 +76,17 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 maxDuplicationNum = allNodes.length;
             }
 
-            console.log("11111", chunkDuplicationCounter, maxDuplicationNum);
+            console.log(
+                "Duplication started",
+                chunkDuplicationCounter,
+                maxDuplicationNum
+            );
 
             while (chunkDuplicationCounter < maxDuplicationNum) {
-                address selectedNodeAddress = findAvailableNode(chunkSize, chunkStorageNodeTempAddress);
-
-                console.log("22222", selectedNodeAddress);
+                address selectedNodeAddress = findAvailableNode(
+                    chunkSize,
+                    chunkStorageNodeTempAddress
+                );
 
                 emit logAddress(selectedNodeAddress);
 
@@ -91,7 +97,12 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 chunkDuplicationCounter++;
 
                 // Pass the file ID along with node address and chunk data
-                storeChunkInNode(selectedNodeAddress, _chunksArr[i], _uniqueId, i);
+                storeChunkInNode(
+                    selectedNodeAddress,
+                    _chunksArr[i],
+                    _uniqueId,
+                    i
+                );
 
                 // Update available storage of the current node
                 updateAvailableStorage(
@@ -101,6 +112,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
                 // emit logAddress(selectedNodeAddress);
             }
+
+            console.log("storeFile: Duplication done. chunk number - ", i);
         }
 
         delete chunkStorageNodeTempAddress;
@@ -127,12 +140,24 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _uniqueId,
         uint256 _fileSize
     ) internal {
-        require(msg.sender != address(0));
-        require(bytes(_fileType).length > 0);
-        require(bytes(_fileName).length > 0);
-        require(bytes32(_fileHash).length > 0);
-        require(_fileSize > 0);
-        require(bytes(_uniqueId).length > 0);
+        require(msg.sender != address(0), "storeFileMetadata: Invalid sender");
+        require(
+            bytes(_fileType).length > 0,
+            "storeFileMetadata: Invalid _fileType"
+        );
+        require(
+            bytes(_fileName).length > 0,
+            "storeFileMetadata: Invalid _fileName"
+        );
+        require(
+            bytes32(_fileHash) != bytes32(0),
+            "storeFileMetadata: Invalid _fileHash"
+        );
+        require(_fileSize > 0, "storeFileMetadata: Invalid _fileSize");
+        require(
+            bytes(_uniqueId).length > 0,
+            "storeFileMetadata: Invalid _uniqueId"
+        );
 
         addressToFile[msg.sender].push(
             FileMetadata(
@@ -169,17 +194,35 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         for (uint256 i = 0; i < filesArr.length; i++) {
             if (compareStrings(filesArr[i].fileId, _fileId)) {
-                return FileRetrieve(filesArr[i], retrieveChunkNodeAddresses(_fileId));
+                return
+                    FileRetrieve(
+                        filesArr[i],
+                        retrieveChunkNodeAddresses(_fileId)
+                    );
             }
         }
 
-        address [] memory dummyAddr;
-        FileMetadata memory dummy = FileMetadata("", "", "", bytes32(0), 0, 0, address(0), "");
+        require(false, "retrieveFileDetails: File Not Found");
+
+        address[] memory dummyAddr;
+        FileMetadata memory dummy = FileMetadata(
+            "",
+            "",
+            "",
+            bytes32(0),
+            0,
+            0,
+            address(0),
+            ""
+        );
         return FileRetrieve(dummy, dummyAddr);
     }
 
     function deleteFile(string memory _fileId) public {
-        require(addressToFile[msg.sender].length > 0, "Invalid file id");
+        require(
+            addressToFile[msg.sender].length > 0,
+            "deleteFile: Invalid file id"
+        );
 
         FileMetadata[] memory filesArr = addressToFile[msg.sender];
 
@@ -189,18 +232,28 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         FileMetadata memory fileToRemove;
 
+        bool isFileFound = false;
         // SWAP last and fileId index
-
         for (uint256 i = 0; i < filesArr.length; i++) {
             if (compareStrings(filesArr[i].fileId, _fileId)) {
+                isFileFound = true;
                 fileToRemove = filesArr[i];
                 addressToFile[msg.sender][i] = lastFile;
             }
         }
+
+        require(isFileFound, "deleteFile: File Not found");
+
         addressToFile[msg.sender][lastIndex] = fileToRemove;
 
         // Delete last index as its the intended file
         addressToFile[msg.sender].pop();
+
+        // Delete Chunks from node adrresses
+        deleteChunkInNode(_fileId);
+
+        // Delete File Hash
+        deleteFileHash(_fileId);
 
         emit FileRemoved(msg.sender, _fileId);
     }
