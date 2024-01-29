@@ -6,6 +6,19 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "logAddress",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -56,14 +69,8 @@
 					}
 				],
 				"name": "deleteChunkInNode",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -135,6 +142,30 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "nodeChunks",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"name": "nodes",
@@ -188,27 +219,14 @@
 						"internalType": "string",
 						"name": "_chunk",
 						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
 					}
 				],
 				"name": "storeChunkInNode",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_nodeAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_newStorage",
-						"type": "uint256"
-					}
-				],
-				"name": "updateAvailableStorage",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -242,11 +260,11 @@
 	},
 	"sources": {
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x141cd01ff2dd4517e5c28a9d90019230c99f6a6c200910972c1bafa74d67db26",
+			"keccak256": "0x95ff19aa64be732888b09788ebc3020eeb2b467b2403f63561b4d91703719d8e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://807ba4ada6dd5ba5c3f01dc07088d9d7a642fb988c9d9ff64e0cdc82c904a18c",
-				"dweb:/ipfs/QmehKSTczcK1YKK1ZoE89jFUHxKBqixzFjm3Z8k1Q645Yx"
+				"bzz-raw://047c9d5adb16cf042840ecb97cc927dc96ab06373babef6b8058de101e0218ae",
+				"dweb:/ipfs/QmdRCsRDu838mcagQezZMroVVSFCkyJ4dYS1k2saGX4fNF"
 			]
 		}
 	},

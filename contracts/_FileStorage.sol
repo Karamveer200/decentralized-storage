@@ -7,6 +7,8 @@ import "./_NodeManager.sol";
 contract FileStorageManager is ChunkManager, NodeManager {
     address public owner;
 
+    event logNumber(uint256);
+
     event FileUploaded(
         string fileId,
         string fileName,
@@ -14,7 +16,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
         bytes32 fileHash,
         uint256 fileSize,
         uint256 uploadTime,
-        address uploader
+        address uploader,
+        address[] fileStorageNodeAddress
     );
 
     event FileRemoved(address uploader, string fileId);
@@ -61,6 +64,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
             while (chunkDuplicationCounter < maxDuplicationNum) {
                 chunkDuplicationCounter++;
                 address selectedNodeAddress = findAvailableNode(chunkSize);
+                emit logNumber(chunkSize);
+                emit logAddress(selectedNodeAddress);
                 require(
                     selectedNodeAddress != address(0),
                     "No available nodes"
@@ -70,15 +75,18 @@ contract FileStorageManager is ChunkManager, NodeManager {
                     !isAddressPresent(selectedNodeAddress, nodeAddressOfChunks)
                 ) {
                     nodeAddressOfChunks.push(selectedNodeAddress);
+                    // emit logNumber(5000);
                 }
 
-                storeChunkInNode(selectedNodeAddress, _chunksArr[i]);
+                // Pass the file ID along with node address and chunk data
+                storeChunkInNode(selectedNodeAddress, _chunksArr[i], _uniqueId);
 
                 // Update available storage of the current node
                 updateAvailableStorage(
                     selectedNodeAddress,
                     nodes[selectedNodeAddress].availableStorage - chunkSize
                 );
+                // emit logAddress(selectedNodeAddress);
             }
         }
 
@@ -118,6 +126,14 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         delete nodeAddressOfChunks;
 
+        // uint256 index = uint256(keccak256(abi.encodePacked(_uniqueId)));
+
+        //trying to make it so it tracks to right uniqueId but it is not working right now, need to think of a better way
+        // for(uint256 i = 0;i <= index;i++){
+        // if(i!=index){
+        //     addressToFile[msg.sender].push(FileMetadata("", "", "", bytes32(0), 0, 0, address(0), "", new address[](0)));
+        // }
+        //  if(i==index){
         addressToFile[msg.sender].push(
             FileMetadata(
                 _uniqueId,
@@ -131,6 +147,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 _fileStorageNodeAddress
             )
         );
+        // }
+        // }
 
         emit FileUploaded(
             _uniqueId,
@@ -139,18 +157,35 @@ contract FileStorageManager is ChunkManager, NodeManager {
             _fileHash,
             _fileSize,
             block.timestamp,
-            msg.sender
+            msg.sender,
+            _fileStorageNodeAddress //for debugging purposes
         );
     }
 
-    function retrieveFile(uint256 _fileId) public view returns (bytes32) {
-        require(
-            addressToFile[msg.sender][_fileId].ownerAddress == msg.sender,
-            "Unauthenticated or file not found"
-        );
+    //currently retreive function mapping is storing in array, so first file hash is stored at index 0, 2nd file at index 1...
+    function retrieveFileHash(string memory _fileId)
+        public
+        view
+        returns (FileMetadata memory)
+    {
+        // require(
+        //     addressToFile[msg.sender][_fileId].ownerAddress == msg.sender,
+        //     "Unauthenticated or file not found"
+        // );
 
         // Return file hash
-        return addressToFile[msg.sender][_fileId].fileHash;
+
+        FileMetadata[] memory filesArr = addressToFile[msg.sender];
+
+        for (uint256 i = 0; i < filesArr.length; i++) {
+            if (compareStrings(filesArr[i].fileId, _fileId)) {
+                return filesArr[i];
+            }
+        }
+
+        address[] memory empty;
+
+        return FileMetadata('','','',bytes32(0),0,0,address(0),'',empty);
     }
 
     function deleteFile(string memory _fileId) public {

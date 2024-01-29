@@ -73,9 +73,41 @@
 						"internalType": "address",
 						"name": "uploader",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address[]",
+						"name": "fileStorageNodeAddress",
+						"type": "address[]"
 					}
 				],
 				"name": "FileUploaded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "logAddress",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "logNumber",
 				"type": "event"
 			},
 			{
@@ -148,14 +180,8 @@
 					}
 				],
 				"name": "deleteChunkInNode",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -253,6 +279,30 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "nodeChunks",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"name": "nodes",
@@ -324,17 +374,64 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "_fileId",
-						"type": "uint256"
+						"type": "string"
 					}
 				],
-				"name": "retrieveFile",
+				"name": "retrieveFileHash",
 				"outputs": [
 					{
-						"internalType": "bytes32",
+						"components": [
+							{
+								"internalType": "string",
+								"name": "fileId",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "fileName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "fileType",
+								"type": "string"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "fileHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "uint256",
+								"name": "fileSize",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "uploadTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "ownerAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "fileEncoding",
+								"type": "string"
+							},
+							{
+								"internalType": "address[]",
+								"name": "fileStorageNodeAddress",
+								"type": "address[]"
+							}
+						],
+						"internalType": "struct FileStorageManager.FileMetadata",
 						"name": "",
-						"type": "bytes32"
+						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
@@ -350,6 +447,11 @@
 					{
 						"internalType": "string",
 						"name": "_chunk",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileId",
 						"type": "string"
 					}
 				],
@@ -462,24 +564,6 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_nodeAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_newStorage",
-						"type": "uint256"
-					}
-				],
-				"name": "updateAvailableStorage",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -510,27 +594,27 @@
 	},
 	"sources": {
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x74f45ced43336946d0375d00f81c83a466107d40d353b99fde0e39b4f5838a63",
+			"keccak256": "0x42c2af194ab893aae834efb3f71b1ffe4505efe7220fe88ce9993c4bb71394df",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4f2883fde757679ed34e173abdfefa1345c47edeb219d8616e313bc04b0aa8f4",
-				"dweb:/ipfs/QmT27ZCqKivSMHWXcuX94RPUR7HtkXUWBMZaWwurw8CmM7"
+				"bzz-raw://b22c9e81b3c35cc129505e7bbddef6899a2a05cc74952ac650b224b93d9036c2",
+				"dweb:/ipfs/QmYkCpY52tWvBA8FxqhgHtNhbjxA1vJNYyim7r3D9TvD2J"
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0x66095fc15a9fcb9004a0e311c5a105af3851dff79e6c323d949159f8b49b55af",
+			"keccak256": "0xc57cf1df279df8d391c4de57e6e7b278893b5423e90b5dee1bf8fe8e836f488c",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://220365953463036976dcfd609efa96c76d4e7014f2ee3d879b7aaad42238c746",
-				"dweb:/ipfs/QmYrsJLKF5cKBx7MPm94EtUZifkdGt8DhYAwmcbeDSBn3S"
+				"bzz-raw://ed19142a33c7a2a32117a9a5b40c55fb4255785ba022abdaa876bfb0e84efe9f",
+				"dweb:/ipfs/QmYngUNEzjCqTfXpzfi1XjuWQhTKBgZaUD5UwtiArbb8G3"
 			]
 		},
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0xd50fd8931b58ad8afa1ab1630bd6865dcef021ebce86e9e4aa5d3e452625a93e",
+			"keccak256": "0x95ff19aa64be732888b09788ebc3020eeb2b467b2403f63561b4d91703719d8e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://10139ee9abdfd505fa018781b035c6b33298164ae7995bd3074b80251bdb3ed4",
-				"dweb:/ipfs/QmbGMRVaQ49cc1xscFMZkjKBYx9yc4EexbLfcJbNEXZzL7"
+				"bzz-raw://047c9d5adb16cf042840ecb97cc927dc96ab06373babef6b8058de101e0218ae",
+				"dweb:/ipfs/QmdRCsRDu838mcagQezZMroVVSFCkyJ4dYS1k2saGX4fNF"
 			]
 		}
 	},
