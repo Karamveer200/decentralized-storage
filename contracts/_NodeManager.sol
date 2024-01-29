@@ -7,30 +7,53 @@ contract NodeManager {
         uint256 availableStorage;
     }
 
+    event logAddress(address);
+    event logAddress2(address);
+    event logNumber(uint256);
+
+
     mapping(address => Node) public nodes;
+    mapping(address => mapping(string => string)) public nodeChunks; // Mapping from node address to fileId to chunk data
     address[] public allNodes;
 
+    //
+
     function addNode(address _nodeAddress, uint256 _initialStorage) public {
-        require(nodes[_nodeAddress].nodeAddress == address(0), "Node already exists");
-        nodes[_nodeAddress] = Node(_nodeAddress, _initialStorage);
-        allNodes.push(_nodeAddress);
+        require(nodes[address(_nodeAddress)].nodeAddress == address(0), "Node already exists");
+        
+        // Create a new Node and initialize it
+        nodes[address(_nodeAddress)] = Node({
+            nodeAddress: address(_nodeAddress),
+            availableStorage: _initialStorage
+        });
+        emit logAddress(address(_nodeAddress)); //added for debugging
+        allNodes.push(address(_nodeAddress));
     }
 
-    function updateAvailableStorage(address _nodeAddress, uint256 _newStorage) public {
+    function updateAvailableStorage(address _nodeAddress, uint256 _newStorage) internal {
         require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
         nodes[_nodeAddress].availableStorage = _newStorage;
     }
 
-    function storeChunkInNode(address _nodeAddress, string memory _chunk) public {
-        // TODO: Store the chunk in Node
+    function storeChunkInNode(address _nodeAddress, string memory _chunk, string memory _fileId) public {
+        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+
+        // Store the chunk data in the separate mapping for the given fileId and node address
+        nodeChunks[_nodeAddress][_fileId] = _chunk;
     }
 
     function retrieveChunkInNode(address _nodeAddress, string memory _fileId) public view returns (string memory) {
-        // TODO: Retrieve the chunk in Node
+        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+
+        // Retrieve and return the chunk data from the separate mapping for the given fileId and node address
+        return nodeChunks[_nodeAddress][_fileId];
     }
 
-    function deleteChunkInNode(address _nodeAddress, string memory _fileId) public view returns (string memory) {
-        // TODO: Delete the chunk in Node
+    function deleteChunkInNode(address _nodeAddress, string memory _fileId) public {
+        require(nodes[_nodeAddress].nodeAddress != address(0), "Node does not exist");
+
+        // Delete the chunk data from the separate mapping for the given fileId and node address
+        delete nodeChunks[_nodeAddress][_fileId];
     }
 
     function getAllNodes() public view returns (address[] memory) {
@@ -41,7 +64,7 @@ contract NodeManager {
         return nodes[_nodeAddress];
     }
 
-    function findAvailableNode(uint256 _chunkSize) public view returns (address) {                              //Changed to public for testing
+    function findAvailableNode(uint256 _chunkSize) public returns (address) {
         uint256 numNodes = allNodes.length;
         uint256 sizeOffset = 50;
 
@@ -55,6 +78,7 @@ contract NodeManager {
         // Iterate through the nodes starting from the pseudo-random index
         for (uint256 i = 0; i < numNodes; i++) {
             address node = allNodes[(randomIndex + i) % numNodes];
+            emit logNumber(randomIndex);
             if (nodes[node].availableStorage > _chunkSize + sizeOffset) {
                 // Randomly return the first node found with available storage
                 return node;

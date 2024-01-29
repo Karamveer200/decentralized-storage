@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
-import "hardhat/console.sol";
+
 import "./_ChunkManager.sol";
 import "./_NodeManager.sol";
 
@@ -19,6 +19,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
     event FileRemoved(address uploader, string fileId);
 
+
     struct FileMetadata {
         string fileId;
         string fileName;
@@ -28,12 +29,14 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 uploadTime;
         address ownerAddress;
         string fileEncoding;
-        address[] fileStorageNodeAddress;
     }
+
+    address[] chunkStorageNodeTempAddress;
 
     // Mapping from address to FileMetadata
     mapping(address => FileMetadata[]) private addressToFile;
-    address[] nodeAddressOfChunks;
+    mapping(address => mapping(string => mapping(uint256 => address[])))
+        private nodeAddressOfChunks;
 
     constructor() NodeManager() {
         owner = msg.sender;
@@ -46,13 +49,17 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _fileEncoding,
         string memory _uniqueId,
         uint256 _fileSize
-    ) public returns (address[] memory) {
-        console.log("log 1",_fileName);
+    ) public {
         // Iterate through each chunk and distribute them to nodes
         for (uint256 i = 0; i < _chunksArr.length; i++) {
+            delete chunkStorageNodeTempAddress;
+
             uint256 chunkSize = bytes(_chunksArr[i]).length;
 
             uint256 chunkDuplicationCounter = 0;
+
+            uint256 breakLoopTimeoutCount = 0;
+
             uint256 maxDuplicationNum = numMaxChunksDuplication;
 
             if (allNodes.length < 3) {
@@ -60,28 +67,54 @@ contract FileStorageManager is ChunkManager, NodeManager {
             }
 
             while (chunkDuplicationCounter < maxDuplicationNum) {
-                chunkDuplicationCounter++;
+                require(
+                    breakLoopTimeoutCount < 20,
+                    "Invalid Storage operation"
+                );
+                
                 address selectedNodeAddress = findAvailableNode(chunkSize);
+                
                 require(
                     selectedNodeAddress != address(0),
                     "No available nodes"
                 );
 
+                emit logAddress(selectedNodeAddress);
+
                 if (
-                    !isAddressPresent(selectedNodeAddress, nodeAddressOfChunks)
+                    !isAddressPresent(
+                        selectedNodeAddress,
+                        chunkStorageNodeTempAddress
+                    )
                 ) {
-                    nodeAddressOfChunks.push(selectedNodeAddress);
+                    breakLoopTimeoutCount = 0;
+                    chunkStorageNodeTempAddress.push(selectedNodeAddress);
+
+                    emit logAddress2(selectedNodeAddress);
+
+                    chunkDuplicationCounter++;
+
+                    // Pass the file ID along with node address and chunk data
+                    storeChunkInNode(
+                        selectedNodeAddress,
+                        _chunksArr[i],
+                        _uniqueId
+                    );
+
+                    // Update available storage of the current node
+                    updateAvailableStorage(
+                        selectedNodeAddress,
+                        nodes[selectedNodeAddress].availableStorage - chunkSize
+                    );
                 }
-
-                storeChunkInNode(selectedNodeAddress, _chunksArr[i]);
-
-                // Update available storage of the current node
-                updateAvailableStorage(
-                    selectedNodeAddress,
-                    nodes[selectedNodeAddress].availableStorage - chunkSize
-                );
+                else{
+                    breakLoopTimeoutCount++;
+                }
+                // emit logAddress(selectedNodeAddress);
             }
         }
+
+        delete chunkStorageNodeTempAddress;
 
         bytes32 getFileHash = createHash(_chunksArr);
 
@@ -92,12 +125,9 @@ contract FileStorageManager is ChunkManager, NodeManager {
             _fileType,
             getFileHash,
             _fileEncoding,
-            nodeAddressOfChunks,
             _uniqueId,
             _fileSize
         );
-
-        return nodeAddressOfChunks;
     }
 
     function storeFileMetadata(
@@ -105,19 +135,15 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _fileType,
         bytes32 _fileHash,
         string memory _fileEncoding,
-        address[] memory _fileStorageNodeAddress,
         string memory _uniqueId,
         uint256 _fileSize
-    ) public {
+    ) internal {
         require(msg.sender != address(0));
         require(bytes(_fileType).length > 0);
         require(bytes(_fileName).length > 0);
         require(bytes32(_fileHash).length > 0);
-        require(_fileStorageNodeAddress.length > 0);
         require(_fileSize > 0);
         require(bytes(_uniqueId).length > 0);
-
-        delete nodeAddressOfChunks;
 
         addressToFile[msg.sender].push(
             FileMetadata(
@@ -128,8 +154,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 _fileSize,
                 block.timestamp,
                 msg.sender,
-                _fileEncoding,
-                _fileStorageNodeAddress
+                _fileEncoding
             )
         );
 
@@ -144,14 +169,22 @@ contract FileStorageManager is ChunkManager, NodeManager {
         );
     }
 
-    function retrieveFile(uint256 _fileId) public view returns (bytes32) {
-        require(
-            addressToFile[msg.sender][_fileId].ownerAddress == msg.sender,
-            "Unauthenticated or file not found"
-        );
+    function retrieveFileHash(string memory _fileId)
+        public
+        view
+        returns (FileMetadata memory)
+    {
+        // Return File meta data
 
-        // Return file hash
-        return addressToFile[msg.sender][_fileId].fileHash;
+        FileMetadata[] memory filesArr = addressToFile[msg.sender];
+
+        for (uint256 i = 0; i < filesArr.length; i++) {
+            if (compareStrings(filesArr[i].fileId, _fileId)) {
+                return filesArr[i];
+            }
+        }
+
+        return FileMetadata("", "", "", bytes32(0), 0, 0, address(0), "");
     }
 
     function deleteFile(string memory _fileId) public {
