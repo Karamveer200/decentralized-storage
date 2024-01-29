@@ -102,6 +102,19 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "logAddress2",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -602,19 +615,19 @@
 			]
 		},
 		"contracts/_FileStorage.sol": {
-			"keccak256": "0xc57cf1df279df8d391c4de57e6e7b278893b5423e90b5dee1bf8fe8e836f488c",
+			"keccak256": "0x1ba252ad2e32388235e11dcf72346aed7f4373d37f0eb4144eb8cd295787aa39",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://ed19142a33c7a2a32117a9a5b40c55fb4255785ba022abdaa876bfb0e84efe9f",
-				"dweb:/ipfs/QmYngUNEzjCqTfXpzfi1XjuWQhTKBgZaUD5UwtiArbb8G3"
+				"bzz-raw://066e25985a932808f4c267b9dd1c0538e73f2d104f41766e7f61252e8c621607",
+				"dweb:/ipfs/Qma1oYwKkkThz9fruvJcH4jA6UeW6zebfT3WpDqCxn6CPS"
 			]
 		},
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x95ff19aa64be732888b09788ebc3020eeb2b467b2403f63561b4d91703719d8e",
+			"keccak256": "0xb77f4b5c62416530828d60f5bed65bee7ad41f937682fe9a99bf1f17eaae04e0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://047c9d5adb16cf042840ecb97cc927dc96ab06373babef6b8058de101e0218ae",
-				"dweb:/ipfs/QmdRCsRDu838mcagQezZMroVVSFCkyJ4dYS1k2saGX4fNF"
+				"bzz-raw://19e77f82f468fbe2f54182fb9cf036ee85fcfeb93a83cb3ef0c94e419ae631ca",
+				"dweb:/ipfs/QmdN1ZX6m9x3zb4bdgNHYuec7eg7GZzUQWraMHRjPVVhX1"
 			]
 		}
 	},

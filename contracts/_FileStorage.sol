@@ -7,7 +7,6 @@ import "./_NodeManager.sol";
 contract FileStorageManager is ChunkManager, NodeManager {
     address public owner;
 
-    event logNumber(uint256);
 
     event FileUploaded(
         string fileId,
@@ -31,12 +30,16 @@ contract FileStorageManager is ChunkManager, NodeManager {
         uint256 uploadTime;
         address ownerAddress;
         string fileEncoding;
-        address[] fileStorageNodeAddress;
+        mapping(string  => mapping(uint256 => address[])) fileStorageNodeAddress;
+    }
+
+        struct TempNodeAddresses {
+        address[] chunkStorageNodeAddress;
     }
 
     // Mapping from address to FileMetadata
     mapping(address => FileMetadata[]) private addressToFile;
-    address[] nodeAddressOfChunks;
+    mapping(address => mapping(string  => mapping(uint256 => address[] ))) private nodeAddressOfChunks;
 
     constructor() NodeManager() {
         owner = msg.sender;
@@ -62,21 +65,19 @@ contract FileStorageManager is ChunkManager, NodeManager {
             }
 
             while (chunkDuplicationCounter < maxDuplicationNum) {
-                chunkDuplicationCounter++;
+                
                 address selectedNodeAddress = findAvailableNode(chunkSize);
-                emit logNumber(chunkSize);
-                emit logAddress(selectedNodeAddress);
                 require(
                     selectedNodeAddress != address(0),
                     "No available nodes"
                 );
-
+                    emit logAddress(selectedNodeAddress);
                 if (
-                    !isAddressPresent(selectedNodeAddress, nodeAddressOfChunks)
+                    !isAddressPresent(selectedNodeAddress, nodeAddressOfChunks[msg.sender][_uniqueId][i])
                 ) {
-                    nodeAddressOfChunks.push(selectedNodeAddress);
-                    // emit logNumber(5000);
-                }
+                    nodeAddressOfChunks[msg.sender][_uniqueId][i].push(selectedNodeAddress);
+                    emit logAddress2(selectedNodeAddress);
+                    chunkDuplicationCounter++;
 
                 // Pass the file ID along with node address and chunk data
                 storeChunkInNode(selectedNodeAddress, _chunksArr[i], _uniqueId);
@@ -86,6 +87,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
                     selectedNodeAddress,
                     nodes[selectedNodeAddress].availableStorage - chunkSize
                 );
+                }
                 // emit logAddress(selectedNodeAddress);
             }
         }
@@ -112,19 +114,17 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _fileType,
         bytes32 _fileHash,
         string memory _fileEncoding,
-        address[] memory _fileStorageNodeAddress,
+        mapping(string  => mapping(uint256 => address[])) storage _fileStorageNodeAddress,
         string memory _uniqueId,
         uint256 _fileSize
-    ) public {
+    ) internal {
         require(msg.sender != address(0));
         require(bytes(_fileType).length > 0);
         require(bytes(_fileName).length > 0);
         require(bytes32(_fileHash).length > 0);
-        require(_fileStorageNodeAddress.length > 0);
         require(_fileSize > 0);
         require(bytes(_uniqueId).length > 0);
 
-        delete nodeAddressOfChunks;
 
         // uint256 index = uint256(keccak256(abi.encodePacked(_uniqueId)));
 

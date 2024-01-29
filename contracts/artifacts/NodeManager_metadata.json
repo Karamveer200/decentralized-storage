@@ -19,6 +19,32 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "logAddress2",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "logNumber",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -79,6 +105,11 @@
 						"internalType": "uint256",
 						"name": "_chunkSize",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "addressOfChunks",
+						"type": "address[]"
 					}
 				],
 				"name": "findAvailableNode",
@@ -89,7 +120,7 @@
 						"type": "address"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -260,11 +291,11 @@
 	},
 	"sources": {
 		"contracts/_NodeManager.sol": {
-			"keccak256": "0x95ff19aa64be732888b09788ebc3020eeb2b467b2403f63561b4d91703719d8e",
+			"keccak256": "0x561a5533adfd250a341a54812890ff572dbee79c4ae8e9a97999f2bbe15825b7",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://047c9d5adb16cf042840ecb97cc927dc96ab06373babef6b8058de101e0218ae",
-				"dweb:/ipfs/QmdRCsRDu838mcagQezZMroVVSFCkyJ4dYS1k2saGX4fNF"
+				"bzz-raw://3e110c6e22f32102ef9d594af11ce5155cbdbca0cedc612188ddacf9c4285c33",
+				"dweb:/ipfs/QmYCL5NhWwS2RejjmoZK3sBWbpy8wH2KWJDWnM3SqfrN7u"
 			]
 		}
 	},

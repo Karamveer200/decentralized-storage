@@ -8,6 +8,9 @@ contract NodeManager {
     }
 
     event logAddress(address);
+    event logAddress2(address);
+    event logNumber(uint256);
+
 
     mapping(address => Node) public nodes;
     mapping(address => mapping(string => string)) public nodeChunks; // Mapping from node address to fileId to chunk data
@@ -61,7 +64,7 @@ contract NodeManager {
         return nodes[_nodeAddress];
     }
 
-    function findAvailableNode(uint256 _chunkSize) public view returns (address) {
+    function findAvailableNode(uint256 _chunkSize) public returns (address) {
         uint256 numNodes = allNodes.length;
         uint256 sizeOffset = 50;
 
@@ -75,6 +78,7 @@ contract NodeManager {
         // Iterate through the nodes starting from the pseudo-random index
         for (uint256 i = 0; i < numNodes; i++) {
             address node = allNodes[(randomIndex + i) % numNodes];
+            emit logNumber(randomIndex);
             if (nodes[node].availableStorage > _chunkSize + sizeOffset) {
                 // Randomly return the first node found with available storage
                 return node;
