@@ -18,7 +18,7 @@ contract ChunkManager {
         return fileIdToHash[_fileId];
     }
 
-    function storeFileHash(bytes32 _fileHash, string memory _fileId) public {
+    function storeFileHash(bytes32 _fileHash, string memory _fileId) internal {
         require(msg.sender != address(0), "storeFileHash: Invalid sender");
         require(
             bytes32(_fileHash) != bytes32(0),
@@ -29,7 +29,7 @@ contract ChunkManager {
         fileIdToHash[_fileId] = _fileHash;
     }
 
-    function deleteFileHash(string memory _fileId) public {
+    function deleteFileHash(string memory _fileId) internal {
         require(bytes(_fileId).length > 0, "deleteFileHash: Invalid _fileId");
         require(
             bytes32(fileIdToHash[_fileId]) != bytes32(0),
@@ -47,7 +47,7 @@ contract ChunkManager {
     }
 
     function createHash(string[] memory stringArray)
-        public
+        internal 
         pure
         returns (bytes32)
     {

@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./_ChunkManager.sol";
 import "./_NodeManager.sol";
+import "../utils/Constants.sol";
 import "hardhat/console.sol";
 
 contract FileStorageManager is ChunkManager, NodeManager {
@@ -57,10 +58,10 @@ contract FileStorageManager is ChunkManager, NodeManager {
     ) public {
         // Iterate through each chunk and distribute them to nodes
 
-        require(allNodes.length != 0, "storeFile: No available nodes found");
+        require(allNodes.length != 0, Constants.STORE_FILE_NO_NODES_FOUND);
         require(
             bytes32(getFileHash(_uniqueId)) == bytes32(0),
-            "storeFile: Duplicate File Id"
+            Constants.STORE_FILE_DUPLICATE_FILE_ID
         );
 
         for (uint256 i = 0; i < _chunksArr.length; i++) {
@@ -113,7 +114,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 // emit logAddress(selectedNodeAddress);
             }
 
-            console.log("storeFile: Duplication done. chunk number - ", i);
         }
 
         delete chunkStorageNodeTempAddress;
@@ -140,24 +140,29 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _uniqueId,
         uint256 _fileSize
     ) internal {
-        require(msg.sender != address(0), "storeFileMetadata: Invalid sender");
+        require(
+            msg.sender != address(0),
+            Constants.STORE_FILE_METADATA_INVALID_SENDER
+        );
         require(
             bytes(_fileType).length > 0,
-            "storeFileMetadata: Invalid _fileType"
+            Constants.STORE_FILE_METADATA_INVALID_FILE_TYPE
         );
         require(
             bytes(_fileName).length > 0,
-            "storeFileMetadata: Invalid _fileName"
+            Constants.STORE_FILE_METADATA_INVALID_FILE_NAME
         );
         require(
             bytes32(_fileHash) != bytes32(0),
-            "storeFileMetadata: Invalid _fileHash"
+            Constants.STORE_FILE_METADATA_INVALID_FILE_HASH
         );
-        require(_fileSize > 0, "storeFileMetadata: Invalid _fileSize");
+        require(_fileSize > 0, Constants.STORE_FILE_METADATA_INVALID_FILE_SIZE);
         require(
             bytes(_uniqueId).length > 0,
-            "storeFileMetadata: Invalid _uniqueId"
+            Constants.STORE_FILE_METADATA_INVALID_FILE_ID
         );
+
+        uint256 timeStamp = block.timestamp;
 
         addressToFile[msg.sender].push(
             FileMetadata(
@@ -166,7 +171,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 _fileType,
                 _fileHash,
                 _fileSize,
-                block.timestamp,
+                timeStamp,
                 msg.sender,
                 _fileEncoding
             )
@@ -178,9 +183,22 @@ contract FileStorageManager is ChunkManager, NodeManager {
             _fileType,
             _fileHash,
             _fileSize,
-            block.timestamp,
+            timeStamp,
             msg.sender
         );
+    }
+
+    function retrieveFilesArray()
+        internal
+        view
+        returns (FileMetadata[] memory)
+    {
+        require(
+            msg.sender != address(0),
+            Constants.STORE_FILE_METADATA_INVALID_SENDER
+        );
+
+        return addressToFile[msg.sender];
     }
 
     function retrieveFileDetails(string memory _fileId)
@@ -190,10 +208,14 @@ contract FileStorageManager is ChunkManager, NodeManager {
     {
         // Return File meta data and chunk node addresses
 
-        FileMetadata[] memory filesArr = addressToFile[msg.sender];
+        FileMetadata[] memory filesArr = retrieveFilesArray();
 
         for (uint256 i = 0; i < filesArr.length; i++) {
             if (compareStrings(filesArr[i].fileId, _fileId)) {
+                require(
+                    msg.sender == filesArr[i].ownerAddress,
+                    Constants.RETRIEVE_FILE_DETAILS_UNAUTHORIZED_CALLER_ADDRESS
+                );
                 return
                     FileRetrieve(
                         filesArr[i],
@@ -202,7 +224,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
             }
         }
 
-        require(false, "retrieveFileDetails: File Not Found");
+        require(false, Constants.RETRIEVE_FILE_DETAILS_FILE_NOT_FOUND);
 
         address[] memory dummyAddr;
         FileMetadata memory dummy = FileMetadata(
@@ -221,7 +243,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
     function deleteFile(string memory _fileId) public {
         require(
             addressToFile[msg.sender].length > 0,
-            "deleteFile: Invalid file id"
+            Constants.DELETE_FILE_INVALID_FILE_ID
         );
 
         FileMetadata[] memory filesArr = addressToFile[msg.sender];
@@ -242,7 +264,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
             }
         }
 
-        require(isFileFound, "deleteFile: File Not found");
+        require(isFileFound, Constants.DELETE_FILE_NOT_FOUND);
 
         addressToFile[msg.sender][lastIndex] = fileToRemove;
 

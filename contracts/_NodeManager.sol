@@ -18,7 +18,6 @@ contract NodeManager {
 
     address[] public allNodes;
 
-    //
 
     function addNode(address _nodeAddress, uint256 _initialStorage) public {
         require(
@@ -50,7 +49,7 @@ contract NodeManager {
         string memory _chunk,
         string memory _fileId,
         uint256 order
-    ) public {
+    ) internal {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
             "storeChunkInNode: Invalid _nodeAddress - Node Does NOT exist"
@@ -77,7 +76,7 @@ contract NodeManager {
         return nodeChunksAddresses[_fileId];
     }
 
-    function deleteChunkInNode(string memory _fileId) public {
+    function deleteChunkInNode(string memory _fileId) internal {
         require(
             bytes(_fileId).length > 0,
             "deleteChunkInNode: Invalid _fileId"
@@ -87,12 +86,12 @@ contract NodeManager {
         delete nodeChunksAddresses[_fileId];
     }
 
-    function getAllNodes() public view returns (address[] memory) {
+    function getAllNodes() internal view returns (address[] memory) {
         return allNodes;
     }
 
     function getNodeByAddress(address _nodeAddress)
-        public
+        internal
         view
         returns (Node memory)
     {
@@ -102,7 +101,7 @@ contract NodeManager {
     function findAvailableNode(
         uint256 _chunkSize,
         address[] memory chunkStorageNodeTempAddress
-    ) public returns (address) {
+    ) internal returns (address) {
         uint256 numNodes = allNodes.length;
         uint256 sizeOffset = 50;
 

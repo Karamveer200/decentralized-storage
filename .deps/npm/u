@@ -1,0 +1,8 @@
+/**
+ * Minified by jsDelivr using UglifyJS v3.3.21.
+ * Original file: /npm/u@0.1.0/u.js
+ * 
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var u=function(t,u,i,c){var a="undefined"!=typeof exports?exports:{},n="prototype",r=t[n],e=u[n],o=Function[n],f=(e.reduce,e.map,e.indexOf,o.bind,r.toString),l=e.slice;return a.isArray=u.isArray||function(n){return"[object Array]"==f.call(n)},a.reduce=function(n,r,e,t){if(!n)return e;if(t=t||n,a.isArray(n))for(var o=0,u=n.length,c=n[0];o<u;c=n[++o])e=r.call(t,e,c,o,n);else for(var i in n)e=r.call(t,e,n[i],i,n);return e},a.map=function(n,o,r){return n?(e=a.isArray(n)?new u(n.length):new(n.constructor||t),a.reduce(n,function(n,r,e,t){return n[e]=o.call(this,r,e,t),n},e,r)):n;var e},a.trim=function(n){return n.replace(/(^\s+|\s+$)/g,"")},a.toKV=function(n,r){return a.reduce(n,function(n,r,e){return n.push(i(e)+"="+i(r)),n},[]).join(r||"&")},a.fromKV=function(n,r){return a.reduce(n.split(r||"&"),function(n,r){var e=r.split("="),t=e[0],o=e[1];return t&&(n[c(t)]=c(o)),n},{})},a.extend=function(n,r){return a.reduce(l.call(arguments,1),function(n,r){return a.reduce(r,function(n,r,e){return n[e]=r,n},n)},n)},a.bind=function(n,r){var e=l.call(arguments,2);return function(){return n.apply(r,e.concat(l.call(arguments)))}},a.setCookie=function(n,r,e,t,o,u){var c=document;return u=u||c,e="expires="+(e||"Sun, 24-Mar-2024 11:11:11 GMT"),t="path="+(t||"/"),o="domain="+(o||u.domain),u.cookie=[n+"="+i(r),e,o,t].join("; "),a.fromKV(c.cookie,"; ")},a}(Object,Array,this.encodeURIComponent,this.decodeURIComponent);
+//# sourceMappingURL=/sm/69ff7e9de8db59b66cd586c19752152dd2022a192e0b4acbacdf1314f202e9e8.map
