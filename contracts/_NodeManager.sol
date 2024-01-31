@@ -11,7 +11,7 @@ contract NodeManager {
     event logAddress2(address);
     event logNumber(uint256);
 
-    mapping(address => Node) public nodes;
+    mapping(address => Node) internal nodes;
 
     // Mapping from node address to fileId to chunk data
     mapping(string => address[]) public nodeChunksAddresses;

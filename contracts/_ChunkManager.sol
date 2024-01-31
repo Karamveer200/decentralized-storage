@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 contract ChunkManager {
-    uint256 public numMaxChunksDuplication = 3;
-    uint256 public maxChunkSize = 100;
+    uint256 internal  numMaxChunksDuplication = 3;
+    uint256 internal maxChunkSize = 100;
 
     // Mapping from fileId to fileHash
     mapping(string => bytes32) private fileIdToHash;

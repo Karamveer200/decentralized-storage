@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.22+commit.4fc1097e"
+		"version": "0.8.24+commit.e11b9ed9"
 	},
 	"language": "Solidity",
 	"output": {
@@ -49,7 +49,7 @@
 		},
 		"optimizer": {
 			"enabled": true,
-			"runs": 1
+			"runs": 50
 		},
 		"remappings": []
 	},
@@ -71,11 +71,11 @@
 			]
 		},
 		"contracts/_ChunkManager.sol": {
-			"keccak256": "0x86213e5136df78e74c9e36b1aa3ef45d9bf1f7a95eb7cff4619802015ea13b0e",
+			"keccak256": "0xd859b536ce4247f4de697a8f7f999b9c8043a7e7d073b6470c7d4987d6f6f734",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://cbd503369ff9409b89c624b5e89404fd7b66b118667a2550a0911c0a0ef9e2d0",
-				"dweb:/ipfs/QmfU4Qsh2vxmXHidaWk81dHA8HpdsxpinTF9E9qKp8SJS4"
+				"bzz-raw://63bd29508f535970187c83cc574fe763345847a8a36f5cb3284184c2eb76ed26",
+				"dweb:/ipfs/QmQUC7T2oNAep9BHvPkAcD7yToWXRnSDYD98prbFdbHmQo"
 			]
 		},
 		"contracts/_FileStorage.sol": {

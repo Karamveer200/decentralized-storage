@@ -7,7 +7,7 @@ import "../utils/Constants.sol";
 import "hardhat/console.sol";
 
 contract FileStorageManager is ChunkManager, NodeManager {
-    address public owner;
+    address internal owner;
 
     event FileUploaded(
         string fileId,
