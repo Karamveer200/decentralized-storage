@@ -34,7 +34,7 @@ contract NodeManager {
         allNodes.push(address(_nodeAddress));
     }
 
-    function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
+    function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)                  
         internal
     {
         require(
@@ -44,7 +44,7 @@ contract NodeManager {
         nodes[_nodeAddress].availableStorage = _newStorage;
     }
 
-    function storeChunkInNode(
+    function storeChunkInNode(                  
         address _nodeAddress,
         string memory _chunk,
         string memory _fileId,
@@ -86,11 +86,11 @@ contract NodeManager {
         delete nodeChunksAddresses[_fileId];
     }
 
-    function getAllNodes() internal view returns (address[] memory) {
+    function getAllNodes() internal  view returns (address[] memory) {     
         return allNodes;
     }
 
-    function getNodeByAddress(address _nodeAddress)
+    function getNodeByAddress(address _nodeAddress)                             
         internal
         view
         returns (Node memory)

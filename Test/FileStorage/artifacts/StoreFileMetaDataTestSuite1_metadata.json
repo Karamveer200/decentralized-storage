@@ -1,0 +1,123 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "beforeAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "suite1Case1StoreFileMetaData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "suite1Case2StoreFileMetaData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Test/FileStorage/storeFileMetadata_test.sol": "StoreFileMetaDataTestSuite1"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 1
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Test/FileStorage/storeFileMetadata_test.sol": {
+			"keccak256": "0x6c52273e3f6f46ab3aed56dc8ad1ed0479366bc475c6f773f48472472ce3b8ef",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://b6a76abc907ec36ebea52dfacdf00a88978bce473b8d300d2ef279c6773f673f",
+				"dweb:/ipfs/QmPsHYS2yczvjP32NJCmCdcUiuPZmeE7wT8tpTjjxFuSCN"
+			]
+		},
+		"Test/_AccessInternalFunctions.sol": {
+			"keccak256": "0x7861ac1867ec1e3e83fc17cdc21066630cef280050f9e9237d591e9fe626f5cc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a074e6fc164f732c77c9d2b95777e9279b0cdd721a1b4f15810406f2a72765f2",
+				"dweb:/ipfs/Qmdc5VhRSPXDBp54249jdiRtim8fXTVvyFbkMkD7YnxEcS"
+			]
+		},
+		"contracts/_ChunkManager.sol": {
+			"keccak256": "0x86213e5136df78e74c9e36b1aa3ef45d9bf1f7a95eb7cff4619802015ea13b0e",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://cbd503369ff9409b89c624b5e89404fd7b66b118667a2550a0911c0a0ef9e2d0",
+				"dweb:/ipfs/QmfU4Qsh2vxmXHidaWk81dHA8HpdsxpinTF9E9qKp8SJS4"
+			]
+		},
+		"contracts/_FileStorage.sol": {
+			"keccak256": "0x16d4e5051138f2d942ac3667c3691acd94748c66cb730a6372903e3b3ee57328",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://61ecfd5c5d1d4a4c3de17b1d6e3798dc8fb139ade4e2a09d4eb61ad5abdae724",
+				"dweb:/ipfs/QmYH6U6zp7sBc4RE9qajzANMjaEeVTgYgpUrj796iFhMDd"
+			]
+		},
+		"contracts/_NodeManager.sol": {
+			"keccak256": "0xb4f1d3da86d641782cdb8d56e0144ec7e5cb4411dd9bcef62963ecdd61eedbdc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://9ca3320d1a88ddcdc2fd94b67f0149ba76159c550c78b6712598ebfa1e53520b",
+				"dweb:/ipfs/QmYgD2dViLgUodvCw89hwWPyad96DZUTuWPFks4TgLEAyN"
+			]
+		},
+		"hardhat/console.sol": {
+			"keccak256": "0x7434453e6d3b7d0e5d0eb7846ffdbc27f0ccf3b163591263739b628074dc103a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://49355f780520494d1d5a0f01858385e51bb5280ce0ecfb960f16995065dca395",
+				"dweb:/ipfs/QmSwJ6C5QLz6xKeQZS8wbwjU1KxRFTYfwbGmtzisd5sRW4"
+			]
+		},
+		"remix_tests.sol": {
+			"keccak256": "0xe2783cdc204cba8c72494119339f1d90f9022b15d6c718c668b7f097d8e29787",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://bb6a22e64c7f16bcaab63b1c1a1b269d5be8a6d37bdd9dec1718477ab916b18e",
+				"dweb:/ipfs/QmdkW1tT5iadBvaHMCoskhDGZKnfdg8o1D9CcoQYtdJet7"
+			]
+		},
+		"utils/Constants.sol": {
+			"keccak256": "0x3bc4458aa2d11304d25c1f133031e3d26d1f65bdccc4fc61d30b2d669fce1448",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://14c658c8c0c474d3788f996bc77dfe0e921e068335448c7186a6b33488d8e537",
+				"dweb:/ipfs/QmNet8QKbp1cEyzYqwUtcRbqdE1nJDZoY7ADrdwn2fnCcz"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,773 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "uploader",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "fileId",
+						"type": "string"
+					}
+				],
+				"name": "FileRemoved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "fileId",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "fileName",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "fileType",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "fileHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "fileSize",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "uploadTime",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "uploader",
+						"type": "address"
+					}
+				],
+				"name": "FileUploaded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "logAddress",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "logAddress2",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "logNumber",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_initialStorage",
+						"type": "uint256"
+					}
+				],
+				"name": "addNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_initialStorage",
+						"type": "uint256"
+					}
+				],
+				"name": "addNodeDerived",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "allNodes",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string[]",
+						"name": "stringArray",
+						"type": "string[]"
+					}
+				],
+				"name": "createHashDerived",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "deleteFile",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "deleteFileHashDerived",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAllNodesDerived",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "getFileHashDerived",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					}
+				],
+				"name": "getNodeByAddressDerived",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "nodeAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "availableStorage",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct NodeManager.Node",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "maxChunkSize",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "nodeChunksAddresses",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "nodes",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "availableStorage",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "numMaxChunksDuplication",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "retrieveChunkNodeAddresses",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "retrieveChunkNodeAddressesDerived",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "retrieveFileDetails",
+				"outputs": [
+					{
+						"components": [
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "fileId",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "fileName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "fileType",
+										"type": "string"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "fileHash",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint256",
+										"name": "fileSize",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "uploadTime",
+										"type": "uint256"
+									},
+									{
+										"internalType": "address",
+										"name": "ownerAddress",
+										"type": "address"
+									},
+									{
+										"internalType": "string",
+										"name": "fileEncoding",
+										"type": "string"
+									}
+								],
+								"internalType": "struct FileStorageManager.FileMetadata",
+								"name": "file",
+								"type": "tuple"
+							},
+							{
+								"internalType": "address[]",
+								"name": "chunkNodeAddresses",
+								"type": "address[]"
+							}
+						],
+						"internalType": "struct FileStorageManager.FileRetrieve",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "retrieveFilesArrayDervied",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "fileId",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "fileName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "fileType",
+								"type": "string"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "fileHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "uint256",
+								"name": "fileSize",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "uploadTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "ownerAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "fileEncoding",
+								"type": "string"
+							}
+						],
+						"internalType": "struct FileStorageManager.FileMetadata[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_chunk",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_order",
+						"type": "uint256"
+					}
+				],
+				"name": "storeChunkInNodeDerived",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string[]",
+						"name": "_chunksArr",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileType",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileEncoding",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_uniqueId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_fileSize",
+						"type": "uint256"
+					}
+				],
+				"name": "storeFile",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_fileHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileId",
+						"type": "string"
+					}
+				],
+				"name": "storeFileHashDerived",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_fileName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileType",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_fileHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_fileEncoding",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_uniqueId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_fileSize",
+						"type": "uint256"
+					}
+				],
+				"name": "storeFileMetadataDerived",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_nodeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_newStorage",
+						"type": "uint256"
+					}
+				],
+				"name": "updateAvailableStorageDerived",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_fileHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_uniqueId",
+						"type": "string"
+					}
+				],
+				"name": "validateFileAuthenticityDerived",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Test/_AccessInternalFunctions.sol": "AccessInternalFunctions"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 5
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Test/_AccessInternalFunctions.sol": {
+			"keccak256": "0x7861ac1867ec1e3e83fc17cdc21066630cef280050f9e9237d591e9fe626f5cc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a074e6fc164f732c77c9d2b95777e9279b0cdd721a1b4f15810406f2a72765f2",
+				"dweb:/ipfs/Qmdc5VhRSPXDBp54249jdiRtim8fXTVvyFbkMkD7YnxEcS"
+			]
+		},
+		"contracts/_ChunkManager.sol": {
+			"keccak256": "0x86213e5136df78e74c9e36b1aa3ef45d9bf1f7a95eb7cff4619802015ea13b0e",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://cbd503369ff9409b89c624b5e89404fd7b66b118667a2550a0911c0a0ef9e2d0",
+				"dweb:/ipfs/QmfU4Qsh2vxmXHidaWk81dHA8HpdsxpinTF9E9qKp8SJS4"
+			]
+		},
+		"contracts/_FileStorage.sol": {
+			"keccak256": "0x16d4e5051138f2d942ac3667c3691acd94748c66cb730a6372903e3b3ee57328",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://61ecfd5c5d1d4a4c3de17b1d6e3798dc8fb139ade4e2a09d4eb61ad5abdae724",
+				"dweb:/ipfs/QmYH6U6zp7sBc4RE9qajzANMjaEeVTgYgpUrj796iFhMDd"
+			]
+		},
+		"contracts/_NodeManager.sol": {
+			"keccak256": "0xb4f1d3da86d641782cdb8d56e0144ec7e5cb4411dd9bcef62963ecdd61eedbdc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://9ca3320d1a88ddcdc2fd94b67f0149ba76159c550c78b6712598ebfa1e53520b",
+				"dweb:/ipfs/QmYgD2dViLgUodvCw89hwWPyad96DZUTuWPFks4TgLEAyN"
+			]
+		},
+		"hardhat/console.sol": {
+			"keccak256": "0x7434453e6d3b7d0e5d0eb7846ffdbc27f0ccf3b163591263739b628074dc103a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://49355f780520494d1d5a0f01858385e51bb5280ce0ecfb960f16995065dca395",
+				"dweb:/ipfs/QmSwJ6C5QLz6xKeQZS8wbwjU1KxRFTYfwbGmtzisd5sRW4"
+			]
+		},
+		"utils/Constants.sol": {
+			"keccak256": "0x3bc4458aa2d11304d25c1f133031e3d26d1f65bdccc4fc61d30b2d669fce1448",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://14c658c8c0c474d3788f996bc77dfe0e921e068335448c7186a6b33488d8e537",
+				"dweb:/ipfs/QmNet8QKbp1cEyzYqwUtcRbqdE1nJDZoY7ADrdwn2fnCcz"
+			]
+		}
+	},
+	"version": 1
+}
