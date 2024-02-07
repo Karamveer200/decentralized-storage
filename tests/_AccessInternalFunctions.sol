@@ -4,8 +4,6 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "../contracts/_FileStorage.sol";
 
-
-
 contract AccessInternalFunctions is FileStorageManager {
     function storeFileMetadataDerived(
         string memory _fileName,
@@ -26,20 +24,11 @@ contract AccessInternalFunctions is FileStorageManager {
             );
     }
 
-    function createHashDerived(string[] memory stringArray)
-        public
-        pure
-        returns (bytes32)
-    {
-        return createHash(stringArray);
-    }
-
     function retrieveFilesArrayDervied() public view returns (FileMetadata[] memory){
         return retrieveFilesArray();
     }
 
     //NodeManager Functions
-
     function getNodeByAddressDerived(address _nodeAddress)
         public
         view
@@ -54,11 +43,11 @@ contract AccessInternalFunctions is FileStorageManager {
 
     function storeChunkInNodeDerived(
         address _nodeAddress,
-        string memory _chunk,
+        uint256 _chunkSize,
         string memory _fileId,
-        uint256 _order
+        string memory _chunkHash
     ) public {
-        storeChunkInNode(_nodeAddress, _chunk, _fileId, _order);
+        storeChunkInNode(_nodeAddress, _chunkSize, _fileId, _chunkHash);
     }
 
     function updateAvailableStorageDerived(address _nodeAddress, uint256 _newStorage) public {
@@ -75,7 +64,6 @@ contract AccessInternalFunctions is FileStorageManager {
 
 
     //ChunkManager Functions
-
     function storeFileHashDerived(bytes32 _fileHash, string memory _fileId) public {
         storeFileHash(_fileHash, _fileId);
     }

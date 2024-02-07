@@ -24,21 +24,28 @@ contract PositiveFileStorageTestSuite {
     // Positive Case: Retrieve file details for an existing file
     function positiveCase1RetrieveFileDetails() public {
         // Store a file first to have something to retrieve
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+        uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
-      fileStorage.storeFile(
-                chunksSizeArr,
-                Constants.TEST_FILE_1_NAME,
-                Constants.TEST_FILE_1_TYPE,
-                Constants.TEST_FILE_1_ENCODING,
-                Constants.TEST_FILE_1_ID,
-                Constants.TEST_FILE_1_SIZE,
-                Constants.TEST_FILE_1_HASH
-            )
+        string[] memory chunksHashesArr = new string[](4);
+        chunksHashesArr[0] = "127125$1821";
+        chunksHashesArr[1] = "91768612$1212";
+        chunksHashesArr[2] = "1@72673512@%$";
+        chunksHashesArr[3] = "0188712$1812";
+
+        fileStorage.storeFile(
+            chunksSizeArr,
+            Constants.TEST_FILE_1_NAME,
+            Constants.TEST_FILE_1_TYPE,
+            Constants.TEST_FILE_1_ENCODING,
+            Constants.TEST_FILE_1_ID,
+            Constants.TEST_FILE_1_SIZE,
+            Constants.TEST_FILE_1_HASH,
+            chunksHashesArr
+        );
         bytes32 getFileHash = bytes32("hash");
 
         address[] memory nodeAddressOfStoredChunk = fileStorage
@@ -56,7 +63,8 @@ contract PositiveFileStorageTestSuite {
                     msg.sender,
                     Constants.TEST_FILE_1_ENCODING
                 ),
-                nodeAddressOfStoredChunk
+                nodeAddressOfStoredChunk,
+                chunksHashesArr
             );
 
         // Check if the retrieved file details match the expected values
@@ -89,7 +97,7 @@ contract PositiveFileStorageTestSuite {
 
         // Check if the chunk node addresses array is not empty
         Assert.equal(
-            nodeAddressOfStoredChunk.length>0,
+            nodeAddressOfStoredChunk.length > 0,
             true,
             "Chunk node addresses should not be empty"
         );
@@ -97,7 +105,7 @@ contract PositiveFileStorageTestSuite {
 }
 
 contract NegativeFileStorageTestSuite {
-        FileStorageManager fileStorage;
+    FileStorageManager fileStorage;
 
     function beforeAll() public {
         fileStorage = new FileStorageManager();
@@ -110,7 +118,6 @@ contract NegativeFileStorageTestSuite {
             Constants.TEST_RANDOM_NODE_SIZE_10000
         );
     }
-
 
     // Negative Case: Attempt to retrieve details for a non-existing file
     function negativeCase1RetrieveFileDetailsNonExisting() public {

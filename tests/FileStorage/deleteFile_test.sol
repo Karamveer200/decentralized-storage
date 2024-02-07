@@ -27,22 +27,29 @@ contract DeleteFileTestSuite {
     // Case 1 - Delete a file successfully
     function case1DeleteFile() public {
         // Add a file
-          uint256[] memory chunksSizeArr = new uint256[](4);
+        uint256[] memory chunksSizeArr = new uint256[](4);
         chunksSizeArr[0] = 10;
         chunksSizeArr[1] = 20;
         chunksSizeArr[2] = 30;
         chunksSizeArr[3] = 40;
 
 
-            fileStorage.storeFile(
-                chunksSizeArr,
-                Constants.TEST_FILE_1_NAME,
-                Constants.TEST_FILE_1_TYPE,
-                Constants.TEST_FILE_1_ENCODING,
-                Constants.TEST_FILE_1_ID,
-                Constants.TEST_FILE_1_SIZE,
-                Constants.TEST_FILE_1_HASH
-            )
+        string[] memory chunksHashesArr = new string[](4);
+        chunksHashesArr[0] = "127125$1821";
+        chunksHashesArr[1] = "91768612$1212";
+        chunksHashesArr[2] = "1@72673512@%$";
+        chunksHashesArr[3] = "0188712$1812";
+
+        fileStorage.storeFile(
+            chunksSizeArr,
+            Constants.TEST_FILE_1_NAME,
+            Constants.TEST_FILE_1_TYPE,
+            Constants.TEST_FILE_1_ENCODING,
+            Constants.TEST_FILE_1_ID,
+            Constants.TEST_FILE_1_SIZE,
+            Constants.TEST_FILE_1_HASH,
+            chunksHashesArr
+        );
 
         // Delete the added file
         fileStorage.deleteFile(Constants.TEST_FILE_1_ID);

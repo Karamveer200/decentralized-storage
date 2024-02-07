@@ -72,6 +72,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "STORE_FILE_INVALID_CHUNKS",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "STORE_FILE_METADATA_INVALID_FILE_HASH",
 				"outputs": [
 					{
@@ -192,9 +205,9 @@
 				"name": "TEST_FILE_1_HASH",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "bytes32",
 						"name": "",
-						"type": "string"
+						"type": "bytes32"
 					}
 				],
 				"stateMutability": "view",
@@ -359,11 +372,11 @@
 	},
 	"sources": {
 		"utils/Constants.sol": {
-			"keccak256": "0x01b5335eb7c1f40aea091cbaeb09e23d71b9b97904714d74620dc0cffcded8c1",
+			"keccak256": "0xdab9be92ba0ff8587ca43deab0d1b6a98d8367915cdfe9d5007bdc28218967d0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6684d242ec11eeb0284bad07a456c4c904cde42052856019ad64de2adda52440",
-				"dweb:/ipfs/QmTPePeuyqJtSy4vCckRRjmDvBajnWhooKX5B2uZ1FgeeD"
+				"bzz-raw://66ded56fc72cda14ac9431db5d95494e4362dca32b64a16fd706941e1552ac03",
+				"dweb:/ipfs/QmTv7UAMyTJBjCZmdNp9KKjGznHaVsAmueRKspZ5NM2M2t"
 			]
 		}
 	},

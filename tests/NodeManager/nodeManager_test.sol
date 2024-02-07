@@ -44,7 +44,18 @@ contract NodeManagerPositiveTestSuite {
             "positiveCase2GetAllNodes: Incorrect number of nodes"
         );
     }
+}
 
+contract NodeManagerPositiveTestSuite2 {
+    NodeManager nodeManager;
+    AccessInternalFunctions accessInternalFuncitons;
+
+    function beforeAll() public {
+        nodeManager = new NodeManager();
+        accessInternalFuncitons = new AccessInternalFunctions();
+    }
+
+ 
     // Positive Case: Store a chunk in a node and check if it exists in the node's chunks
     function positiveCase3StoreChunkInNode() public {
         accessInternalFuncitons.addNodeDerived(
@@ -52,15 +63,26 @@ contract NodeManagerPositiveTestSuite {
             Constants.TEST_RANDOM_NODE_SIZE_10000
         );
 
+        uint256 chunkSize = 200;
+
         accessInternalFuncitons.storeChunkInNodeDerived(
             Constants.TEST_RANDOM_ADDRESS_2,
-            "dummyChunk",
+            chunkSize,
             "dummyFileId",
-            0
+            "hash"
         );
 
         address[] memory nodeChunks = accessInternalFuncitons
             .retrieveChunkNodeAddressesDerived("dummyFileId");
+
+        NodeManager.Node memory addedNode = accessInternalFuncitons
+            .getNodeByAddressDerived(Constants.TEST_RANDOM_ADDRESS_2);
+
+        Assert.equal(
+            addedNode.availableStorage,
+            Constants.TEST_RANDOM_NODE_SIZE_10000 - chunkSize,
+            "positiveCase3StoreChunkInNode: Failed to store chunk in node"
+        );
 
         Assert.equal(
             nodeChunks[0],
@@ -69,7 +91,6 @@ contract NodeManagerPositiveTestSuite {
         );
     }
 }
-
 
 contract NodeManagerNegativeTestSuite {
     NodeManager nodeManager;
@@ -82,7 +103,7 @@ contract NodeManagerNegativeTestSuite {
 
     // Negative Case: Try to update available storage for a non-existent node
     function negativeCase1UpdateInvalidNode() public {
-        bool flag = false;               
+        bool flag = false;
         try
             accessInternalFuncitons.updateAvailableStorageDerived(
                 Constants.TEST_RANDOM_ADDRESS_1,
@@ -110,9 +131,9 @@ contract NodeManagerNegativeTestSuite {
         try
             accessInternalFuncitons.storeChunkInNodeDerived(
                 Constants.TEST_RANDOM_ADDRESS_1,
-                "dummyChunk",
+                10,
                 "dummyFileId",
-                0
+                "hash"
             )
         {
             flag = true;

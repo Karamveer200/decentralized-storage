@@ -35,12 +35,15 @@ contract FileStorageManager is ChunkManager, NodeManager {
     struct FileRetrieve {
         FileMetadata file;
         address[] chunkNodeAddresses;
+        string[] chunkHashesOrder;
     }
 
     address[] chunkStorageNodeTempAddress;
 
-    // Mapping from address to FileMetadata
     mapping(address => FileMetadata[]) private addressToFile;
+
+    mapping(string => string[]) private fileIdToChunkHashesOrder;
+
     mapping(address => mapping(string => mapping(uint256 => address[])))
         private nodeAddressOfChunks;
 
@@ -55,11 +58,13 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string memory _fileEncoding,
         string memory _uniqueId,
         uint256 _fileSize,
-        bytes32 _fileHash
+        bytes32 _fileHash,
+        string[] memory _chunkHashes
     ) public {
         // Iterate through each chunk and distribute them to nodes
 
         require(allNodes.length != 0, Constants.STORE_FILE_NO_NODES_FOUND);
+        require(_chunkHashes.length == _chunksSizeArr.length, Constants.STORE_FILE_INVALID_CHUNKS);
         require(
             bytes32(getFileHash(_uniqueId)) == bytes32(0),
             Constants.STORE_FILE_DUPLICATE_FILE_ID
@@ -68,11 +73,15 @@ contract FileStorageManager is ChunkManager, NodeManager {
         for (uint256 i = 0; i < _chunksSizeArr.length; i++) {
             delete chunkStorageNodeTempAddress;
 
+            string memory chunkHash = _chunkHashes[i];
+
             uint256 chunkSize = _chunksSizeArr[i];
 
             uint256 chunkDuplicationCounter = 0;
 
             uint256 maxDuplicationNum = numMaxChunksDuplication;
+
+            fileIdToChunkHashesOrder[_uniqueId].push(chunkHash);
 
             if (allNodes.length < 3) {
                 maxDuplicationNum = allNodes.length;
@@ -97,7 +106,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
                     selectedNodeAddress,
                     chunkSize,
                     _uniqueId,
-                    i
+                    chunkHash
                 );
             }
 
@@ -204,7 +213,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 return
                     FileRetrieve(
                         filesArr[i],
-                        retrieveChunkNodeAddresses(_fileId)
+                        retrieveChunkNodeAddresses(_fileId),
+                        fileIdToChunkHashesOrder[_fileId]
                     );
             }
         }
@@ -222,7 +232,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
             address(0),
             ""
         );
-        return FileRetrieve(dummy, dummyAddr);
+        return FileRetrieve(dummy, dummyAddr, fileIdToChunkHashesOrder[_fileId]);
     }
 
     function deleteFile(string memory _fileId) public {

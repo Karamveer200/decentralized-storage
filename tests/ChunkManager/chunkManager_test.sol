@@ -54,28 +54,6 @@ contract PositiveChunkManagerTest {
             "File authenticity should be valid with correct hash and uniqueId"
         );
     }
-
-    // Positive Test case: Create hash from string array and validate it
-    function testCreateHashFromStringArray() public {
-        string[] memory inputStrings = new string[](3);
-        inputStrings[0] = "create";
-        inputStrings[1] = "hash";
-        inputStrings[2] = "test";
-
-        bytes32 expectedHash = keccak256(
-            abi.encodePacked("create", "hash", "test")
-        );
-        bytes32 createdHash = accessInternalFuncitons.createHashDerived(
-            inputStrings
-        );
-
-        Assert.equal(
-            createdHash,
-            expectedHash,
-            "Created hash should match the expected hash"
-        );
-    }
-
 }
 
 

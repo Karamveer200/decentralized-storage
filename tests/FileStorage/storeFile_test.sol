@@ -24,6 +24,12 @@ contract StoreFileTestSuite1 {
         chunksSizeArr[2] = 30;
         chunksSizeArr[3] = 40;
 
+        string[] memory chunksHashesArr = new string[](4);
+        chunksHashesArr[0] = "127125$1821";
+        chunksHashesArr[1] = "91768612$1212";
+        chunksHashesArr[2] = "1@72673512@%$";
+        chunksHashesArr[3] = "0188712$1812";
+
         bool r = false;
         try
             fileStorage.storeFile(
@@ -33,7 +39,8 @@ contract StoreFileTestSuite1 {
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_FILE_1_ID,
                 Constants.TEST_FILE_1_SIZE,
-                Constants.TEST_FILE_1_HASH
+                Constants.TEST_FILE_1_HASH,
+                chunksHashesArr
             )
         {
             r = true;
@@ -66,23 +73,28 @@ contract StoreFileTestSuite2 {
 
     // Case 1 - Add two nodes and test store file, expected to store File Id in nodeAddress and File metadata
     function suite2Case1StoreNewFile() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
+        uint256[] memory chunksSizeArr = new uint256[](4);
         chunksSizeArr[0] = 10;
         chunksSizeArr[1] = 20;
         chunksSizeArr[2] = 30;
         chunksSizeArr[3] = 40;
 
-      fileStorage.storeFile(
-                chunksSizeArr,
-                Constants.TEST_FILE_1_NAME,
-                Constants.TEST_FILE_1_TYPE,
-                Constants.TEST_FILE_1_ENCODING,
-                Constants.TEST_FILE_1_ID,
-                Constants.TEST_FILE_1_SIZE,
-                Constants.TEST_FILE_1_HASH
-            )
+        string[] memory chunksHashesArr = new string[](4);
+        chunksHashesArr[0] = "127125$1821";
+        chunksHashesArr[1] = "91768612$1212";
+        chunksHashesArr[2] = "1@72673512@%$";
+        chunksHashesArr[3] = "0188712$1812";
 
-        bytes32 getFileHash = bytes32("hash");
+        fileStorage.storeFile(
+            chunksSizeArr,
+            Constants.TEST_FILE_1_NAME,
+            Constants.TEST_FILE_1_TYPE,
+            Constants.TEST_FILE_1_ENCODING,
+            Constants.TEST_FILE_1_ID,
+            Constants.TEST_FILE_1_SIZE,
+            Constants.TEST_FILE_1_HASH,
+            chunksHashesArr
+        );
 
         address[] memory nodeAddressOfStoredChunk = fileStorage
             .retrieveChunkNodeAddresses(Constants.TEST_FILE_1_ID);
@@ -93,13 +105,14 @@ contract StoreFileTestSuite2 {
                     Constants.TEST_FILE_1_ID,
                     Constants.TEST_FILE_1_NAME,
                     Constants.TEST_FILE_1_TYPE,
-                    getFileHash,
+                    Constants.TEST_FILE_1_HASH,
                     Constants.TEST_FILE_1_SIZE,
                     block.timestamp,
                     msg.sender,
                     Constants.TEST_FILE_1_ENCODING
                 ),
-                nodeAddressOfStoredChunk
+                nodeAddressOfStoredChunk,
+                chunksHashesArr
             );
 
         Assert.greaterThan(
@@ -137,31 +150,40 @@ contract StoreFileTestSuite3 {
 
     // Case 1 - Add two file with same file id, expected to revert due to duplicate id
     function suite3Case1StoreduplicateFile() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
+        uint256[] memory chunksSizeArr = new uint256[](4);
         chunksSizeArr[0] = 10;
         chunksSizeArr[1] = 20;
         chunksSizeArr[2] = 30;
         chunksSizeArr[3] = 40;
 
-      fileStorage.storeFile(
+        string[] memory chunksHashesArr = new string[](4);
+        chunksHashesArr[0] = "127125$1821";
+        chunksHashesArr[1] = "91768612$1212";
+        chunksHashesArr[2] = "1@72673512@%$";
+        chunksHashesArr[3] = "0188712$1812";
+
+        fileStorage.storeFile(
+            chunksSizeArr,
+            Constants.TEST_FILE_1_NAME,
+            Constants.TEST_FILE_1_TYPE,
+            Constants.TEST_FILE_1_ENCODING,
+            Constants.TEST_FILE_1_ID,
+            Constants.TEST_FILE_1_SIZE,
+            Constants.TEST_FILE_1_HASH,
+            chunksHashesArr
+        );
+
+        bool r = false;
+        try
+            fileStorage.storeFile(
                 chunksSizeArr,
                 Constants.TEST_FILE_1_NAME,
                 Constants.TEST_FILE_1_TYPE,
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_FILE_1_ID,
                 Constants.TEST_FILE_1_SIZE,
-                Constants.TEST_FILE_1_HASH
-            )
-
-        bool r = false;
-        try
-            fileStorage.storeFile(
-                chunksArr,
-                Constants.TEST_FILE_1_NAME,
-                Constants.TEST_FILE_1_TYPE,
-                Constants.TEST_FILE_1_ENCODING,
-                Constants.TEST_FILE_1_ID,
-                Constants.TEST_FILE_1_SIZE
+                Constants.TEST_FILE_1_HASH,
+                chunksHashesArr
             )
         {
             r = true;
@@ -170,6 +192,43 @@ contract StoreFileTestSuite3 {
                 reason,
                 Constants.STORE_FILE_DUPLICATE_FILE_ID,
                 "suite3Case1StoreduplicateFile: Failed with unexpected reason"
+            );
+        }
+        Assert.equal(
+            r,
+            false,
+            "suite3Case1StoreduplicateFile did not work as expected"
+        );
+    }
+
+    // Case 2 - Send Invlaid chunk hash and chunk sizeARR
+    function suite3Case2StoreduplicateFile() public {
+        uint256[] memory chunksSizeArr = new uint256[](2);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 40;
+
+        string[] memory chunksHashesArr = new string[](1);
+        chunksHashesArr[0] = "127125$1821";
+
+        bool r = false;
+        try
+            fileStorage.storeFile(
+                chunksSizeArr,
+                Constants.TEST_FILE_1_NAME,
+                Constants.TEST_FILE_1_TYPE,
+                Constants.TEST_FILE_1_ENCODING,
+                Constants.TEST_FILE_1_ID,
+                Constants.TEST_FILE_1_SIZE,
+                Constants.TEST_FILE_1_HASH,
+                chunksHashesArr
+            )
+        {
+            r = true;
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason,
+                Constants.STORE_FILE_INVALID_CHUNKS,
+                "suite3Case2StoreduplicateFile: Failed with unexpected reason"
             );
         }
         Assert.equal(

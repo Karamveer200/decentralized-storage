@@ -19,22 +19,12 @@ contract StoreFileMetaDataTestSuite1 {
 
     // Case 1 - Expected to go to catch block as filename is empty
     function suite1Case1StoreFileMetaData() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
-        chunksSizeArr[0] = 10;
-        chunksSizeArr[1] = 20;
-        chunksSizeArr[2] = 30;
-        chunksSizeArr[3] = 40;
-
-        bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
-            chunksArr
-        );
-
         bool r = false;
         try
             accessInternalFuncitons.storeFileMetadataDerived(
                 Constants.TEST_EMPTY_STRING,
                 Constants.TEST_FILE_1_TYPE,
-                getFileHash,
+                Constants.TEST_FILE_1_HASH,
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_FILE_1_ID,
                 Constants.TEST_FILE_1_SIZE
@@ -53,22 +43,12 @@ contract StoreFileMetaDataTestSuite1 {
 
     // Case 2 - Expected to go to catch block as filetype is empty
     function suite1Case2StoreFileMetaData() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
-        chunksSizeArr[0] = 10;
-        chunksSizeArr[1] = 20;
-        chunksSizeArr[2] = 30;
-        chunksSizeArr[3] = 40;
-
-        bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
-            chunksArr
-        );
-
         bool r = false;
         try
             accessInternalFuncitons.storeFileMetadataDerived(
                 Constants.TEST_FILE_1_NAME,
                 Constants.TEST_EMPTY_STRING,
-                getFileHash,
+                Constants.TEST_FILE_1_HASH,
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_FILE_1_ID,
                 Constants.TEST_FILE_1_SIZE
@@ -128,22 +108,12 @@ contract StoreFileMetaDataTestSuite2 {
 
     // Case 2 - Expected to go to catch block as _uniqueId is empty
     function suite2Case2StoreFileMetaData() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
-        chunksSizeArr[0] = 10;
-        chunksSizeArr[1] = 20;
-        chunksSizeArr[2] = 30;
-        chunksSizeArr[3] = 40;
-
-        bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
-            chunksArr
-        );
-
         bool r = false;
         try
             accessInternalFuncitons.storeFileMetadataDerived(
                 Constants.TEST_FILE_1_NAME,
                 Constants.TEST_FILE_1_TYPE,
-                getFileHash,
+                Constants.TEST_FILE_1_HASH,
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_EMPTY_STRING,
                 Constants.TEST_FILE_1_SIZE
@@ -175,22 +145,12 @@ contract StoreFileMetaDataTestSuite3 {
 
     // Case 1 - Expected to go to catch block as _fileSize is empty
     function suite3Case1StoreFileMetaData() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
-        chunksSizeArr[0] = 10;
-        chunksSizeArr[1] = 20;
-        chunksSizeArr[2] = 30;
-        chunksSizeArr[3] = 40;
-
-        bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
-            chunksArr
-        );
-
         bool r = false;
         try
             accessInternalFuncitons.storeFileMetadataDerived(
                 Constants.TEST_FILE_1_NAME,
                 Constants.TEST_FILE_1_TYPE,
-                getFileHash,
+                Constants.TEST_FILE_1_HASH,
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_FILE_1_ID,
                 Constants.TEST_ZERO_SIZE
@@ -213,20 +173,10 @@ contract StoreFileMetaDataTestSuite3 {
 
     // Case 2 - Expected to store File Meta data
     function suite3Case2StoreFileMetaData() public {
-          uint256[] memory chunksSizeArr = new uint256[](4);
-        chunksSizeArr[0] = 10;
-        chunksSizeArr[1] = 20;
-        chunksSizeArr[2] = 30;
-        chunksSizeArr[3] = 40;
-
-        bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
-            chunksArr
-        );
-
         accessInternalFuncitons.storeFileMetadataDerived(
             Constants.TEST_FILE_1_NAME,
             Constants.TEST_FILE_1_TYPE,
-            getFileHash,
+            Constants.TEST_FILE_1_HASH,
             Constants.TEST_FILE_1_ENCODING,
             Constants.TEST_FILE_1_ID,
             Constants.TEST_FILE_1_SIZE

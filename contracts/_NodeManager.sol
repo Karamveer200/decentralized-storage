@@ -48,7 +48,7 @@ contract NodeManager {
         address _nodeAddress,
         uint256 _chunkSize,
         string memory _fileId,
-        uint256 order
+        string memory _chunkHash
     ) internal {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),

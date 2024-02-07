@@ -5,6 +5,9 @@ library Constants {
     string public constant STORE_FILE_NO_NODES_FOUND =
         "storeFile: No available nodes found";
 
+    string public constant STORE_FILE_INVALID_CHUNKS =
+        "storeFile: Invalid chunks";
+
     string public constant STORE_FILE_DUPLICATE_FILE_ID =
         "storeFile: Duplicate File Id";
 
