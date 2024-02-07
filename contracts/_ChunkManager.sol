@@ -45,18 +45,4 @@ contract ChunkManager {
     ) internal view returns (bool) {
         return _fileHash == fileIdToHash[_uniqueId];
     }
-
-    function createHash(string[] memory stringArray)
-        internal 
-        pure
-        returns (bytes32)
-    {
-        bytes memory toBeHashed = "";
-
-        for (uint256 i = 0; i < stringArray.length; i++) {
-            toBeHashed = abi.encodePacked(toBeHashed, stringArray[i]);
-        }
-
-        return keccak256(toBeHashed);
-    }
 }

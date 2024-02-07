@@ -49,25 +49,26 @@ contract FileStorageManager is ChunkManager, NodeManager {
     }
 
     function storeFile(
-        string[] memory _chunksArr,
+        string[] memory _chunksSizeArr,
         string memory _fileName,
         string memory _fileType,
         string memory _fileEncoding,
         string memory _uniqueId,
-        uint256 _fileSize
+        uint256 _fileSize,
+        bytes32 _fileHash
     ) public {
         // Iterate through each chunk and distribute them to nodes
 
         require(allNodes.length != 0, Constants.STORE_FILE_NO_NODES_FOUND);
         require(
-            bytes32(getFileHash(_uniqueId)) == bytes32(0),
+            bytes32(_fileHash(_uniqueId)) == bytes32(0),
             Constants.STORE_FILE_DUPLICATE_FILE_ID
         );
 
-        for (uint256 i = 0; i < _chunksArr.length; i++) {
+        for (uint256 i = 0; i < _chunksSizeArr.length; i++) {
             delete chunkStorageNodeTempAddress;
 
-            uint256 chunkSize = bytes(_chunksArr[i]).length;
+            uint256 chunkSize = _chunksSizeArr[i];
 
             uint256 chunkDuplicationCounter = 0;
 
@@ -76,12 +77,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
             if (allNodes.length < 3) {
                 maxDuplicationNum = allNodes.length;
             }
-
-            console.log(
-                "Duplication started",
-                chunkDuplicationCounter,
-                maxDuplicationNum
-            );
 
             while (chunkDuplicationCounter < maxDuplicationNum) {
                 address selectedNodeAddress = findAvailableNode(
@@ -100,32 +95,23 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 // Pass the file ID along with node address and chunk data
                 storeChunkInNode(
                     selectedNodeAddress,
-                    _chunksArr[i],
+                    _chunksSizeArr[i],
                     _uniqueId,
-                    i
+                    i,
+                    chunkSize
                 );
-
-                // Update available storage of the current node
-                updateAvailableStorage(
-                    selectedNodeAddress,
-                    nodes[selectedNodeAddress].availableStorage - chunkSize
-                );
-
-                // emit logAddress(selectedNodeAddress);
             }
 
         }
 
         delete chunkStorageNodeTempAddress;
 
-        bytes32 getFileHash = createHash(_chunksArr);
-
-        storeFileHash(getFileHash, _uniqueId);
+        storeFileHash(_fileHash, _uniqueId);
 
         storeFileMetadata(
             _fileName,
             _fileType,
-            getFileHash,
+            _fileHash,
             _fileEncoding,
             _uniqueId,
             _fileSize

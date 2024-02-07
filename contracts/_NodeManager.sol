@@ -48,7 +48,8 @@ contract NodeManager {
         address _nodeAddress,
         string memory _chunk,
         string memory _fileId,
-        uint256 order
+        uint256 order,
+        uint256 _chunkSize,
     ) internal {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
@@ -56,9 +57,14 @@ contract NodeManager {
         );
 
         // Store the chunk data in the separate mapping for the given fileId and node address
-
         if (!isAddressPresent(_nodeAddress, nodeChunksAddresses[_fileId])) {
             nodeChunksAddresses[_fileId].push(_nodeAddress);
+
+            // Update available storage of the current node
+            updateAvailableStorage(
+                _nodeAddress,
+                nodes[_nodeAddress].availableStorage - _chunkSize
+            );
         }
     }
 
