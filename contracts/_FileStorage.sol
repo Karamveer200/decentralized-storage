@@ -49,7 +49,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
     }
 
     function storeFile(
-        string[] memory _chunksSizeArr,
+        uint256[] memory _chunksSizeArr,
         string memory _fileName,
         string memory _fileType,
         string memory _fileEncoding,
@@ -61,7 +61,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
         require(allNodes.length != 0, Constants.STORE_FILE_NO_NODES_FOUND);
         require(
-            bytes32(_fileHash(_uniqueId)) == bytes32(0),
+            bytes32(getFileHash(_uniqueId)) == bytes32(0),
             Constants.STORE_FILE_DUPLICATE_FILE_ID
         );
 
@@ -95,10 +95,9 @@ contract FileStorageManager is ChunkManager, NodeManager {
                 // Pass the file ID along with node address and chunk data
                 storeChunkInNode(
                     selectedNodeAddress,
-                    _chunksSizeArr[i],
+                    chunkSize,
                     _uniqueId,
-                    i,
-                    chunkSize
+                    i
                 );
             }
 

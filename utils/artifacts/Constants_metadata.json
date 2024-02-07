@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.22+commit.4fc1097e"
+		"version": "0.8.24+commit.e11b9ed9"
 	},
 	"language": "Solidity",
 	"output": {
@@ -189,6 +189,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "TEST_FILE_1_HASH",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "TEST_FILE_1_ID",
 				"outputs": [
 					{
@@ -339,18 +352,18 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
-			"runs": 5
+			"enabled": false,
+			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"utils/Constants.sol": {
-			"keccak256": "0x3bc4458aa2d11304d25c1f133031e3d26d1f65bdccc4fc61d30b2d669fce1448",
+			"keccak256": "0x01b5335eb7c1f40aea091cbaeb09e23d71b9b97904714d74620dc0cffcded8c1",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://14c658c8c0c474d3788f996bc77dfe0e921e068335448c7186a6b33488d8e537",
-				"dweb:/ipfs/QmNet8QKbp1cEyzYqwUtcRbqdE1nJDZoY7ADrdwn2fnCcz"
+				"bzz-raw://6684d242ec11eeb0284bad07a456c4c904cde42052856019ad64de2adda52440",
+				"dweb:/ipfs/QmTPePeuyqJtSy4vCckRRjmDvBajnWhooKX5B2uZ1FgeeD"
 			]
 		}
 	},

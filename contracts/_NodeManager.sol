@@ -46,10 +46,9 @@ contract NodeManager {
 
     function storeChunkInNode(                  
         address _nodeAddress,
-        string memory _chunk,
-        string memory _fileId,
-        uint256 order,
         uint256 _chunkSize,
+        string memory _fileId,
+        uint256 order
     ) internal {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),

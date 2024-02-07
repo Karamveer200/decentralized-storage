@@ -18,21 +18,22 @@ contract StoreFileTestSuite1 {
 
     // Case 1 - Expected to go to catch block as storeFile is called when allNodes.length == 0
     function suite1Case1StoreFile() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+        uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
         bool r = false;
         try
             fileStorage.storeFile(
-                chunksArr,
+                chunksSizeArr,
                 Constants.TEST_FILE_1_NAME,
                 Constants.TEST_FILE_1_TYPE,
                 Constants.TEST_FILE_1_ENCODING,
                 Constants.TEST_FILE_1_ID,
-                Constants.TEST_FILE_1_SIZE
+                Constants.TEST_FILE_1_SIZE,
+                Constants.TEST_FILE_1_HASH
             )
         {
             r = true;
