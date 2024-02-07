@@ -66,20 +66,21 @@ contract StoreFileTestSuite2 {
 
     // Case 1 - Add two nodes and test store file, expected to store File Id in nodeAddress and File metadata
     function suite2Case1StoreNewFile() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
-        fileStorage.storeFile(
-            chunksArr,
-            Constants.TEST_FILE_1_NAME,
-            Constants.TEST_FILE_1_TYPE,
-            Constants.TEST_FILE_1_ENCODING,
-            Constants.TEST_FILE_1_ID,
-            Constants.TEST_FILE_1_SIZE
-        );
+      fileStorage.storeFile(
+                chunksSizeArr,
+                Constants.TEST_FILE_1_NAME,
+                Constants.TEST_FILE_1_TYPE,
+                Constants.TEST_FILE_1_ENCODING,
+                Constants.TEST_FILE_1_ID,
+                Constants.TEST_FILE_1_SIZE,
+                Constants.TEST_FILE_1_HASH
+            )
 
         bytes32 getFileHash = bytes32("hash");
 
@@ -136,20 +137,21 @@ contract StoreFileTestSuite3 {
 
     // Case 1 - Add two file with same file id, expected to revert due to duplicate id
     function suite3Case1StoreduplicateFile() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
-        fileStorage.storeFile(
-            chunksArr,
-            Constants.TEST_FILE_1_NAME,
-            Constants.TEST_FILE_1_TYPE,
-            Constants.TEST_FILE_1_ENCODING,
-            Constants.TEST_FILE_1_ID,
-            Constants.TEST_FILE_1_SIZE
-        );
+      fileStorage.storeFile(
+                chunksSizeArr,
+                Constants.TEST_FILE_1_NAME,
+                Constants.TEST_FILE_1_TYPE,
+                Constants.TEST_FILE_1_ENCODING,
+                Constants.TEST_FILE_1_ID,
+                Constants.TEST_FILE_1_SIZE,
+                Constants.TEST_FILE_1_HASH
+            )
 
         bool r = false;
         try

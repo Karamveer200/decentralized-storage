@@ -30,15 +30,15 @@ contract PositiveFileStorageTestSuite {
         chunksArr[2] = "ghi";
         chunksArr[3] = "jklmnop";
 
-        fileStorage.storeFile(
-            chunksArr,
-            Constants.TEST_FILE_1_NAME,
-            Constants.TEST_FILE_1_TYPE,
-            Constants.TEST_FILE_1_ENCODING,
-            Constants.TEST_FILE_1_ID,
-            Constants.TEST_FILE_1_SIZE
-        );
-
+      fileStorage.storeFile(
+                chunksSizeArr,
+                Constants.TEST_FILE_1_NAME,
+                Constants.TEST_FILE_1_TYPE,
+                Constants.TEST_FILE_1_ENCODING,
+                Constants.TEST_FILE_1_ID,
+                Constants.TEST_FILE_1_SIZE,
+                Constants.TEST_FILE_1_HASH
+            )
         bytes32 getFileHash = bytes32("hash");
 
         address[] memory nodeAddressOfStoredChunk = fileStorage

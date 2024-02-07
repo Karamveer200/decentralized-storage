@@ -19,11 +19,11 @@ contract StoreFileMetaDataTestSuite1 {
 
     // Case 1 - Expected to go to catch block as filename is empty
     function suite1Case1StoreFileMetaData() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
         bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
             chunksArr
@@ -53,11 +53,11 @@ contract StoreFileMetaDataTestSuite1 {
 
     // Case 2 - Expected to go to catch block as filetype is empty
     function suite1Case2StoreFileMetaData() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
         bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
             chunksArr
@@ -128,11 +128,11 @@ contract StoreFileMetaDataTestSuite2 {
 
     // Case 2 - Expected to go to catch block as _uniqueId is empty
     function suite2Case2StoreFileMetaData() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
         bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
             chunksArr
@@ -175,11 +175,11 @@ contract StoreFileMetaDataTestSuite3 {
 
     // Case 1 - Expected to go to catch block as _fileSize is empty
     function suite3Case1StoreFileMetaData() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
         bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
             chunksArr
@@ -213,11 +213,11 @@ contract StoreFileMetaDataTestSuite3 {
 
     // Case 2 - Expected to store File Meta data
     function suite3Case2StoreFileMetaData() public {
-        string[] memory chunksArr = new string[](4);
-        chunksArr[0] = "abc";
-        chunksArr[1] = "def";
-        chunksArr[2] = "ghi";
-        chunksArr[3] = "jklmnop";
+          uint256[] memory chunksSizeArr = new uint256[](4);
+        chunksSizeArr[0] = 10;
+        chunksSizeArr[1] = 20;
+        chunksSizeArr[2] = 30;
+        chunksSizeArr[3] = 40;
 
         bytes32 getFileHash = accessInternalFuncitons.createHashDerived(
             chunksArr
