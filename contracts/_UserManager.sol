@@ -115,4 +115,17 @@ contract UserManager {
       function convertToGwei(uint value) public payable returns (uint) {
         return value / 1e9;
     }
+
+        // Function to get user tier
+    function getUserTier() public view returns (Tier) {
+        require(users[msg.sender].registered, "User not registered.");
+        return users[msg.sender].tier;
+    }
+
+    // Function to get user storage usage
+    function getUserStorageUsed() public view returns (uint256) {
+        require(users[msg.sender].registered, "User not registered.");
+        return users[msg.sender].storageUsed;
+    }
+
 }

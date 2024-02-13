@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./_ChunkManager.sol";
 import "./_NodeManager.sol";
+import "./_UserManager.sol";
 import "../utils/Constants.sol";
 import "hardhat/console.sol";
 
@@ -64,11 +65,50 @@ contract FileStorageManager is ChunkManager, NodeManager {
         // Iterate through each chunk and distribute them to nodes
 
         require(allNodes.length != 0, Constants.STORE_FILE_NO_NODES_FOUND);
-        require(_chunkHashes.length == _chunksSizeArr.length, Constants.STORE_FILE_INVALID_CHUNKS);
+        require(
+            _chunkHashes.length == _chunksSizeArr.length,
+            Constants.STORE_FILE_INVALID_CHUNKS
+        );
         require(
             bytes32(getFileHash(_uniqueId)) == bytes32(0),
             Constants.STORE_FILE_DUPLICATE_FILE_ID
         );
+        require(
+            _fileSize + users[msg.sender].storageUsed <=
+                users[msg.sender].storageAllocated,
+            "User storage limit exceeded."
+        );
+
+        // Check storage limit based on the user's tier
+        if (users[msg.sender].tier == Tier.PayAsYouGo) {
+            require(
+                _fileSize + users[msg.sender].storageUsed <=
+                    getNodeAvailableStorage(msg.sender),
+                "Insufficient available storage for PayAsYouGo user."
+            );
+        } else if (users[msg.sender].tier == Tier.Advanced) {
+            require(
+                _fileSize + users[msg.sender].storageUsed <=
+                    users[msg.sender].storageAllocated,
+                "Advanced user storage limit exceeded."
+            );
+        } else {
+            // Free tier
+            require(
+                _fileSize + users[msg.sender].storageUsed <=
+                    GBToBytes(freeStorage),
+                "Free user storage limit exceeded."
+            );
+        }
+
+        // Check if the user's tier is PayAsYouGo and has enough allocated storage
+        if (users[msg.sender].tier == Tier.PayAsYouGo) {
+            require(
+                _fileSize + users[msg.sender].storageUsed <=
+                    getNodeAvailableStorage(msg.sender),
+                "Insufficient available storage for PayAsYouGo user."
+            );
+        }
 
         for (uint256 i = 0; i < _chunksSizeArr.length; i++) {
             delete chunkStorageNodeTempAddress;
@@ -93,11 +133,9 @@ contract FileStorageManager is ChunkManager, NodeManager {
                     chunkStorageNodeTempAddress
                 );
 
-                emit logAddress(selectedNodeAddress);
 
                 chunkStorageNodeTempAddress.push(selectedNodeAddress);
 
-                emit logAddress2(selectedNodeAddress);
 
                 chunkDuplicationCounter++;
 
@@ -109,7 +147,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
                     chunkHash
                 );
             }
-
         }
 
         delete chunkStorageNodeTempAddress;
@@ -232,7 +269,8 @@ contract FileStorageManager is ChunkManager, NodeManager {
             address(0),
             ""
         );
-        return FileRetrieve(dummy, dummyAddr, fileIdToChunkHashesOrder[_fileId]);
+        return
+            FileRetrieve(dummy, dummyAddr, fileIdToChunkHashesOrder[_fileId]);
     }
 
     function deleteFile(string memory _fileId) public {
