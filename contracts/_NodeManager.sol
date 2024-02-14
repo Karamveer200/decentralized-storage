@@ -15,8 +15,6 @@ contract NodeManager is UserManager {
     // Mapping to track payments for each storage node
     mapping(address => uint256) internal nodePayments;
 
-    // Mapping to track staking amounts for each node
-    mapping(address => uint256) internal nodeStakes;
 
     // Mapping from node address to fileId to chunk data
     mapping(string => address[]) public nodeChunksAddresses;
@@ -50,8 +48,6 @@ contract NodeManager is UserManager {
             stakedAmount: msg.value
         });
 
-        // Track the staking amount
-        nodeStakes[msg.sender] = msg.value;
 
         // Add the node to the list of all nodes
         allNodes.push(msg.sender);
@@ -235,8 +231,8 @@ contract NodeManager is UserManager {
         // Check if the node is flagged as a bad actor
         require(!isBadActor(storageNode), "Node flagged as a bad actor.");
 
-        // Retrieve the initial stake and remaining payments
-        uint256 initialStake = nodeStakes[storageNode];
+        // Retrieve the initial stake and remaining payments, can update this later
+        uint256 initialStake = 50 gwei;
         uint256 remainingPayments = nodePayments[storageNode];
 
         // Transfer the initial stake and remaining payments to the storage node
