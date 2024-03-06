@@ -22,8 +22,8 @@ contract UserManager {
     mapping(address => User) public users;
 
     // Subscription fees and rates
-    uint256 constant advancedFee = 0.00001 gwei; // Placeholder, set based on current ETH price
-    uint256 constant payAsYouGoRate = 0.0000004 gwei; // Per GB, placeholder
+    uint256 constant advancedFee = 3 gwei; // Placeholder, per month
+    uint256 constant payAsYouGoRate = 0.04 gwei; // Per GB, placeholder
 
     uint256 constant advancedStorage = 100; // 100GB for advanced users
     uint256 constant freeStorage = 1; // 100GB for advanced users
@@ -52,8 +52,6 @@ contract UserManager {
 
         if (newTier == Tier.Advanced) {
             uint moneyValue = convertToGwei(msg.value);
-            console.log("valuesadashd - ", advancedFee, moneyValue);
-
             require(
                 moneyValue == advancedFee,
                 "Incorrect payment for Advanced tier."

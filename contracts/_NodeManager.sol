@@ -29,6 +29,8 @@ contract NodeManager is UserManager {
 
     // Event for storage payment
     event StorageNodePaid(address indexed storageNode, uint256 amount);
+    uint256 initialStake = 50 gwei;
+
 
     // Function to stake and register a new storage node
     function addNode(address _nodeAddress, uint256 _initialStorage)
@@ -56,9 +58,6 @@ contract NodeManager is UserManager {
         // Emit an event for staking
         emit NodeStaked(msg.sender, msg.value);
     }
-
-    // Function to pay storage nodes based on proof of storage
-    function payStorageNodes(address[] memory chunkNodeAddresses) internal {}
 
     function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
         internal
@@ -202,17 +201,10 @@ contract NodeManager is UserManager {
     }
 
     // Function to delete a storage node, returning the initial stake and remaining payments
-    function deleteNode() external {
-        address storageNode = msg.sender;
-        // Check if the node is flagged as a bad actor
-        require(!isBadActor(storageNode), "Node flagged as a bad actor.");
+    function returnInitialStake(address payee) external {
+        require(!isBadActor(payee), "Node flagged as a bad actor.");
 
-        // Retrieve the initial stake and remaining payments, can update this later
-        uint256 initialStake = 50 gwei;
-        // uint256 remainingPayments = nodePayments[storageNode];
-
-        // Transfer the initial stake and remaining payments to the storage node
-        payable(storageNode).transfer(initialStake);
+        payable(payee).transfer(initialStake);
     }
 
     // Function to check whether a node is flagged as a bad actor
