@@ -15,14 +15,14 @@ contract NodeManager is UserManager {
     // Mapping to track payments for each storage node
     mapping(address => uint256) internal nodePayments;
 
-
     // Mapping from node address to fileId to chunk data
     mapping(string => address[]) public nodeChunksAddresses;
 
     address[] public allNodes;
 
     // Mapping to track whether a node is flagged as a bad actor
-    mapping(address => bool) internal badActors;
+    mapping(address => bool) public badActors;
+    mapping(address => uint256[]) public badActorTimestamps;
 
     // Event for staking by storage nodes
     event NodeStaked(address indexed node, uint256 amount);
@@ -31,23 +31,24 @@ contract NodeManager is UserManager {
     event StorageNodePaid(address indexed storageNode, uint256 amount);
 
     // Function to stake and register a new storage node
-    function addNode() public payable {
+    function addNode(address _nodeAddress, uint256 _initialStorage)
+        public
+        payable
+    {
         // Check if the node is not already registered
         require(
-            nodes[msg.sender].nodeAddress == address(0),
-            "addNode: Node already registered."
+            nodes[address(_nodeAddress)].nodeAddress == address(0),
+            "addNode: Invalid _nodeAddress - Node Already exists"
         );
 
         // Enforce staking amount, random placeholder value
-        require(msg.value < 50 gwei, "Incorrect staking amount.");
+        require(msg.value == 50 gwei, "Incorrect staking amount.");
 
-        // Create a new Node and initialize it
-        nodes[msg.sender] = Node({
-            nodeAddress: msg.sender,
-            availableStorage: 0,
+        nodes[address(_nodeAddress)] = Node({
+            nodeAddress: address(_nodeAddress),
+            availableStorage: _initialStorage,
             stakedAmount: msg.value
         });
-
 
         // Add the node to the list of all nodes
         allNodes.push(msg.sender);
@@ -57,24 +58,8 @@ contract NodeManager is UserManager {
     }
 
     // Function to pay storage nodes based on proof of storage
-    function payStorageNodes() internal {
-        // Distribute payments to storage nodes based on proof of storage
-        for (uint256 i = 0; i < allNodes.length; i++) {
-            address storageNode = allNodes[i];
-
-            // Calculate payment somehow, not exactly sure for now random amount, do heartbeat checks and random sampling
-
-            uint256 paymentAmount = 5;
-
-            // Make payment to the storage node
-            payable(storageNode).transfer(paymentAmount);
-
-            // Update payment tracking
-            nodePayments[storageNode] += paymentAmount;
-
-            // Emit an event for storage payment
-            emit StorageNodePaid(storageNode, paymentAmount);
-        }
+    function payStorageNodes(address[] memory chunkNodeAddresses) internal {
+  
     }
 
     function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
@@ -218,13 +203,6 @@ contract NodeManager is UserManager {
         return nodes[_nodeAddress].availableStorage;
     }
 
-    // Event for deleting a storage node
-    event NodeDeleted(
-        address indexed storageNode,
-        uint256 initialStake,
-        uint256 remainingPayments
-    );
-
     // Function to delete a storage node, returning the initial stake and remaining payments
     function deleteNode() external {
         address storageNode = msg.sender;
@@ -239,13 +217,28 @@ contract NodeManager is UserManager {
         payable(storageNode).transfer(initialStake + remainingPayments);
 
         // need to also add a function to remove the storage node from mapping
-
-        // Emit an event for node deletion
-        emit NodeDeleted(storageNode, initialStake, remainingPayments);
     }
 
     // Function to check whether a node is flagged as a bad actor
-    function isBadActor(address storageNode) internal view returns (bool) {
+    function isBadActor(address storageNode) public view returns (bool) {
         return badActors[storageNode]; //needs some policy later
     }
+
+
+    function flagAsBadActor(address _nodeAddress) public {
+        // Assuming onlyOwner or similar modifier is used to restrict access
+        require(
+            !badActors[_nodeAddress],
+            "Node is already flagged as a bad actor."
+        );
+        require(
+            nodes[_nodeAddress].nodeAddress != address(0),
+            "flagAsBadActor: Invalid _nodeAddress - Node Does NOT exist"
+        );
+
+        badActors[_nodeAddress] = true;
+        badActorTimestamps[_nodeAddress].push(block.timestamp);
+    }
+
+
 }

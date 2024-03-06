@@ -128,4 +128,14 @@ contract UserManager {
         return users[msg.sender].storageUsed;
     }
 
+    // Function to transfer Ether from this contract to an address
+    function transferEther(address payable _to, uint256 _amount) public {
+        // Check for sufficient balance in the contract
+        require(address(this).balance >= _amount, "Insufficient balance to transfer");
+
+        // Recommended way to send Ether as of Solidity 0.6.x and later
+        (bool sent, ) = _to.call{value: _amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
 }
