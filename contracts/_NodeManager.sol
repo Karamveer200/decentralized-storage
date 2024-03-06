@@ -13,9 +13,9 @@ contract NodeManager is UserManager {
     mapping(address => Node) internal nodes;
 
     // Mapping to track payments for each storage node
-    mapping(address => uint256) internal nodePayments;
+    mapping(address => uint256) internal nodePaymentsCount;
 
-    // Mapping from node address to fileId to chunk data
+    // Mapping from fileId to node address chunk data
     mapping(string => address[]) public nodeChunksAddresses;
 
     address[] public allNodes;
@@ -58,9 +58,7 @@ contract NodeManager is UserManager {
     }
 
     // Function to pay storage nodes based on proof of storage
-    function payStorageNodes(address[] memory chunkNodeAddresses) internal {
-  
-    }
+    function payStorageNodes(address[] memory chunkNodeAddresses) internal {}
 
     function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
         internal
@@ -211,19 +209,16 @@ contract NodeManager is UserManager {
 
         // Retrieve the initial stake and remaining payments, can update this later
         uint256 initialStake = 50 gwei;
-        uint256 remainingPayments = nodePayments[storageNode];
+        // uint256 remainingPayments = nodePayments[storageNode];
 
         // Transfer the initial stake and remaining payments to the storage node
-        payable(storageNode).transfer(initialStake + remainingPayments);
-
-        // need to also add a function to remove the storage node from mapping
+        payable(storageNode).transfer(initialStake);
     }
 
     // Function to check whether a node is flagged as a bad actor
     function isBadActor(address storageNode) public view returns (bool) {
         return badActors[storageNode]; //needs some policy later
     }
-
 
     function flagAsBadActor(address _nodeAddress) public {
         // Assuming onlyOwner or similar modifier is used to restrict access
@@ -240,5 +235,22 @@ contract NodeManager is UserManager {
         badActorTimestamps[_nodeAddress].push(block.timestamp);
     }
 
+    function chargePenaltyForBadActors(address _nodeAddress) public {
+        uint256 incidentCounts = badActorTimestamps[_nodeAddress].length;
+        uint256 stakedAmount = nodes[_nodeAddress].stakedAmount;
 
+        if (stakedAmount > 0) {
+            // 10% penalty for each inactivity
+            uint256 calculatePenalty = incidentCounts *
+                ((stakedAmount * 10) / 100);
+
+            if (calculatePenalty > stakedAmount) {
+                nodes[_nodeAddress].stakedAmount = 0;
+            } else {
+                nodes[_nodeAddress].stakedAmount =
+                    stakedAmount -
+                    calculatePenalty;
+            }
+        }
+    }
 }

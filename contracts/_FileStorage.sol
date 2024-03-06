@@ -40,6 +40,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
     }
 
     address[] chunkStorageNodeTempAddress;
+    address[] paymentReleaseNodeTempAddress;
 
     mapping(address => FileMetadata[]) public addressToFile;
 
@@ -152,5 +153,38 @@ contract FileStorageManager is ChunkManager, NodeManager {
         returns (bool)
     {
         return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
+    }
+
+    function releasePayments() public {
+        uint256 userContractBalance = getContractBalance();
+        uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
+        uint256 twoPercentBalance = (userContractBalance * 2) / 100;
+
+        uint256 remainingBalanceForRetievalNodes = userContractBalance -
+            seventyPercentBalance -
+            twoPercentBalance;
+
+        for (uint256 i = 0; i < userAddresses.length; i++) {
+            FileMetadata[] memory filesArr = addressToFile[userAddresses[i]];
+
+            for (uint256 j = 0; j < filesArr.length; j++) {
+                address[] memory nodesAddress = nodeChunksAddresses[
+                    filesArr[j].fileId
+                ];
+                for (uint256 k = 0; k < nodesAddress.length; k++) {
+                    if (!isBadActor(nodesAddress[k])) {
+                        paymentReleaseNodeTempAddress.push(nodesAddress[k]);
+                    }
+                }
+            }
+        }
+
+        uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
+            paymentReleaseNodeTempAddress.length;
+
+        for (uint256 i = 0; i < paymentReleaseNodeTempAddress.length; i++) {
+            address payable payee = payable(paymentReleaseNodeTempAddress[i]);
+            transferEther(payee, paymentOfEachNodesForseventyPercent);
+        }
     }
 }

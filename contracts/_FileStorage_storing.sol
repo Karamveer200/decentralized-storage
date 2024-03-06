@@ -110,6 +110,8 @@ contract FileStorageManagerStoring is FileStorageManager {
             _uniqueId,
             _fileSize
         );
+
+        addAddress(msg.sender);
     }
 
     function storeFileMetadata(

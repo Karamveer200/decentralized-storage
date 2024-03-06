@@ -27,6 +27,7 @@ contract UserManager {
 
     uint256 constant advancedStorage = 100; // 100GB for advanced users
     uint256 constant freeStorage = 1; // 100GB for advanced users
+    address[] userAddresses;
 
     // Events
     event UserRegistered(address user, Tier tier);
@@ -108,7 +109,7 @@ contract UserManager {
         return gb * 1e9 * 1024;
     }
 
-    function getUserBalance() external view returns (uint256) {
+    function getContractBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
@@ -136,6 +137,23 @@ contract UserManager {
         // Recommended way to send Ether as of Solidity 0.6.x and later
         (bool sent, ) = _to.call{value: _amount}("");
         require(sent, "Failed to send Ether");
+    }
+
+    // Function to add an address if it doesn't already exist in the array
+    function addAddress(address newUser) public {
+        if (!addressExists(newUser)) {
+            userAddresses.push(newUser);
+        }
+    }
+
+    // Private function to check if an address exists in the array
+    function addressExists(address userAddress) private view returns (bool) {
+        for (uint i = 0; i < userAddresses.length; i++) {
+            if (userAddresses[i] == userAddress) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
