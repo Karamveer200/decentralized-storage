@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-import "./_FileStorage.sol";
+import "./_FileStorage2.sol";
 import "../utils/Constants.sol";
 import "hardhat/console.sol";
 
-contract FileStorageManagerStoring is FileStorageManager {
+contract FileStorageManager1 is FileStorageManager2 {
     address internal owner;
 
-    constructor() NodeManager() {
+    constructor() FileStorageManager2() {
         owner = msg.sender;
     }
 
@@ -19,7 +19,7 @@ contract FileStorageManagerStoring is FileStorageManager {
         string memory _fileEncoding,
         string memory _uniqueId,
         uint256 _fileSize,
-        bytes32 _fileHash,
+        string memory _fileHash,
         string[] memory _chunkHashes
     ) public {
         // Iterate through each chunk and distribute them to nodes
@@ -30,7 +30,7 @@ contract FileStorageManagerStoring is FileStorageManager {
             Constants.STORE_FILE_INVALID_CHUNKS
         );
         require(
-            bytes32(getFileHash(_uniqueId)) == bytes32(0),
+            bytes(getFileHash(_uniqueId)).length <= 0,
             Constants.STORE_FILE_DUPLICATE_FILE_ID
         );
         require(
@@ -84,6 +84,14 @@ contract FileStorageManagerStoring is FileStorageManager {
                     chunkStorageNodeTempAddress
                 );
 
+                if (selectedNodeAddress == address(0)) {
+                    continue;
+                }
+
+                if (chunkStorageNodeTempAddress.length == allNodes.length) {
+                    break;
+                }
+
                 chunkStorageNodeTempAddress.push(selectedNodeAddress);
 
                 chunkDuplicationCounter++;
@@ -117,7 +125,7 @@ contract FileStorageManagerStoring is FileStorageManager {
     function storeFileMetadata(
         string memory _fileName,
         string memory _fileType,
-        bytes32 _fileHash,
+        string memory _fileHash,
         string memory _fileEncoding,
         string memory _uniqueId,
         uint256 _fileSize
@@ -135,7 +143,7 @@ contract FileStorageManagerStoring is FileStorageManager {
             Constants.STORE_FILE_METADATA_INVALID_FILE_NAME
         );
         require(
-            bytes32(_fileHash) != bytes32(0),
+            bytes(_fileHash).length > 0,
             Constants.STORE_FILE_METADATA_INVALID_FILE_HASH
         );
         require(_fileSize > 0, Constants.STORE_FILE_METADATA_INVALID_FILE_SIZE);

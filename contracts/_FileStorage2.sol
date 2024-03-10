@@ -7,14 +7,13 @@ import "./_UserManager.sol";
 import "../utils/Constants.sol";
 import "hardhat/console.sol";
 
-contract FileStorageManager is ChunkManager, NodeManager {
-    address internal owner;
+contract FileStorageManager2 is ChunkManager, NodeManager {
 
     event FileUploaded(
         string fileId,
         string fileName,
         string fileType,
-        bytes32 fileHash,
+        string fileHash,
         uint256 fileSize,
         uint256 uploadTime,
         address uploader
@@ -26,7 +25,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
         string fileId;
         string fileName;
         string fileType;
-        bytes32 fileHash;
+        string fileHash;
         uint256 fileSize;
         uint256 uploadTime;
         address ownerAddress;
@@ -48,10 +47,6 @@ contract FileStorageManager is ChunkManager, NodeManager {
 
     mapping(address => mapping(string => mapping(uint256 => address[])))
         private nodeAddressOfChunks;
-
-    constructor() NodeManager() {
-        owner = msg.sender;
-    }
 
     function retrieveFilesArray()
         internal
@@ -97,7 +92,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
             "",
             "",
             "",
-            bytes32(0),
+            "",
             0,
             0,
             address(0),
@@ -156,7 +151,7 @@ contract FileStorageManager is ChunkManager, NodeManager {
     }
 
     function releasePayments() public {
-        uint256 userContractBalance = getContractBalance();
+        uint256 userContractBalance = getUserContractBalance();
         uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
         uint256 twoPercentBalance = (userContractBalance * 2) / 100;
 

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import "hardhat/console.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract UserManager {
     struct User {
@@ -13,6 +12,11 @@ contract UserManager {
         uint256 subscriptionEndTime;
     }
 
+    struct UserPayments {
+        uint256 amountPaid;
+        uint256 paidTime;
+    }
+
     enum Tier {
         Free,
         Advanced,
@@ -20,10 +24,11 @@ contract UserManager {
     }
 
     mapping(address => User) public users;
+    mapping(address => UserPayments[]) public userPayments;
 
     // Subscription fees and rates
-    uint256 constant advancedFee = 3 gwei; // Placeholder, per month
-    uint256 constant payAsYouGoRate = 0.04 gwei; // Per GB, placeholder
+    uint256 constant advancedFee = 1 gwei; // Placeholder, set based on current ETH price
+    uint256 constant payAsYouGoRate = 2 gwei; // Per GB, placeholder
 
     uint256 constant advancedStorage = 100; // 100GB for advanced users
     uint256 constant freeStorage = 1; // 100GB for advanced users
@@ -40,6 +45,7 @@ contract UserManager {
     // Function to register a new user
     function registerUser() public {
         require(!users[msg.sender].registered, "User already registered.");
+
         users[msg.sender] = User(true, Tier.Free, GBToBytes(freeStorage), 0, 0);
 
         emit UserRegistered(msg.sender, Tier.Free);
@@ -50,8 +56,11 @@ contract UserManager {
         require(users[msg.sender].registered, "User not registered.");
         require(newTier != Tier.Free, "Cannot upgrade to Free tier.");
 
+        console.log("Amount recieved - ", advancedFee, msg.value);
+
         if (newTier == Tier.Advanced) {
-            uint moneyValue = convertToGwei(msg.value);
+            uint256 moneyValue = msg.value;
+
             require(
                 moneyValue == advancedFee,
                 "Incorrect payment for Advanced tier."
@@ -61,6 +70,10 @@ contract UserManager {
 
             // 30 days for a month, in seconds
             users[msg.sender].subscriptionEndTime = block.timestamp + 30 days;
+
+            userPayments[msg.sender].push(
+                UserPayments(msg.value, block.timestamp)
+            );
         } else if (newTier == Tier.PayAsYouGo) {
             // No upfront fee, but need to allocate initial storage or handle billing differently
             require(
@@ -89,17 +102,9 @@ contract UserManager {
     }
 
     // Function to check a user's subscription and storage
-    function getUser(address user)
-        public
-        view
-        returns (
-            User memory
-        )
-    {
+    function getUser(address user) public view returns (User memory) {
         require(users[user].registered, "User not registered.");
-        return (
-            users[user]
-        );
+        return (users[user]);
     }
 
     function GBToBytes(uint256 gb) public pure returns (uint256) {
@@ -107,15 +112,19 @@ contract UserManager {
         return gb * 1e9 * 1024;
     }
 
-    function getContractBalance() public view returns (uint256) {
+    function getUserBalance() external view returns (uint256) {
         return address(this).balance;
     }
 
-      function convertToGwei(uint value) public payable returns (uint) {
-        return value / 1e9;
+    function weiToGwei(uint256 amountInWei) public pure returns (uint256) {
+        return amountInWei / 1e9;
     }
 
-        // Function to get user tier
+    function getUserContractBalance() public view returns (uint256) {
+        return weiToGwei(address(this).balance);
+    }
+
+    // Function to get user tier
     function getUserTier() public view returns (Tier) {
         require(users[msg.sender].registered, "User not registered.");
         return users[msg.sender].tier;
@@ -130,7 +139,10 @@ contract UserManager {
     // Function to transfer Ether from this contract to an address
     function transferEther(address payable _to, uint256 _amount) public {
         // Check for sufficient balance in the contract
-        require(address(this).balance >= _amount, "Insufficient balance to transfer");
+        require(
+            address(this).balance >= _amount,
+            "Insufficient balance to transfer"
+        );
 
         // Recommended way to send Ether as of Solidity 0.6.x and later
         (bool sent, ) = _to.call{value: _amount}("");
@@ -146,12 +158,11 @@ contract UserManager {
 
     // Private function to check if an address exists in the array
     function addressExists(address userAddress) private view returns (bool) {
-        for (uint i = 0; i < userAddresses.length; i++) {
+        for (uint256 i = 0; i < userAddresses.length; i++) {
             if (userAddresses[i] == userAddress) {
                 return true;
             }
         }
         return false;
     }
-
 }

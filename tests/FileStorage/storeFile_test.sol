@@ -4,7 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 // This import is automatically injected by Remix
 import "remix_tests.sol";
-import "../../contracts/_FileStorage.sol";
+import "../../contracts/_FileStorage1.sol";
 import "../../utils/Constants.sol";
 import "hardhat/console.sol";
 

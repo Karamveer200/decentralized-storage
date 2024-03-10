@@ -10,10 +10,7 @@ contract NodeManager is UserManager {
         uint256 stakedAmount;
     }
 
-    mapping(address => Node) internal nodes;
-
-    // Mapping to track payments for each storage node
-    mapping(address => uint256) internal nodePaymentsCount;
+    mapping(address => Node) public nodes;
 
     // Mapping from fileId to node address chunk data
     mapping(string => address[]) public nodeChunksAddresses;
@@ -24,19 +21,15 @@ contract NodeManager is UserManager {
     mapping(address => bool) public badActors;
     mapping(address => uint256[]) public badActorTimestamps;
 
-    // Event for staking by storage nodes
-    event NodeStaked(address indexed node, uint256 amount);
-
-    // Event for storage payment
-    event StorageNodePaid(address indexed storageNode, uint256 amount);
     uint256 initialStake = 50 gwei;
-
 
     // Function to stake and register a new storage node
     function addNode(address _nodeAddress, uint256 _initialStorage)
         public
         payable
     {
+        console.log("Amount recieved - ", initialStake, msg.value);
+
         // Check if the node is not already registered
         require(
             nodes[address(_nodeAddress)].nodeAddress == address(0),
@@ -44,7 +37,7 @@ contract NodeManager is UserManager {
         );
 
         // Enforce staking amount, random placeholder value
-        require(msg.value == 50 gwei, "Incorrect staking amount.");
+        require(msg.value == initialStake, "Incorrect staking amount.");
 
         nodes[address(_nodeAddress)] = Node({
             nodeAddress: address(_nodeAddress),
@@ -54,9 +47,6 @@ contract NodeManager is UserManager {
 
         // Add the node to the list of all nodes
         allNodes.push(msg.sender);
-
-        // Emit an event for staking
-        emit NodeStaked(msg.sender, msg.value);
     }
 
     function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
@@ -75,6 +65,7 @@ contract NodeManager is UserManager {
         string memory _fileId,
         string memory _chunkHash
     ) internal {
+    console.log("_nodeAddress",_nodeAddress, nodes[_nodeAddress].nodeAddress );
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
             "storeChunkInNode: Invalid _nodeAddress - Node Does NOT exist"
@@ -131,7 +122,7 @@ contract NodeManager is UserManager {
     function findAvailableNode(
         uint256 _chunkSize,
         address[] memory chunkStorageNodeTempAddress
-    ) internal view returns (address) {
+    ) public view returns (address) {
         uint256 numNodes = allNodes.length;
         uint256 sizeOffset = 50;
 
@@ -144,6 +135,10 @@ contract NodeManager is UserManager {
         uint256 i = 0;
         uint256 loopTimeoutCount = 0;
         uint256 BREAK_LOOP_COUNT = 1000;
+
+        if(chunkStorageNodeTempAddress.length == allNodes.length){
+            return address(0);
+        }
 
         // Iterate through the nodes starting from the pseudo-random index
         while (loopTimeoutCount < BREAK_LOOP_COUNT) {
@@ -244,5 +239,9 @@ contract NodeManager is UserManager {
                     calculatePenalty;
             }
         }
+    }
+
+    function getNodeContractBalance() public view returns (uint256) {
+        return weiToGwei(address(this).balance);
     }
 }

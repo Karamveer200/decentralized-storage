@@ -2,26 +2,28 @@
 pragma solidity ^0.8.0;
 
 contract ChunkManager {
-    uint256 internal  numMaxChunksDuplication = 3;
+    uint256 internal numMaxChunksDuplication = 3;
     uint256 internal maxChunkSize = 100;
 
     // Mapping from fileId to fileHash
-    mapping(string => bytes32) private fileIdToHash;
+    mapping(string => string) private fileIdToHash;
 
     function getFileHash(string memory _fileId)
         internal
         view
-        returns (bytes32)
+        returns (string memory)
     {
         require(bytes(_fileId).length > 0, "getFileHash: Invalid _fileId");
 
         return fileIdToHash[_fileId];
     }
 
-    function storeFileHash(bytes32 _fileHash, string memory _fileId) internal {
+    function storeFileHash(string memory _fileHash, string memory _fileId)
+        internal
+    {
         require(msg.sender != address(0), "storeFileHash: Invalid sender");
         require(
-            bytes32(_fileHash) != bytes32(0),
+            bytes(_fileHash).length > 0,
             "storeFileHash: Invalid _fileHash"
         );
         require(bytes(_fileId).length > 0, "storeFileHash: Invalid _fileId");
@@ -32,7 +34,7 @@ contract ChunkManager {
     function deleteFileHash(string memory _fileId) internal {
         require(bytes(_fileId).length > 0, "deleteFileHash: Invalid _fileId");
         require(
-            bytes32(fileIdToHash[_fileId]) != bytes32(0),
+            bytes(fileIdToHash[_fileId]).length > 0,
             "deleteFileHash: Invalid fileIdToHash"
         );
 
@@ -40,9 +42,19 @@ contract ChunkManager {
     }
 
     function validateFileAuthenticity(
-        bytes32 _fileHash,
+        string memory _fileHash,
         string memory _uniqueId
     ) internal view returns (bool) {
-        return _fileHash == fileIdToHash[_uniqueId];
+        return areStringsEqual(_fileHash, fileIdToHash[_uniqueId]);
+    }
+
+    function areStringsEqual(string memory string1, string memory string2)
+        public
+        pure
+        returns (bool)
+    {
+        return
+            keccak256(abi.encodePacked(string1)) ==
+            keccak256(abi.encodePacked(string2));
     }
 }
