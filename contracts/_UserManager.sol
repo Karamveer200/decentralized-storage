@@ -121,7 +121,7 @@ contract UserManager {
     }
 
     function getUserContractBalance() public view returns (uint256) {
-        return weiToGwei(address(this).balance);
+        return address(this).balance;
     }
 
     // Function to get user tier

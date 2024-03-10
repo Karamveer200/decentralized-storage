@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
+import "hardhat/console.sol";
 
-import "./_UserManager.sol";
-
-contract NodeManager is UserManager {
+contract NodeManager {
     struct Node {
         address nodeAddress;
         uint256 availableStorage;
@@ -32,13 +31,12 @@ contract NodeManager is UserManager {
 
         // Check if the node is not already registered
         require(
-            nodes[address(_nodeAddress)].nodeAddress == address(0),
+            nodes[_nodeAddress].nodeAddress == address(0),
             "addNode: Invalid _nodeAddress - Node Already exists"
         );
 
         // Enforce staking amount, random placeholder value
         require(msg.value == initialStake, "Incorrect staking amount.");
-
         nodes[address(_nodeAddress)] = Node({
             nodeAddress: address(_nodeAddress),
             availableStorage: _initialStorage,
@@ -46,7 +44,7 @@ contract NodeManager is UserManager {
         });
 
         // Add the node to the list of all nodes
-        allNodes.push(msg.sender);
+        allNodes.push(address(_nodeAddress));
     }
 
     function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
@@ -65,11 +63,12 @@ contract NodeManager is UserManager {
         string memory _fileId,
         string memory _chunkHash
     ) internal {
-    console.log("_nodeAddress",_nodeAddress, nodes[_nodeAddress].nodeAddress );
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
             "storeChunkInNode: Invalid _nodeAddress - Node Does NOT exist"
         );
+
+        console.log("_chunkHash", _chunkHash);
 
         // Store the chunk data in the separate mapping for the given fileId and node address
         if (!isAddressPresent(_nodeAddress, nodeChunksAddresses[_fileId])) {
@@ -134,9 +133,9 @@ contract NodeManager is UserManager {
         uint256 randomIndex = uint256(blockhash(block.number - 1)) % numNodes;
         uint256 i = 0;
         uint256 loopTimeoutCount = 0;
-        uint256 BREAK_LOOP_COUNT = 1000;
+        uint256 BREAK_LOOP_COUNT = 80;
 
-        if(chunkStorageNodeTempAddress.length == allNodes.length){
+        if (chunkStorageNodeTempAddress.length == allNodes.length) {
             return address(0);
         }
 
@@ -242,6 +241,6 @@ contract NodeManager is UserManager {
     }
 
     function getNodeContractBalance() public view returns (uint256) {
-        return weiToGwei(address(this).balance);
+        return address(this).balance;
     }
 }
