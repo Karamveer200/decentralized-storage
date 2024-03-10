@@ -46,7 +46,6 @@ contract FileStorage is ChunkManager, NodeManager, UserManager {
     }
 
     address[] chunkStorageNodeTempAddress;
-    address[] paymentReleaseNodeTempAddress;
 
     mapping(address => FileMetadata[]) public addressToFile;
 
@@ -236,7 +235,6 @@ contract FileStorage is ChunkManager, NodeManager, UserManager {
 
     function retrieveFileDetails(string memory _fileId)
         public
-        view
         returns (FileRetrieve memory)
     {
         // Return File meta data and chunk node addresses
@@ -324,28 +322,30 @@ contract FileStorage is ChunkManager, NodeManager, UserManager {
             seventyPercentBalance -
             twoPercentBalance;
 
-        for (uint256 i = 0; i < userAddresses.length; i++) {
-            FileMetadata[] memory filesArr = addressToFile[userAddresses[i]];
-
-            for (uint256 j = 0; j < filesArr.length; j++) {
-                address[] memory nodesAddress = nodeChunksAddresses[
-                    filesArr[j].fileId
-                ];
-                for (uint256 k = 0; k < nodesAddress.length; k++) {
-                    if (!isBadActor(nodesAddress[k])) {
-                        paymentReleaseNodeTempAddress.push(nodesAddress[k]);
-                    }
-                }
-            }
-        }
-
         uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
-            paymentReleaseNodeTempAddress.length;
+            nodeAddressesForEqualPayments.length;
 
-        for (uint256 i = 0; i < paymentReleaseNodeTempAddress.length; i++) {
-            address payable payee = payable(paymentReleaseNodeTempAddress[i]);
+        for (uint256 i = 0; i < nodeAddressesForEqualPayments.length; i++) {
+            address payable payee = payable(nodeAddressesForEqualPayments[i]);
             transferEther(payee, paymentOfEachNodesForseventyPercent);
         }
+
+        delete nodeAddressesForEqualPayments;
+
+        uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
+                nodeAddressesForFileRetrivalPayments.length;
+
+        for (
+            uint256 i = 0;
+            i < nodeAddressesForFileRetrivalPayments.length;
+            i++
+        ) {
+            address payable payee = payable(
+                nodeAddressesForFileRetrivalPayments[i]
+            );
+            transferEther(payee, paymentOfEachNodesForThirtyPercent);
+        }
+
+        delete nodeAddressesForFileRetrivalPayments;
     }
-    
 }

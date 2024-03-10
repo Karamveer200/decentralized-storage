@@ -15,6 +15,8 @@ contract NodeManager {
     mapping(string => address[]) public nodeChunksAddresses;
 
     address[] public allNodes;
+    address[] public nodeAddressesForEqualPayments;
+    address[] public nodeAddressesForFileRetrivalPayments;
 
     // Mapping to track whether a node is flagged as a bad actor
     mapping(address => bool) public badActors;
@@ -74,6 +76,12 @@ contract NodeManager {
         if (!isAddressPresent(_nodeAddress, nodeChunksAddresses[_fileId])) {
             nodeChunksAddresses[_fileId].push(_nodeAddress);
 
+            if (
+                !isAddressPresent(_nodeAddress, nodeAddressesForEqualPayments)
+            ) {
+                nodeAddressesForEqualPayments.push(_nodeAddress);
+            }
+
             // Update available storage of the current node
             updateAvailableStorage(
                 _nodeAddress,
@@ -84,13 +92,25 @@ contract NodeManager {
 
     function retrieveChunkNodeAddresses(string memory _fileId)
         public
-        view
         returns (address[] memory)
     {
         require(
             nodeChunksAddresses[_fileId].length > 0,
             "retrieveChunkNodeAddresses: Invalid _nodeAddress - Node Does NOT exist"
         );
+
+        for (uint256 i = 0; i < nodeChunksAddresses[_fileId].length; i++) {
+            address tempAddress = nodeChunksAddresses[_fileId][i];
+
+            if (
+                !isAddressPresent(
+                    tempAddress,
+                    nodeAddressesForFileRetrivalPayments
+                )
+            ) {
+                nodeAddressesForFileRetrivalPayments.push(tempAddress);
+            }
+        }
 
         // Retrieve and return the chunk data from the separate mapping for the given fileId and node address
         return nodeChunksAddresses[_fileId];
