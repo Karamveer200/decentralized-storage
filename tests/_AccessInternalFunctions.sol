@@ -8,7 +8,7 @@ contract AccessInternalFunctions is FileStorageManager {
     function storeFileMetadataDerived(
         string memory _fileName,
         string memory _fileType,
-        bytes32 _fileHash,
+        string memory _fileHash,
         string memory _fileEncoding,
         string memory _uniqueId,
         uint256 _fileSize
@@ -69,14 +69,13 @@ contract AccessInternalFunctions is FileStorageManager {
 
     function retrieveChunkNodeAddressesDerived(string memory _fileId)
         public
-        view
         returns (address[] memory)
     {
         return retrieveChunkNodeAddresses(_fileId);
     }
 
     //ChunkManager Functions
-    function storeFileHashDerived(bytes32 _fileHash, string memory _fileId)
+    function storeFileHashDerived(string memory _fileHash, string memory _fileId)
         public
     {
         storeFileHash(_fileHash, _fileId);
@@ -85,7 +84,7 @@ contract AccessInternalFunctions is FileStorageManager {
     function getFileHashDerived(string memory _fileId)
         public
         view
-        returns (bytes32)
+        returns (string memory)
     {
         return getFileHash(_fileId);
     }
@@ -95,7 +94,7 @@ contract AccessInternalFunctions is FileStorageManager {
     }
 
     function validateFileAuthenticityDerived(
-        bytes32 _fileHash,
+        string memory _fileHash,
         string memory _uniqueId
     ) public view returns (bool) {
         return validateFileAuthenticity(_fileHash, _uniqueId);

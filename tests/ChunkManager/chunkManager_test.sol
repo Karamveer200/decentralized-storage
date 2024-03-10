@@ -18,13 +18,13 @@ contract PositiveChunkManagerTest {
 
     //Positive Test case: Store file hash and retrieve it
     function testStoreFileHashAndRetrieve() public {
-        bytes32 expectedHash = keccak256(abi.encodePacked("test"));
+        string memory expectedHash = "testFileId";
         accessInternalFuncitons.storeFileHashDerived(
             expectedHash,
             "testFileId"
         );
 
-        bytes32 retrievedHash = accessInternalFuncitons.getFileHashDerived(
+        string memory  retrievedHash = accessInternalFuncitons.getFileHashDerived(
             "testFileId"
         );
 
@@ -37,7 +37,7 @@ contract PositiveChunkManagerTest {
 
     //Positive Test case: Validate file authenticity with correct hash and uniqueId
     function testValidateFileAuthenticity() public {
-        bytes32 fileHash = keccak256(abi.encodePacked("authenticityTest"));
+        string memory fileHash = "authenticityTestFileId";
         accessInternalFuncitons.storeFileHashDerived(
             fileHash,
             "authenticityTestFileId"
@@ -68,7 +68,7 @@ contract NegativeChunkManagerTest {
 
         //Negative Test case: Delete file hash and attempt to retrieve it
     function testDeleteFileHash() public {
-        bytes32 fileHash = keccak256(abi.encodePacked("deleteTest"));
+        string memory fileHash = "deleteTest";
         accessInternalFuncitons.storeFileHashDerived(
             fileHash,
             "deleteTestFileId"
@@ -76,29 +76,28 @@ contract NegativeChunkManagerTest {
 
         accessInternalFuncitons.deleteFileHashDerived("deleteTestFileId");
 
-        bytes32 retrievedHash = accessInternalFuncitons.getFileHashDerived(
+         string memory retrievedHash = accessInternalFuncitons.getFileHashDerived(
             "deleteTestFileId"
         );
 
         Assert.equal(
             retrievedHash,
-            bytes32(0),
+            "",
             "Deleted file hash should be empty"
         );
     }
 
     // Negative Test case: Validate file authenticity with incorrect hash and correct uniqueId
     function testInvalidateFileAuthenticity() public {
-        bytes32 fileHash = keccak256(
-            abi.encodePacked("invalidAuthenticityTest")
-        );
+        string memory fileHash = "invalidAuthenticityTest";
+
         accessInternalFuncitons.storeFileHashDerived(
             fileHash,
             "invalidAuthenticityTestFileId"
         );
 
         bool isValid = accessInternalFuncitons.validateFileAuthenticityDerived(
-            bytes32(0), // Incorrect hash
+            "", // Incorrect hash
             "invalidAuthenticityTestFileId"
         );
 

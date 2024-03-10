@@ -55,7 +55,7 @@ library Constants {
     string public constant TEST_FILE_1_ENCODING = "7Bit";
     string public constant TEST_FILE_1_ID = "ui12f-2jf7d-ajd0asd";
     uint256 public constant TEST_FILE_1_SIZE = 200;
-    bytes32 public constant TEST_FILE_1_HASH = "120182$2fs83389fkdjd";
+    string public constant TEST_FILE_1_HASH = "120182$2fs83389fkdjd";
 
     string public constant TEST_EMPTY_STRING = "";
     uint256 public constant TEST_ZERO_SIZE = 0;

@@ -9,7 +9,7 @@ import "./_UserManager.sol";
 
 import "hardhat/console.sol";
 
-contract FileStorage is ChunkManager, NodeManager, UserManager {
+contract FileStorageManager is ChunkManager, NodeManager, UserManager {
     address internal owner;
 
     constructor() {
