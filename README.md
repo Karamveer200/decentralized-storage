@@ -84,4 +84,4 @@ To delete a stored file, follow these steps:
 
 ## Conclusion
 
-You have now successfully compiled, deployed, and tested the File Storage smart contracts in Remix IDE. Make sure to explore all functionalities and thoroughly test the contracts to ensure they meet your requirements.
+You have now successfully compiled, deployed, and tested the File Storage smart contracts in Remix IDE.
