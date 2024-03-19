@@ -14,12 +14,10 @@ This guide provides step-by-step instructions to compile, deploy, and test the F
 - Clone the GitHub repository containing the smart contracts into Remix IDE from the URL: [decentralized-storage](https://github.com/Karamveer200/decentralized-storage).
   - This step ensures that you have all the necessary smart contracts available in Remix for testing.
 
-### 2. Deploy Contract with Gwei
+### 2. Deploy Contract
 
 - Switch to the "Deploy & Run Transactions" tab in Remix.
 - Select the `_FileStorage.sol` contract from the dropdown menu.
-- Specify an address from which the contract will be deployed. You can use an address like `0x55Cc5bF403e420057c457740F8838084C5DC3490` or other addresses from [Vanity-ETH](https://vanity-eth.tk/).
-- Add an amount of 100 GWEI in the "value" field to deploy the contract. This ensures that the contract is deployed with sufficient funds for executing payable functions.
 - Click the "Deploy" button to deploy the `_FileStorage` contract.
 
 ### 3. Add Storage Nodes
@@ -29,12 +27,19 @@ To add storage nodes, follow these steps:
 - Navigate to the deployed contract in Remix IDE.
 - Locate the `addNode` function.
 - Call the `addNode` function with the following parameters:
-  - `_nodeAddress`: Address of the storage node. You can use any address obtained from [Vanity-ETH](https://vanity-eth.tk/).
-  - `_initialStorage`: Initial storage capacity of the node. Specify the desired amount of storage capacity for the node.
-- Ensure that the node contains sufficient funds (Gwei or other currency) to cover the staking amount required by the `addNode` function.
-- This will add the storage node.
-  
-  **Note:** You can add multiple storage nodes by deploying the contract with different addresses obtained from services like Vanity-ETH. Each node requires a separate deployment and staking amount.
+  - `_nodeAddress`: Address of the storage node (example: 0xea5Db7668E91f989fA019Bd4ADEa347D65574aaA). You can use any address obtained from [Vanity-ETH](https://vanity-eth.tk/).
+  - `_initialStorage`: Initial storage capacity of the node (example: 1000000). Specify the desired amount of storage capacity for the node.
+- Specify the staking amount of 50 GWEI in the "value" field.
+- Click the "Transact" button to add the storage node.
+
+### 3. Register User
+
+To register a user, follow these steps:
+
+- Navigate to the deployed contract in Remix IDE.
+- Locate the `registerUser` function.
+- Call the `registerUser` function with the desired parameters, such as the user's address.
+- This step ensures that the user is registered within the system before upgrading their subscription.
 
 ### 4. Upgrade Subscription to Advanced Tier
 
@@ -43,9 +48,9 @@ To upgrade your subscription tier to the Advanced Tier, follow these steps:
 - Ensure that you have sufficient funds in your Ethereum account to cover the subscription upgrade fee.
 - Navigate to the deployed contract in Remix IDE.
 - Locate the `upgradeSubscription` function.
-- Call the `upgradeSubscription` function with the following parameter:
-  - `newTier`: Set the value to 1 to upgrade to the Advanced Tier.
-- Once the transaction is confirmed, your subscription tier will be upgraded to Advanced.
+- Enter `1` in the `newTier` parameter box.
+- Specify the staking amount of 1 GWEI in the "value" field.
+- Click the "Transact" button to upgrade your subscription to Advanced.
 
 ### 5. Store Files
 
@@ -58,7 +63,7 @@ To upgrade your subscription tier to the Advanced Tier, follow these steps:
   - `_uniqueId`: "123456789"
   - `_fileSize`: 1000
   - `_fileHash`: "0x123abc"
-  - `_chunkHashes`: ["chunkHash"]
+  - `_chunkHashes`: ["chunk","Hash"]
 - Explore other functionalities and test edge cases as needed.
 - Use Remix's debugging tools to trace transactions and inspect contract states for thorough testing.
 
@@ -68,8 +73,7 @@ To retrieve details about a stored file, follow these steps:
 
 - Navigate to the `_FileStorage.sol` contract in Remix IDE.
 - Locate the `retrieveFileDetails` function.
-- Call the `retrieveFileDetails` function with the following parameter:
-  - `_fileId`: Specify the unique identifier of the file you want to retrieve details for.
+- Call the `retrieveFileDetails` function with the specified parameters.
 - Review the returned details, including file metadata and chunk information.
 
 ### 7. Delete File
@@ -78,9 +82,8 @@ To delete a stored file, follow these steps:
 
 - Navigate to the `_FileStorage.sol` contract in Remix IDE.
 - Locate the `deleteFile` function.
-- Call the `deleteFile` function with the following parameter:
-  - `_fileId`: Specify the unique identifier of the file you want to delete.
-- Once the transaction is confirmed, the file will be permanently deleted from the storage system.
+- Call the `deleteFile` function with the specified parameter.
+- Once the transaction is confirmed, the file will be permanently deleted from the storage system and you can check by trying to retrieve the file again which should result in file not found.
 
 ## Conclusion
 
