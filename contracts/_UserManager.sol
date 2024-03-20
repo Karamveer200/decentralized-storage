@@ -90,17 +90,6 @@ contract UserManager {
         emit SubscriptionChanged(msg.sender, newTier);
     }
 
-    // Add more storage for PayAsYouGo users
-    function addStorage() public payable {
-        require(users[msg.sender].registered, "User not registered.");
-        require(
-            users[msg.sender].tier == Tier.PayAsYouGo,
-            "Not on PayAsYouGo tier."
-        );
-        uint256 additionalStorage = msg.value / payAsYouGoRate;
-        users[msg.sender].storageAllocated += additionalStorage;
-    }
-
     // Function to check a user's subscription and storage
     function getUser(address user) public view returns (User memory) {
         require(users[user].registered, "User not registered.");
@@ -114,10 +103,6 @@ contract UserManager {
 
     function getUserBalance() external view returns (uint256) {
         return address(this).balance;
-    }
-
-    function weiToGwei(uint256 amountInWei) public pure returns (uint256) {
-        return amountInWei / 1e9;
     }
 
     function getUserContractBalance() public view returns (uint256) {

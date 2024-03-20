@@ -49,6 +49,28 @@ contract NodeManager {
         allNodes.push(address(_nodeAddress));
     }
 
+    function removeAddress(address _addressToRemove) internal  {
+        for (uint256 i = 0; i < allNodes.length; i++) {
+            if (allNodes[i] == _addressToRemove) {
+                allNodes[i] = allNodes[allNodes.length - 1]; // Move the last element into the place of the one to remove
+                allNodes.pop(); // Remove the last element
+                return;
+            }
+        }
+    }
+
+    // Function to delete a storage node, returning the initial stake and remaining payments
+    function returnInitialStake(address payee) internal {
+        require(!isBadActor(payee), "Node flagged as a bad actor.");
+
+        payable(payee).transfer(initialStake);
+    }
+
+    function deleteNode(address _nodeAddress) public {
+        removeAddress(_nodeAddress);
+        returnInitialStake(_nodeAddress);
+    }
+
     function updateAvailableStorage(address _nodeAddress, uint256 _newStorage)
         internal
     {
@@ -212,13 +234,6 @@ contract NodeManager {
         returns (uint256)
     {
         return nodes[_nodeAddress].availableStorage;
-    }
-
-    // Function to delete a storage node, returning the initial stake and remaining payments
-    function returnInitialStake(address payee) external {
-        require(!isBadActor(payee), "Node flagged as a bad actor.");
-
-        payable(payee).transfer(initialStake);
     }
 
     // Function to check whether a node is flagged as a bad actor

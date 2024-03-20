@@ -9,7 +9,7 @@ contract ChunkManager {
     mapping(string => string) private fileIdToHash;
 
     function getFileHash(string memory _fileId)
-        internal
+        public
         view
         returns (string memory)
     {
@@ -19,7 +19,7 @@ contract ChunkManager {
     }
 
     function storeFileHash(string memory _fileHash, string memory _fileId)
-        internal
+        public
     {
         require(msg.sender != address(0), "storeFileHash: Invalid sender");
         require(
@@ -31,7 +31,7 @@ contract ChunkManager {
         fileIdToHash[_fileId] = _fileHash;
     }
 
-    function deleteFileHash(string memory _fileId) internal {
+    function deleteFileHash(string memory _fileId) public {
         require(bytes(_fileId).length > 0, "deleteFileHash: Invalid _fileId");
         require(
             bytes(fileIdToHash[_fileId]).length > 0,
@@ -44,7 +44,7 @@ contract ChunkManager {
     function validateFileAuthenticity(
         string memory _fileHash,
         string memory _uniqueId
-    ) internal view returns (bool) {
+    ) public view returns (bool) {
         return areStringsEqual(_fileHash, fileIdToHash[_uniqueId]);
     }
 

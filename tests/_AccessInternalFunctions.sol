@@ -63,6 +63,7 @@ contract AccessInternalFunctions is FileStorageManager {
 
     function addNodeDerived(address _nodeAddress, uint256 _initialStorage)
         public
+        payable
     {
         addNode(_nodeAddress, _initialStorage);
     }
@@ -75,9 +76,10 @@ contract AccessInternalFunctions is FileStorageManager {
     }
 
     //ChunkManager Functions
-    function storeFileHashDerived(string memory _fileHash, string memory _fileId)
-        public
-    {
+    function storeFileHashDerived(
+        string memory _fileHash,
+        string memory _fileId
+    ) public {
         storeFileHash(_fileHash, _fileId);
     }
 

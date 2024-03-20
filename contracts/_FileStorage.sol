@@ -5,7 +5,6 @@ import "./_ChunkManager.sol";
 import "./_NodeManager.sol";
 import "./_UserManager.sol";
 import "../utils/Constants.sol";
-import "./_UserManager.sol";
 
 import "hardhat/console.sol";
 

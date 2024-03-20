@@ -18,10 +18,22 @@ contract NodeManagerPositiveTestSuite {
 
     // Positive Case: Add a new node and check if it exists
     function positiveCase1AddNode() public {
-        accessInternalFuncitons.addNodeDerived(
-            Constants.TEST_RANDOM_ADDRESS_1,
-            Constants.TEST_RANDOM_NODE_SIZE_10000
+        (bool success, ) = address(accessInternalFuncitons).call{
+            value: 50 gwei
+        }(
+            abi.encodeWithSignature(
+                "accessInternalFuncitons.addNodeDerived(address,uint256)",
+                Constants.TEST_RANDOM_ADDRESS_1,
+                Constants.TEST_RANDOM_NODE_SIZE_10000
+            )
         );
+
+        Assert.ok(success, "addNode should succeed");
+
+        // accessInternalFuncitons.addNodeDerived(
+        //     Constants.TEST_RANDOM_ADDRESS_1,
+        //     Constants.TEST_RANDOM_NODE_SIZE_10000
+        // );
 
         NodeManager.Node memory addedNode = accessInternalFuncitons
             .getNodeByAddressDerived(Constants.TEST_RANDOM_ADDRESS_1);
@@ -55,7 +67,6 @@ contract NodeManagerPositiveTestSuite2 {
         accessInternalFuncitons = new AccessInternalFunctions();
     }
 
- 
     // Positive Case: Store a chunk in a node and check if it exists in the node's chunks
     function positiveCase3StoreChunkInNode() public {
         accessInternalFuncitons.addNodeDerived(
