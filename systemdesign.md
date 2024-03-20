@@ -2,7 +2,7 @@
 
 ## Overview
 
-The decentralized file storage system leverages blockchain technology to offer a secure, transparent, and decentralized solution for storing and managing files. By utilizing the Ethereum blockchain, the system ensures data integrity, security, and access control while providing a distributed framework that eliminates single points of failure. The core functionality revolves around enabling users to upload, store, retrieve, and manage their files across a network of decentralized nodes. Blockchain plays a pivotal role in achieving decentralization by storing metadata about files and transactions, handling node management, and ensuring secure and transparent interactions between users and storage nodes.
+The decentralized file storage system leverages blockchain technology to offer a secure, transparent, and decentralized solution for storing and managing files. By utilizing the Ethereum blockchain, the system ensures data integrity, security, and access control while providing a distributed framework that eliminates single points of failure. The core functionality revolves around enabling users to upload, store, retrieve, and manage their files across a network of decentralized nodes while also providing incentives to the nodes to provide storage. Blockchain plays a pivotal role in achieving decentralization by storing metadata about files and transactions, handling node management, and ensuring secure and transparent interactions between users and storage nodes.
 
 ## Smart Contracts
 
