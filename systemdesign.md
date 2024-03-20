@@ -83,7 +83,8 @@ This system design ensures a decentralized and secure mechanism for file storage
    - The file's hash is removed using ChunkManager's deleteFileHash.
    - Finally, the file's metadata is removed from FileStorageManager.
 
-![495 drawio](https://github.com/Karamveer200/decentralized-storage/assets/125762319/b8afa584-33d8-4a21-b5c2-c94922676079)
+![495DeleteFile drawio](https://github.com/Karamveer200/decentralized-storage/assets/125762319/35acb37d-992e-4e75-a92e-188aaa89cc49)
+
 
 
 
