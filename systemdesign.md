@@ -73,7 +73,7 @@ This system design ensures a decentralized and secure mechanism for file storage
    - It retrieves the addresses of nodes storing the file's chunks through NodeManager's retrieveChunkNodeAddresses.
    - Combines this data to provide the user with the file's metadata and the locations of its chunks for retrieval.
 
-![495RetreiveFile drawio](https://github.com/Karamveer200/decentralized-storage/assets/125762319/bb1dd6f4-e4df-434c-bb94-ca8a5b434478)
+![image](https://github.com/Karamveer200/decentralized-storage/assets/125762319/28a4b1e9-f24c-4814-8866-c4fb8779a745)
 
 ## 3. Delete File
 
