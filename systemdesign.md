@@ -63,7 +63,8 @@ This system design ensures a decentralized and secure mechanism for file storage
    - File metadata is saved in FileStorageManager using its storeFileMetadata.
    - The uploader's address is added if not present, using UserManager's addAddress.
 
-![495StoreFile drawio](https://github.com/Karamveer200/decentralized-storage/assets/125762319/c7ada76b-038f-4ba9-8bce-88e117a38857)
+![image](https://github.com/Karamveer200/decentralized-storage/assets/68271221/3af803b6-0462-458a-b8a3-bc6a5e99c601)
+
 
 ### 2. Retreive File
 
