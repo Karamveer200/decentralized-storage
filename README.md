@@ -13,14 +13,22 @@ This guide provides step-by-step instructions to compile, deploy, and test the F
 
 - Clone the GitHub repository containing the smart contracts into Remix IDE from the URL: [decentralized-storage](https://github.com/Karamveer200/decentralized-storage).
   - This step ensures that you have all the necessary smart contracts available in Remix for testing.
+ 
+### 2. Compile Contract
 
-### 2. Deploy Contract
+- Switch to the "Solidity compiler" tab in Remix.
+- Open the "Advanced Configurations" drop down menu.
+- Enable optimization as our contract is inheriting other contracts so that it does not throw warning of exceeding contract size.
+- Click the "Compile _FileStorage.sol" button to compile the `_FileStorage` contract
+
+### 3. Deploy Contract
 
 - Switch to the "Deploy & Run Transactions" tab in Remix.
 - Select the `_FileStorage.sol` contract from the dropdown menu.
 - Click the "Deploy" button to deploy the `_FileStorage` contract.
+- Also since `_FileStorage.sol` is inheriting other contracts, please enable 
 
-### 3. Add Storage Nodes
+### 4. Add Storage Nodes
 
 To add storage nodes, follow these steps:
 
@@ -32,16 +40,16 @@ To add storage nodes, follow these steps:
 - Specify the staking amount of 50 GWEI in the "value" field.
 - Click the "Transact" button to add the storage node.
 
-### 3. Register User
+### 5. Register User
 
-To register a user, follow these steps:
+To register yourself as a user, follow these steps:
 
 - Navigate to the deployed contract in Remix IDE.
 - Locate the `registerUser` function.
-- Call the `registerUser` function with the desired parameters, such as the user's address.
+- Call the `registerUser` function.
 - This step ensures that the user is registered within the system before upgrading their subscription.
 
-### 4. Upgrade Subscription to Advanced Tier
+### 6. Upgrade Subscription to Advanced Tier
 
 To upgrade your subscription tier to the Advanced Tier, follow these steps:
 
@@ -52,11 +60,11 @@ To upgrade your subscription tier to the Advanced Tier, follow these steps:
 - Specify the staking amount of 1 GWEI in the "value" field.
 - Click the "Transact" button to upgrade your subscription to Advanced.
 
-### 5. Store Files
+### 7. Store Files
 
 - Navigate to the `_FileStorage.sol` contract in the "Deploy & Run Transactions" tab.
 - Call the `storeFile` function with the following sample parameters to store a file:
-  - `_chunksSizeArr`: [100]
+  - `_chunksSizeArr`: [100,100]
   - `_fileName`: "example.txt"
   - `_fileType`: "text"
   - `_fileEncoding`: "7bit"
@@ -67,7 +75,7 @@ To upgrade your subscription tier to the Advanced Tier, follow these steps:
 - Explore other functionalities and test edge cases as needed.
 - Use Remix's debugging tools to trace transactions and inspect contract states for thorough testing.
 
-### 6. Retrieve File Details
+### 8. Retrieve File Details
 
 To retrieve details about a stored file, follow these steps:
 
@@ -76,7 +84,7 @@ To retrieve details about a stored file, follow these steps:
 - Call the `retrieveFileDetails` function with the specified parameters.
 - Review the returned details, including file metadata and chunk information.
 
-### 7. Delete File
+### 9. Delete File
 
 To delete a stored file, follow these steps:
 
