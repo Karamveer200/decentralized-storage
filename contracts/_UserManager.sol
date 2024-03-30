@@ -19,8 +19,7 @@ contract UserManager {
 
     enum Tier {
         Free,
-        Advanced,
-        PayAsYouGo
+        Advanced
     }
 
     mapping(address => User) public users;
@@ -28,10 +27,10 @@ contract UserManager {
 
     // Subscription fees and rates
     uint256 constant advancedFee = 1 gwei; // Placeholder, set based on current ETH price
-    uint256 constant payAsYouGoRate = 2 gwei; // Per GB, placeholder
 
     uint256 constant advancedStorage = 100; // 100GB for advanced users
-    uint256 constant freeStorage = 1; // 100GB for advanced users
+    uint256 constant freeStorage = 1; // 100GB for free users
+
     address[] userAddresses;
 
     // Events
@@ -40,54 +39,44 @@ contract UserManager {
 
     constructor() {}
 
-    receive() external payable {}
-
     // Function to register a new user
-    function registerUser() public {
-        require(!users[msg.sender].registered, "User already registered.");
+    function registerUser(address _userAddress) public {
+        require(!users[_userAddress].registered, "User already registered.");
 
-        users[msg.sender] = User(true, Tier.Free, GBToBytes(freeStorage), 0, 0);
+        users[_userAddress] = User(
+            true,
+            Tier.Free,
+            GBToBytes(freeStorage),
+            0,
+            0
+        );
 
-        emit UserRegistered(msg.sender, Tier.Free);
+        emit UserRegistered(_userAddress, Tier.Free);
     }
 
     // Payable function to upgrade subscription
-    function upgradeSubscription(Tier newTier) public payable {
-        require(users[msg.sender].registered, "User not registered.");
-        require(newTier != Tier.Free, "Cannot upgrade to Free tier.");
+    function upgradeSubscription(address _userAddress) public payable {
+        require(users[_userAddress].registered, "User not registered.");
 
         console.log("Amount recieved - ", advancedFee, msg.value);
 
-        if (newTier == Tier.Advanced) {
-            uint256 moneyValue = msg.value;
+        uint256 moneyValue = msg.value;
 
-            require(
-                moneyValue == advancedFee,
-                "Incorrect payment for Advanced tier."
-            );
-            users[msg.sender].tier = Tier.Advanced;
-            users[msg.sender].storageAllocated = GBToBytes(advancedStorage);
+        require(
+            moneyValue == advancedFee,
+            "Incorrect payment for Advanced tier."
+        );
+        users[_userAddress].tier = Tier.Advanced;
+        users[_userAddress].storageAllocated = GBToBytes(advancedStorage);
 
-            // 30 days for a month, in seconds
-            users[msg.sender].subscriptionEndTime = block.timestamp + 30 days;
+        // 30 days for a month, in seconds
+        users[_userAddress].subscriptionEndTime = block.timestamp + 30 days;
 
-            userPayments[msg.sender].push(
-                UserPayments(msg.value, block.timestamp)
-            );
-        } else if (newTier == Tier.PayAsYouGo) {
-            // No upfront fee, but need to allocate initial storage or handle billing differently
-            require(
-                users[msg.sender].tier != Tier.PayAsYouGo,
-                "Already on PayAsYouGo tier."
-            );
-            users[msg.sender].tier = Tier.PayAsYouGo;
+        userPayments[_userAddress].push(
+            UserPayments(msg.value, block.timestamp)
+        );
 
-            // Initial storage allocation can be handled based on payment
-            uint256 initialStorage = msg.value / payAsYouGoRate;
-            users[msg.sender].storageAllocated += initialStorage;
-        }
-
-        emit SubscriptionChanged(msg.sender, newTier);
+        emit SubscriptionChanged(_userAddress, Tier.Advanced);
     }
 
     // Function to check a user's subscription and storage
@@ -110,15 +99,31 @@ contract UserManager {
     }
 
     // Function to get user tier
-    function getUserTier() public view returns (Tier) {
-        require(users[msg.sender].registered, "User not registered.");
-        return users[msg.sender].tier;
+    function getUserTier(address _userAddress) public view returns (Tier) {
+        require(users[_userAddress].registered, "User not registered.");
+        return users[_userAddress].tier;
+    }
+
+    function getAllTiers() public pure returns (Tier[] memory) {
+        Tier[] memory tiers = new Tier[](3);
+        tiers[0] = Tier.Free;
+        tiers[1] = Tier.Advanced;
+
+        return tiers;
+    }
+
+    function getFreeStorageAmount() public pure returns (uint256) {
+        return freeStorage;
     }
 
     // Function to get user storage usage
-    function getUserStorageUsed() public view returns (uint256) {
-        require(users[msg.sender].registered, "User not registered.");
-        return users[msg.sender].storageUsed;
+    function getUserStorageUsed(address _userAddress)
+        public
+        view
+        returns (uint256)
+    {
+        require(users[_userAddress].registered, "User not registered.");
+        return users[_userAddress].storageUsed;
     }
 
     // Function to transfer Ether from this contract to an address

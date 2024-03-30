@@ -49,7 +49,7 @@ contract NodeManager {
         allNodes.push(address(_nodeAddress));
     }
 
-    function removeAddress(address _addressToRemove) internal  {
+    function removeAddress(address _addressToRemove) internal {
         for (uint256 i = 0; i < allNodes.length; i++) {
             if (allNodes[i] == _addressToRemove) {
                 allNodes[i] = allNodes[allNodes.length - 1]; // Move the last element into the place of the one to remove
@@ -86,7 +86,7 @@ contract NodeManager {
         uint256 _chunkSize,
         string memory _fileId,
         string memory _chunkHash
-    ) internal {
+    ) public {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
             "storeChunkInNode: Invalid _nodeAddress - Node Does NOT exist"
@@ -138,7 +138,7 @@ contract NodeManager {
         return nodeChunksAddresses[_fileId];
     }
 
-    function deleteChunkInNode(string memory _fileId) internal {
+    function deleteChunkInNode(string memory _fileId) public {
         require(
             bytes(_fileId).length > 0,
             "deleteChunkInNode: Invalid _fileId"
@@ -150,6 +150,10 @@ contract NodeManager {
 
     function getAllNodes() internal view returns (address[] memory) {
         return allNodes;
+    }
+
+    function getAllNodesLength() public view returns (uint256) {
+        return allNodes.length;
     }
 
     function getNodeByAddress(address _nodeAddress)
@@ -277,5 +281,29 @@ contract NodeManager {
 
     function getNodeContractBalance() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    function getNodeAddressesForEqualPayments()
+        public
+        view
+        returns (address[] memory)
+    {
+        return nodeAddressesForEqualPayments;
+    }
+
+    function getNodeAddressesForFileRetrievalPayments()
+        public
+        view
+        returns (address[] memory)
+    {
+        return nodeAddressesForFileRetrivalPayments;
+    }
+
+    function deleteNodeAddressesForEqualPayments() public {
+        delete nodeAddressesForEqualPayments;
+    }
+
+    function deleteNodeAddressesForFileRetrievalPayments() public {
+        delete nodeAddressesForFileRetrivalPayments;
     }
 }

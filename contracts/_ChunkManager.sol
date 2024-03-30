@@ -2,8 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract ChunkManager {
-    uint256 internal numMaxChunksDuplication = 3;
-    uint256 internal maxChunkSize = 100;
+    uint256 internal  numMaxChunksDuplication = 3;
 
     // Mapping from fileId to fileHash
     mapping(string => string) private fileIdToHash;
@@ -56,5 +55,9 @@ contract ChunkManager {
         return
             keccak256(abi.encodePacked(string1)) ==
             keccak256(abi.encodePacked(string2));
+    }
+
+    function getChunkDuplicateCount() public view returns(uint256){
+        return numMaxChunksDuplication;
     }
 }

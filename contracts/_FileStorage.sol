@@ -8,11 +8,23 @@ import "../utils/Constants.sol";
 
 import "hardhat/console.sol";
 
-contract FileStorageManager is ChunkManager, NodeManager, UserManager {
+contract FileStorageManager {
+    NodeManager nodeManager;
+    ChunkManager chunkManager;
+    UserManager userManager;
+
     address internal owner;
 
-    constructor() {
+    constructor(
+        address nodeManagerAddress,
+        address chunkManagerAddress,
+        address userManagerAddress
+    ) {
         owner = msg.sender;
+
+        nodeManager = NodeManager(nodeManagerAddress);
+        chunkManager = ChunkManager(chunkManagerAddress);
+        userManager = UserManager(userManagerAddress);
     }
 
     event FileUploaded(
@@ -53,79 +65,86 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
     mapping(address => mapping(string => mapping(uint256 => address[])))
         private nodeAddressOfChunks;
 
-    function storeFile(
-        uint256[] memory _chunksSizeArr,
-        string memory _fileName,
-        string memory _fileType,
-        string memory _fileEncoding,
-        string memory _uniqueId,
-        uint256 _fileSize,
-        string memory _fileHash,
-        string[] memory _chunkHashes
-    ) public {
-        // Iterate through each chunk and distribute them to nodes
+    uint256[] dummyChunksSizeArr;
+    string[] dummyChunksHashesArr;
 
-        require(allNodes.length != 0, Constants.STORE_FILE_NO_NODES_FOUND);
+    function storeFile(
+        string memory _fileName,
+        string memory _uniqueId,
+        address  _userAddress,
+        uint256 _fileSize
+    ) public {
+        // Dummy file inputs for simulation
+        dummyChunksSizeArr.push(10);
+        dummyChunksSizeArr.push(10);
+        dummyChunksSizeArr.push(10);
+
+        dummyChunksHashesArr.push("hash");
+        dummyChunksHashesArr.push("hash");
+        dummyChunksHashesArr.push("hash");
+
+        string memory _fileType = ".txt";
+        string memory _fileEncoding = "7-Bit";
+        string memory _fileHash = "xRandomHash";
+
         require(
-            _chunkHashes.length == _chunksSizeArr.length,
+            nodeManager.getAllNodesLength() != 0,
+            Constants.STORE_FILE_NO_NODES_FOUND
+        );
+        require(
+            dummyChunksHashesArr.length == dummyChunksSizeArr.length,
             Constants.STORE_FILE_INVALID_CHUNKS
         );
         require(
-            bytes(getFileHash(_uniqueId)).length <= 0,
-            Constants.STORE_FILE_DUPLICATE_FILE_ID
-        );
-        require(
-            _fileSize + users[msg.sender].storageUsed <=
-                users[msg.sender].storageAllocated,
+            _fileSize + userManager.getUser(_userAddress).storageUsed <=
+                userManager.getUser(_userAddress).storageAllocated,
             "User storage limit exceeded."
         );
 
-        // Check storage limit based on the user's tier
-        if (users[msg.sender].tier == Tier.PayAsYouGo) {
+        if (
+            userManager.getUser(_userAddress).tier == userManager.getAllTiers()[1]
+        ) {
             require(
-                _fileSize + users[msg.sender].storageUsed <=
-                    getNodeAvailableStorage(msg.sender),
-                "Insufficient available storage for PayAsYouGo user."
-            );
-        } else if (users[msg.sender].tier == Tier.Advanced) {
-            require(
-                _fileSize + users[msg.sender].storageUsed <=
-                    users[msg.sender].storageAllocated,
+                _fileSize + userManager.getUser(_userAddress).storageUsed <=
+                    userManager.getUser(_userAddress).storageAllocated,
                 "Advanced user storage limit exceeded."
             );
         } else {
             // Free tier
             require(
-                _fileSize + users[msg.sender].storageUsed <=
-                    GBToBytes(freeStorage),
+                _fileSize + userManager.getUser(_userAddress).storageUsed <=
+                    userManager.GBToBytes(userManager.getFreeStorageAmount()),
                 "Free user storage limit exceeded."
             );
         }
 
-        for (uint256 i = 0; i < _chunksSizeArr.length; i++) {
+        for (uint256 i = 0; i < dummyChunksSizeArr.length; i++) {
             delete chunkStorageNodeTempAddress;
 
-            string memory chunkHash = _chunkHashes[i];
+            string memory chunkHash = dummyChunksHashesArr[i];
 
-            uint256 chunkSize = _chunksSizeArr[i];
+            uint256 chunkSize = dummyChunksSizeArr[i];
 
             uint256 chunkDuplicationCounter = 0;
 
-            uint256 maxDuplicationNum = numMaxChunksDuplication;
+            uint256 maxDuplicationNum = chunkManager.getChunkDuplicateCount();
 
             fileIdToChunkHashesOrder[_uniqueId].push(chunkHash);
 
-            if (allNodes.length < 3) {
-                maxDuplicationNum = allNodes.length;
+            if (nodeManager.getAllNodesLength() < 3) {
+                maxDuplicationNum = nodeManager.getAllNodesLength();
             }
 
             while (chunkDuplicationCounter < maxDuplicationNum) {
-                address selectedNodeAddress = findAvailableNode(
+                address selectedNodeAddress = nodeManager.findAvailableNode(
                     chunkSize,
                     chunkStorageNodeTempAddress
                 );
 
-                if (chunkStorageNodeTempAddress.length == allNodes.length) {
+                if (
+                    chunkStorageNodeTempAddress.length ==
+                    nodeManager.getAllNodesLength()
+                ) {
                     break;
                 }
 
@@ -138,7 +157,7 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
                 chunkDuplicationCounter++;
 
                 // Pass the file ID along with node address and chunk data
-                storeChunkInNode(
+                nodeManager.storeChunkInNode(
                     selectedNodeAddress,
                     chunkSize,
                     _uniqueId,
@@ -149,7 +168,7 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
 
         delete chunkStorageNodeTempAddress;
 
-        storeFileHash(_fileHash, _uniqueId);
+        chunkManager.storeFileHash(_fileHash, _uniqueId);
 
         storeFileMetadata(
             _fileName,
@@ -157,10 +176,13 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
             _fileHash,
             _fileEncoding,
             _uniqueId,
-            _fileSize
+            _fileSize,
+            _userAddress
         );
 
-        addAddress(msg.sender);
+        userManager.addAddress(_userAddress);
+        delete dummyChunksSizeArr;
+        delete dummyChunksHashesArr;
     }
 
     function storeFileMetadata(
@@ -169,10 +191,11 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
         string memory _fileHash,
         string memory _fileEncoding,
         string memory _uniqueId,
-        uint256 _fileSize
+        uint256 _fileSize,
+        address _userAddress
     ) internal {
         require(
-            msg.sender != address(0),
+            _userAddress != address(0),
             Constants.STORE_FILE_METADATA_INVALID_SENDER
         );
         require(
@@ -195,7 +218,7 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
 
         uint256 timeStamp = block.timestamp;
 
-        addressToFile[msg.sender].push(
+        addressToFile[_userAddress].push(
             FileMetadata(
                 _uniqueId,
                 _fileName,
@@ -203,7 +226,7 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
                 _fileHash,
                 _fileSize,
                 timeStamp,
-                msg.sender,
+                _userAddress,
                 _fileEncoding
             )
         );
@@ -215,41 +238,41 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
             _fileHash,
             _fileSize,
             timeStamp,
-            msg.sender
+            _userAddress
         );
     }
 
-    function retrieveFilesArray()
+    function retrieveFilesArray(address _userAddress)
         internal
         view
         returns (FileMetadata[] memory)
     {
         require(
-            msg.sender != address(0),
+            _userAddress != address(0),
             Constants.STORE_FILE_METADATA_INVALID_SENDER
         );
 
-        return addressToFile[msg.sender];
+        return addressToFile[_userAddress];
     }
 
-    function retrieveFileDetails(string memory _fileId)
+    function retrieveFile(string memory _fileId, address _userAddress)
         public
         returns (FileRetrieve memory)
     {
         // Return File meta data and chunk node addresses
 
-        FileMetadata[] memory filesArr = retrieveFilesArray();
+        FileMetadata[] memory filesArr = retrieveFilesArray(_userAddress);
 
         for (uint256 i = 0; i < filesArr.length; i++) {
-            if (areStringsEqual(filesArr[i].fileId, _fileId)) {
+            if (chunkManager.areStringsEqual(filesArr[i].fileId, _fileId)) {
                 require(
-                    msg.sender == filesArr[i].ownerAddress,
+                    _userAddress == filesArr[i].ownerAddress,
                     Constants.RETRIEVE_FILE_DETAILS_UNAUTHORIZED_CALLER_ADDRESS
                 );
                 return
                     FileRetrieve(
                         filesArr[i],
-                        retrieveChunkNodeAddresses(_fileId),
+                        nodeManager.retrieveChunkNodeAddresses(_fileId),
                         fileIdToChunkHashesOrder[_fileId]
                     );
             }
@@ -272,13 +295,14 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
             FileRetrieve(dummy, dummyAddr, fileIdToChunkHashesOrder[_fileId]);
     }
 
-    function deleteFile(string memory _fileId) public {
+    function deleteFile(string memory _fileId, address _userAddress) public {
+        console.log("ENTERED DELETING FILE");
         require(
-            addressToFile[msg.sender].length > 0,
+            addressToFile[_userAddress].length > 0,
             Constants.DELETE_FILE_INVALID_FILE_ID
         );
 
-        FileMetadata[] memory filesArr = addressToFile[msg.sender];
+        FileMetadata[] memory filesArr = addressToFile[_userAddress];
 
         uint256 lastIndex = filesArr.length - 1;
 
@@ -289,31 +313,31 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
         bool isFileFound = false;
         // SWAP last and fileId index
         for (uint256 i = 0; i < filesArr.length; i++) {
-            if (areStringsEqual(filesArr[i].fileId, _fileId)) {
+            if (chunkManager.areStringsEqual(filesArr[i].fileId, _fileId)) {
                 isFileFound = true;
                 fileToRemove = filesArr[i];
-                addressToFile[msg.sender][i] = lastFile;
+                addressToFile[_userAddress][i] = lastFile;
             }
         }
 
         require(isFileFound, Constants.DELETE_FILE_NOT_FOUND);
 
-        addressToFile[msg.sender][lastIndex] = fileToRemove;
+        addressToFile[_userAddress][lastIndex] = fileToRemove;
 
         // Delete last index as its the intended file
-        addressToFile[msg.sender].pop();
+        addressToFile[_userAddress].pop();
 
         // Delete Chunks from node adrresses
-        deleteChunkInNode(_fileId);
+        nodeManager.deleteChunkInNode(_fileId);
 
         // Delete File Hash
-        deleteFileHash(_fileId);
+        chunkManager.deleteFileHash(_fileId);
 
-        emit FileRemoved(msg.sender, _fileId);
+        emit FileRemoved(_userAddress, _fileId);
     }
 
     function releasePayments() public {
-        uint256 userContractBalance = getUserContractBalance();
+        uint256 userContractBalance = userManager.getUserContractBalance();
         uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
         uint256 twoPercentBalance = (userContractBalance * 2) / 100;
 
@@ -322,29 +346,45 @@ contract FileStorageManager is ChunkManager, NodeManager, UserManager {
             twoPercentBalance;
 
         uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
-            nodeAddressesForEqualPayments.length;
-
-        for (uint256 i = 0; i < nodeAddressesForEqualPayments.length; i++) {
-            address payable payee = payable(nodeAddressesForEqualPayments[i]);
-            transferEther(payee, paymentOfEachNodesForseventyPercent);
-        }
-
-        delete nodeAddressesForEqualPayments;
-
-        uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
-                nodeAddressesForFileRetrivalPayments.length;
+            nodeManager.getNodeAddressesForEqualPayments().length;
 
         for (
             uint256 i = 0;
-            i < nodeAddressesForFileRetrivalPayments.length;
+            i < nodeManager.getNodeAddressesForEqualPayments().length;
             i++
         ) {
             address payable payee = payable(
-                nodeAddressesForFileRetrivalPayments[i]
+                nodeManager.getNodeAddressesForEqualPayments()[i]
             );
-            transferEther(payee, paymentOfEachNodesForThirtyPercent);
+            userManager.transferEther(
+                payee,
+                paymentOfEachNodesForseventyPercent
+            );
         }
 
-        delete nodeAddressesForFileRetrivalPayments;
+        nodeManager.deleteNodeAddressesForEqualPayments();
+
+        uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
+                nodeManager.getNodeAddressesForFileRetrievalPayments().length;
+
+        for (
+            uint256 i = 0;
+            i < nodeManager.getNodeAddressesForFileRetrievalPayments().length;
+            i++
+        ) {
+            address payable payee = payable(
+                nodeManager.getNodeAddressesForFileRetrievalPayments()[i]
+            );
+            userManager.transferEther(
+                payee,
+                paymentOfEachNodesForThirtyPercent
+            );
+        }
+
+        nodeManager.deleteNodeAddressesForFileRetrievalPayments();
+    }
+
+    function dummyLog() public pure {
+        console.log("VIEW CALLED");
     }
 }
