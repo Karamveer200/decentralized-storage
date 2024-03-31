@@ -3,9 +3,13 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract UserManager {
+    constructor() {}
+
+    receive() external payable {}
+
     struct User {
         bool registered;
-        Tier tier;
+        uint104 tier;
         // In GB
         uint256 storageAllocated;
         uint256 storageUsed;
@@ -17,13 +21,11 @@ contract UserManager {
         uint256 paidTime;
     }
 
-    enum Tier {
-        Free,
-        Advanced
-    }
+    uint104 constant FREE_TIER = 0;
+    uint104 constant ADVANCED_TIER = 1;
 
-    mapping(address => User) public users;
-    mapping(address => UserPayments[]) public userPayments;
+    mapping(address => User) internal users;
+    mapping(address => UserPayments[]) internal userPayments;
 
     // Subscription fees and rates
     uint256 constant advancedFee = 1 gwei; // Placeholder, set based on current ETH price
@@ -34,10 +36,8 @@ contract UserManager {
     address[] userAddresses;
 
     // Events
-    event UserRegistered(address user, Tier tier);
-    event SubscriptionChanged(address user, Tier newTier);
-
-    constructor() {}
+    event UserRegistered(address user, uint104 tier);
+    event SubscriptionChanged(address user, uint104 newTier);
 
     // Function to register a new user
     function registerUser(address _userAddress) public {
@@ -45,13 +45,13 @@ contract UserManager {
 
         users[_userAddress] = User(
             true,
-            Tier.Free,
+            FREE_TIER,
             GBToBytes(freeStorage),
             0,
             0
         );
 
-        emit UserRegistered(_userAddress, Tier.Free);
+        emit UserRegistered(_userAddress, FREE_TIER);
     }
 
     // Payable function to upgrade subscription
@@ -66,7 +66,7 @@ contract UserManager {
             moneyValue == advancedFee,
             "Incorrect payment for Advanced tier."
         );
-        users[_userAddress].tier = Tier.Advanced;
+        users[_userAddress].tier = ADVANCED_TIER;
         users[_userAddress].storageAllocated = GBToBytes(advancedStorage);
 
         // 30 days for a month, in seconds
@@ -76,13 +76,7 @@ contract UserManager {
             UserPayments(msg.value, block.timestamp)
         );
 
-        emit SubscriptionChanged(_userAddress, Tier.Advanced);
-    }
-
-    // Function to check a user's subscription and storage
-    function getUser(address user) public view returns (User memory) {
-        require(users[user].registered, "User not registered.");
-        return (users[user]);
+        emit SubscriptionChanged(_userAddress, ADVANCED_TIER);
     }
 
     function GBToBytes(uint256 gb) public pure returns (uint256) {
@@ -99,17 +93,13 @@ contract UserManager {
     }
 
     // Function to get user tier
-    function getUserTier(address _userAddress) public view returns (Tier) {
+    function getUserTier(address _userAddress) public view returns (uint104) {
         require(users[_userAddress].registered, "User not registered.");
         return users[_userAddress].tier;
     }
 
-    function getAllTiers() public pure returns (Tier[] memory) {
-        Tier[] memory tiers = new Tier[](3);
-        tiers[0] = Tier.Free;
-        tiers[1] = Tier.Advanced;
-
-        return tiers;
+    function getAdvancedTier() public pure returns (uint104) {
+        return ADVANCED_TIER;
     }
 
     function getFreeStorageAmount() public pure returns (uint256) {
@@ -126,9 +116,17 @@ contract UserManager {
         return users[_userAddress].storageUsed;
     }
 
+    function getUserStorageallocated(address user)
+        public
+        view
+        returns (uint256)
+    {
+        require(users[user].registered, "User not registered.");
+        return users[user].storageAllocated;
+    }
+
     // Function to transfer Ether from this contract to an address
     function transferEther(address payable _to, uint256 _amount) public {
-        // Check for sufficient balance in the contract
         require(
             address(this).balance >= _amount,
             "Insufficient balance to transfer"
@@ -140,7 +138,7 @@ contract UserManager {
     }
 
     // Function to add an address if it doesn't already exist in the array
-    function addAddress(address newUser) public {
+    function addUserAddresses(address newUser) public {
         if (!addressExists(newUser)) {
             userAddresses.push(newUser);
         }

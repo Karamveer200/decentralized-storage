@@ -1,26 +1,33 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
+import "./_UserManager.sol";
 import "hardhat/console.sol";
 
 contract NodeManager {
+    UserManager userManager;
+
+    constructor(address payable userManagerAddress) {
+        userManager = UserManager(userManagerAddress);
+    }
+
     struct Node {
         address nodeAddress;
         uint256 availableStorage;
         uint256 stakedAmount;
     }
 
-    mapping(address => Node) public nodes;
+    mapping(address => Node) internal nodes;
 
     // Mapping from fileId to node address chunk data
-    mapping(string => address[]) public nodeChunksAddresses;
+    mapping(string => address[]) internal nodeChunksAddresses;
 
-    address[] public allNodes;
-    address[] public nodeAddressesForEqualPayments;
-    address[] public nodeAddressesForFileRetrivalPayments;
+    address[] internal allNodes;
+    address[] internal nodeAddressesForEqualPayments;
+    address[] internal nodeAddressesForFileRetrivalPayments;
 
     // Mapping to track whether a node is flagged as a bad actor
-    mapping(address => bool) public badActors;
-    mapping(address => uint256[]) public badActorTimestamps;
+    mapping(address => bool) internal badActors;
+    mapping(address => uint256[]) internal badActorTimestamps;
 
     uint256 initialStake = 50 gwei;
 
@@ -61,7 +68,7 @@ contract NodeManager {
 
     // Function to delete a storage node, returning the initial stake and remaining payments
     function returnInitialStake(address payee) internal {
-        require(!isBadActor(payee), "Node flagged as a bad actor.");
+        require(!isBadActor(payee), "Node removed but lost stake as flagged as a bad actor.");
 
         payable(payee).transfer(initialStake);
     }
@@ -164,6 +171,14 @@ contract NodeManager {
         return nodes[_nodeAddress];
     }
 
+    function generateRandomNumber() internal view returns (uint256) {
+        bytes32 hash = keccak256(
+            abi.encodePacked(block.timestamp, block.difficulty, block.coinbase)
+        );
+
+        return uint256(hash);
+    }
+
     function findAvailableNode(
         uint256 _chunkSize,
         address[] memory chunkStorageNodeTempAddress
@@ -176,7 +191,7 @@ contract NodeManager {
         }
 
         // Generate a pseudo-random index using blockhash
-        uint256 randomIndex = uint256(blockhash(block.number - 1)) % numNodes;
+        uint256 randomIndex = generateRandomNumber() % numNodes;
         uint256 i = 0;
         uint256 loopTimeoutCount = 0;
         uint256 BREAK_LOOP_COUNT = 80;
@@ -299,11 +314,59 @@ contract NodeManager {
         return nodeAddressesForFileRetrivalPayments;
     }
 
-    function deleteNodeAddressesForEqualPayments() public {
+    function deleteNodeAddressesForEqualPayments() internal {
         delete nodeAddressesForEqualPayments;
     }
 
-    function deleteNodeAddressesForFileRetrievalPayments() public {
+    function deleteNodeAddressesForFileRetrievalPayments() internal {
         delete nodeAddressesForFileRetrivalPayments;
+    }
+
+    function releaseNodePayments() public {
+        uint256 userContractBalance = userManager.getUserContractBalance();
+        uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
+        uint256 twoPercentBalance = (userContractBalance * 2) / 100;
+
+        uint256 remainingBalanceForRetievalNodes = userContractBalance -
+            seventyPercentBalance -
+            twoPercentBalance;
+
+        uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
+            getNodeAddressesForEqualPayments().length;
+
+        for (
+            uint256 i = 0;
+            i < getNodeAddressesForEqualPayments().length;
+            i++
+        ) {
+            address payable payee = payable(
+                getNodeAddressesForEqualPayments()[i]
+            );
+            userManager.transferEther(
+                payee,
+                paymentOfEachNodesForseventyPercent
+            );
+        }
+
+        deleteNodeAddressesForEqualPayments();
+
+        uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
+                getNodeAddressesForFileRetrievalPayments().length;
+
+        for (
+            uint256 i = 0;
+            i < getNodeAddressesForFileRetrievalPayments().length;
+            i++
+        ) {
+            address payable payee = payable(
+                getNodeAddressesForFileRetrievalPayments()[i]
+            );
+            userManager.transferEther(
+                payee,
+                paymentOfEachNodesForThirtyPercent
+            );
+        }
+
+        deleteNodeAddressesForFileRetrievalPayments();
     }
 }

@@ -18,7 +18,7 @@ contract FileStorageManager {
     constructor(
         address nodeManagerAddress,
         address chunkManagerAddress,
-        address userManagerAddress
+        address payable userManagerAddress
     ) {
         owner = msg.sender;
 
@@ -58,9 +58,9 @@ contract FileStorageManager {
 
     address[] chunkStorageNodeTempAddress;
 
-    mapping(address => FileMetadata[]) public addressToFile;
+    mapping(address => FileMetadata[]) internal addressToFile;
 
-    mapping(string => string[]) public fileIdToChunkHashesOrder;
+    mapping(string => string[]) internal fileIdToChunkHashesOrder;
 
     mapping(address => mapping(string => mapping(uint256 => address[])))
         private nodeAddressOfChunks;
@@ -71,17 +71,17 @@ contract FileStorageManager {
     function storeFile(
         string memory _fileName,
         string memory _uniqueId,
-        address  _userAddress,
+        address _userAddress,
         uint256 _fileSize
     ) public {
         // Dummy file inputs for simulation
-        dummyChunksSizeArr.push(10);
-        dummyChunksSizeArr.push(10);
-        dummyChunksSizeArr.push(10);
+        dummyChunksSizeArr[0] = 10;
+        dummyChunksSizeArr[1] = 10;
+        dummyChunksSizeArr[2] = 10;
 
-        dummyChunksHashesArr.push("hash");
-        dummyChunksHashesArr.push("hash");
-        dummyChunksHashesArr.push("hash");
+        dummyChunksHashesArr[0] = "hash";
+        dummyChunksHashesArr[1] = "hash";
+        dummyChunksHashesArr[2] = "hash";
 
         string memory _fileType = ".txt";
         string memory _fileEncoding = "7-Bit";
@@ -91,28 +91,31 @@ contract FileStorageManager {
             nodeManager.getAllNodesLength() != 0,
             Constants.STORE_FILE_NO_NODES_FOUND
         );
+
         require(
             dummyChunksHashesArr.length == dummyChunksSizeArr.length,
             Constants.STORE_FILE_INVALID_CHUNKS
         );
+
         require(
-            _fileSize + userManager.getUser(_userAddress).storageUsed <=
-                userManager.getUser(_userAddress).storageAllocated,
+            _fileSize + userManager.getUserStorageUsed(_userAddress) <=
+                userManager.getUserStorageallocated(_userAddress),
             "User storage limit exceeded."
         );
 
         if (
-            userManager.getUser(_userAddress).tier == userManager.getAllTiers()[1]
+            userManager.getUserTier(_userAddress) ==
+            userManager.getAdvancedTier()
         ) {
             require(
-                _fileSize + userManager.getUser(_userAddress).storageUsed <=
-                    userManager.getUser(_userAddress).storageAllocated,
+                _fileSize + userManager.getUserStorageUsed(_userAddress) <=
+                    userManager.getUserStorageallocated(_userAddress),
                 "Advanced user storage limit exceeded."
             );
         } else {
             // Free tier
             require(
-                _fileSize + userManager.getUser(_userAddress).storageUsed <=
+                _fileSize + userManager.getUserStorageUsed(_userAddress) <=
                     userManager.GBToBytes(userManager.getFreeStorageAmount()),
                 "Free user storage limit exceeded."
             );
@@ -180,9 +183,7 @@ contract FileStorageManager {
             _userAddress
         );
 
-        userManager.addAddress(_userAddress);
-        delete dummyChunksSizeArr;
-        delete dummyChunksHashesArr;
+        userManager.addUserAddresses(_userAddress);
     }
 
     function storeFileMetadata(
@@ -259,7 +260,10 @@ contract FileStorageManager {
         public
         returns (FileRetrieve memory)
     {
-        // Return File meta data and chunk node addresses
+        require(
+            _userAddress != address(0),
+            Constants.STORE_FILE_METADATA_INVALID_SENDER
+        );
 
         FileMetadata[] memory filesArr = retrieveFilesArray(_userAddress);
 
@@ -291,12 +295,12 @@ contract FileStorageManager {
             address(0),
             ""
         );
+
         return
             FileRetrieve(dummy, dummyAddr, fileIdToChunkHashesOrder[_fileId]);
     }
 
     function deleteFile(string memory _fileId, address _userAddress) public {
-        console.log("ENTERED DELETING FILE");
         require(
             addressToFile[_userAddress].length > 0,
             Constants.DELETE_FILE_INVALID_FILE_ID
@@ -334,57 +338,5 @@ contract FileStorageManager {
         chunkManager.deleteFileHash(_fileId);
 
         emit FileRemoved(_userAddress, _fileId);
-    }
-
-    function releasePayments() public {
-        uint256 userContractBalance = userManager.getUserContractBalance();
-        uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
-        uint256 twoPercentBalance = (userContractBalance * 2) / 100;
-
-        uint256 remainingBalanceForRetievalNodes = userContractBalance -
-            seventyPercentBalance -
-            twoPercentBalance;
-
-        uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
-            nodeManager.getNodeAddressesForEqualPayments().length;
-
-        for (
-            uint256 i = 0;
-            i < nodeManager.getNodeAddressesForEqualPayments().length;
-            i++
-        ) {
-            address payable payee = payable(
-                nodeManager.getNodeAddressesForEqualPayments()[i]
-            );
-            userManager.transferEther(
-                payee,
-                paymentOfEachNodesForseventyPercent
-            );
-        }
-
-        nodeManager.deleteNodeAddressesForEqualPayments();
-
-        uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
-                nodeManager.getNodeAddressesForFileRetrievalPayments().length;
-
-        for (
-            uint256 i = 0;
-            i < nodeManager.getNodeAddressesForFileRetrievalPayments().length;
-            i++
-        ) {
-            address payable payee = payable(
-                nodeManager.getNodeAddressesForFileRetrievalPayments()[i]
-            );
-            userManager.transferEther(
-                payee,
-                paymentOfEachNodesForThirtyPercent
-            );
-        }
-
-        nodeManager.deleteNodeAddressesForFileRetrievalPayments();
-    }
-
-    function dummyLog() public pure {
-        console.log("VIEW CALLED");
     }
 }
