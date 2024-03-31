@@ -8,7 +8,7 @@ import "../utils/Constants.sol";
 
 import "hardhat/console.sol";
 
-contract FileStorageManager {
+contract FileManager {
     NodeManager nodeManager;
     ChunkManager chunkManager;
     UserManager userManager;
@@ -75,13 +75,13 @@ contract FileStorageManager {
         uint256 _fileSize
     ) public {
         // Dummy file inputs for simulation
-        dummyChunksSizeArr[0] = 10;
-        dummyChunksSizeArr[1] = 10;
-        dummyChunksSizeArr[2] = 10;
+        dummyChunksSizeArr.push(10);
+        dummyChunksSizeArr.push(10);
+        dummyChunksSizeArr.push(10);
 
-        dummyChunksHashesArr[0] = "hash";
-        dummyChunksHashesArr[1] = "hash";
-        dummyChunksHashesArr[2] = "hash";
+        dummyChunksHashesArr.push("hash");
+        dummyChunksHashesArr.push("hash");
+        dummyChunksHashesArr.push("hash");
 
         string memory _fileType = ".txt";
         string memory _fileEncoding = "7-Bit";
@@ -90,6 +90,10 @@ contract FileStorageManager {
         require(
             nodeManager.getAllNodesLength() != 0,
             Constants.STORE_FILE_NO_NODES_FOUND
+        );
+        require(
+            bytes(chunkManager.getFileHash(_uniqueId)).length <= 0,
+            Constants.STORE_FILE_DUPLICATE_FILE_ID
         );
 
         require(
@@ -163,8 +167,7 @@ contract FileStorageManager {
                 nodeManager.storeChunkInNode(
                     selectedNodeAddress,
                     chunkSize,
-                    _uniqueId,
-                    chunkHash
+                    _uniqueId
                 );
             }
         }
@@ -260,6 +263,7 @@ contract FileStorageManager {
         public
         returns (FileRetrieve memory)
     {
+        
         require(
             _userAddress != address(0),
             Constants.STORE_FILE_METADATA_INVALID_SENDER

@@ -5,7 +5,7 @@ contract ChunkManager {
     uint256 internal  numMaxChunksDuplication = 3;
 
     // Mapping from fileId to fileHash
-    mapping(string => string) private fileIdToHash;
+    mapping(string => string) internal fileIdToHash;
 
     function getFileHash(string memory _fileId)
         public

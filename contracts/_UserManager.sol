@@ -25,7 +25,6 @@ contract UserManager {
     uint104 constant ADVANCED_TIER = 1;
 
     mapping(address => User) internal users;
-    mapping(address => UserPayments[]) internal userPayments;
 
     // Subscription fees and rates
     uint256 constant advancedFee = 1 gwei; // Placeholder, set based on current ETH price
@@ -72,20 +71,12 @@ contract UserManager {
         // 30 days for a month, in seconds
         users[_userAddress].subscriptionEndTime = block.timestamp + 30 days;
 
-        userPayments[_userAddress].push(
-            UserPayments(msg.value, block.timestamp)
-        );
-
         emit SubscriptionChanged(_userAddress, ADVANCED_TIER);
     }
 
     function GBToBytes(uint256 gb) public pure returns (uint256) {
         // 1 GB = 1e9 * 1024 bytes
         return gb * 1e9 * 1024;
-    }
-
-    function getUserBalance() external view returns (uint256) {
-        return address(this).balance;
     }
 
     function getUserContractBalance() public view returns (uint256) {

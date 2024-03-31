@@ -68,7 +68,10 @@ contract NodeManager {
 
     // Function to delete a storage node, returning the initial stake and remaining payments
     function returnInitialStake(address payee) internal {
-        require(!isBadActor(payee), "Node removed but lost stake as flagged as a bad actor.");
+        require(
+            !isBadActor(payee),
+            "Node removed but lost stake as flagged as a bad actor."
+        );
 
         payable(payee).transfer(initialStake);
     }
@@ -91,15 +94,12 @@ contract NodeManager {
     function storeChunkInNode(
         address _nodeAddress,
         uint256 _chunkSize,
-        string memory _fileId,
-        string memory _chunkHash
+        string memory _fileId
     ) public {
         require(
             nodes[_nodeAddress].nodeAddress != address(0),
             "storeChunkInNode: Invalid _nodeAddress - Node Does NOT exist"
         );
-
-        console.log("_chunkHash", _chunkHash);
 
         // Store the chunk data in the separate mapping for the given fileId and node address
         if (!isAddressPresent(_nodeAddress, nodeChunksAddresses[_fileId])) {
@@ -324,6 +324,9 @@ contract NodeManager {
 
     function releaseNodePayments() public {
         uint256 userContractBalance = userManager.getUserContractBalance();
+        
+        require(userContractBalance <= 0, "User Contract has 0 balance");
+
         uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
         uint256 twoPercentBalance = (userContractBalance * 2) / 100;
 
