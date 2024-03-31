@@ -28,8 +28,8 @@ To add storage nodes, follow these steps:
 - Navigate to the deployed `_NodeManager` contract in Remix IDE.
 - Locate the `addNode` function.
 - Call the `addNode` function with `50 GWEI` (required for staking) using the following parameters:
-  - `_nodeAddress`: Address of the storage node (example: 0xea5Db7668E91f989fA019Bd4ADEa347D65574aaA). You can use any address obtained from [Vanity-ETH](https://vanity-eth.tk/).
-  - `_initialStorage`: Initial storage capacity of the node (example: 1000000). Specify the desired amount of storage capacity for the node.
+  - `_nodeAddress`: Address of the storage node (example: `0xea5Db7668E91f989fA019Bd4ADEa347D65574aaA`). You can use any address obtained from [Vanity-ETH](https://vanity-eth.tk/).
+  - `_initialStorage`: Initial storage capacity of the node (example: `1000000`). Specify the desired amount of storage capacity for the node.
 - Click the "Transact" button to add the storage node.
 - Now call `getNodeContractBalance` function to check the balance of NodeManager contract (it should be `50000000000`).
 
@@ -39,12 +39,12 @@ To register a user, follow these steps:
 
 - Navigate to the deployed `_UserManager` contract in Remix IDE.
 - Call the `registerUser` function with the following parameters:
-  - `_userAddress`: Address of the user (example: 0x6d6AB9655Bb96997dEE8453431eb81639b528878).
+  - `_userAddress`: Address of the user (example: `0x6d6AB9655Bb96997dEE8453431eb81639b528878`).
 
 This register a new user with default "Free" tier with limites storage. So, let's upgrade to "Advanced" Tier.
 
 - In same deployed `_UserManager` contract, call the `upgradeSubscription` funciton with `1 GWEI` value using the following parameters:
-  - `_userAddress`: Upgrades to Advanced Tier. This address should be same as what you have used during `registerUser` function (example: 0x6d6AB9655Bb96997dEE8453431eb81639b528878).
+  - `_userAddress`: Upgrades to Advanced Tier. This address should be same as what you have used during `registerUser` function (example: `0x6d6AB9655Bb96997dEE8453431eb81639b528878`).
 - Now call `getUserContractBalance` function to check the balance of UserManager contract (it should be `1000000000`).
 
 ### 5. Store Files
