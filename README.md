@@ -63,7 +63,7 @@ To retrieve details about a stored file, follow these steps:
 - Call the `retrieveFile` function with the following sample parameters:
   - `_uniqueId`: `1010` (must be same as what you have used in `storeFile`)
   - `_userAddress`: `0x6d6AB9655Bb96997dEE8453431eb81639b528878` (must be same as what you have used in `storeFile`)
-- Click on the transaction in Remix terminal and check the output. It should have you uploaded file details
+- Click on the transaction in Remix terminal and check the output. It should have your uploaded file details
 
 
 ### 7. Release payment to Storage Nodes (Can be configured in backend to get called bi-weekly)

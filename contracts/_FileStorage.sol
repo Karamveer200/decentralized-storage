@@ -91,6 +91,7 @@ contract FileManager {
             nodeManager.getAllNodesLength() != 0,
             Constants.STORE_FILE_NO_NODES_FOUND
         );
+
         require(
             bytes(chunkManager.getFileHash(_uniqueId)).length <= 0,
             Constants.STORE_FILE_DUPLICATE_FILE_ID

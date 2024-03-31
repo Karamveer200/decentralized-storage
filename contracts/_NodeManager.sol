@@ -301,12 +301,9 @@ contract NodeManager {
     function releaseNodePayments() public {
         require(nodeAddressesForEqualPayments.length != 0, "No Nodes found");
 
-        require(
-            nodeAddressesForFileRetrivalPayments.length != 0,
-            "No Retrieval Nodes found"
-        );
-
         uint256 userContractBalance = userManager.getUserContractBalance();
+        console.log("userContractBalance", userContractBalance);
+        console.log("userContractBalance 22", userContractBalance != 0);
 
         require(userContractBalance != 0, "User Contract has 0 balance");
 
@@ -317,8 +314,10 @@ contract NodeManager {
         uint256 remainingBalanceForRetievalNodes = userContractBalance -
             seventyPercentBalance -
             twoPercentBalance;
+
         uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
             nodeAddressesForEqualPayments.length;
+
         for (uint256 i = 0; i < nodeAddressesForEqualPayments.length; i++) {
             address payable payee = payable(nodeAddressesForEqualPayments[i]);
 
@@ -329,6 +328,11 @@ contract NodeManager {
         }
 
         delete nodeAddressesForEqualPayments;
+
+        require(
+            nodeAddressesForFileRetrivalPayments.length != 0,
+            "Amount transfered to nodes for providig storage but no nodes have participated in retireval"
+        );
 
         uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
                 nodeAddressesForFileRetrivalPayments.length;
