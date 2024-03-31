@@ -302,8 +302,6 @@ contract NodeManager {
         require(nodeAddressesForEqualPayments.length != 0, "No Nodes found");
 
         uint256 userContractBalance = userManager.getUserContractBalance();
-        console.log("userContractBalance", userContractBalance);
-        console.log("userContractBalance 22", userContractBalance != 0);
 
         require(userContractBalance != 0, "User Contract has 0 balance");
 

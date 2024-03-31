@@ -71,7 +71,7 @@ Nodes are paid with the money that user (storage user) pays. You check the balan
 In order to release the payment from `UserContract` to the storage providers (Nodes), do the following - 
 - Navigate to the deployed `_NodeManager` contract in Remix IDE.
 - Call the `releaseNodePayments` fn and it will transfer the value from `_UserManager` to registered node addresses.
-- You can call the `getUserContractBalance` fn of `_UserManager` again to verify. It should return `0`
+- You can call the `getUserContractBalance` fn of `_UserManager` again to verify. It should return `20000000` (2% commision of the system)
 
 ### 8. Delete File
 To delete a stored file, follow these steps:
