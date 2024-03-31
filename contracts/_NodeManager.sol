@@ -298,71 +298,48 @@ contract NodeManager {
         return address(this).balance;
     }
 
-    function getNodeAddressesForEqualPayments()
-        public
-        view
-        returns (address[] memory)
-    {
-        return nodeAddressesForEqualPayments;
-    }
-
-    function getNodeAddressesForFileRetrievalPayments()
-        public
-        view
-        returns (address[] memory)
-    {
-        return nodeAddressesForFileRetrivalPayments;
-    }
-
-    function deleteNodeAddressesForEqualPayments() internal {
-        delete nodeAddressesForEqualPayments;
-    }
-
-    function deleteNodeAddressesForFileRetrievalPayments() internal {
-        delete nodeAddressesForFileRetrivalPayments;
-    }
-
     function releaseNodePayments() public {
+        require(nodeAddressesForEqualPayments.length != 0, "No Nodes found");
+
+        require(
+            nodeAddressesForFileRetrivalPayments.length != 0,
+            "No Retrieval Nodes found"
+        );
+
         uint256 userContractBalance = userManager.getUserContractBalance();
-        
-        require(userContractBalance <= 0, "User Contract has 0 balance");
+
+        require(userContractBalance != 0, "User Contract has 0 balance");
 
         uint256 seventyPercentBalance = (userContractBalance * 70) / 100;
+
         uint256 twoPercentBalance = (userContractBalance * 2) / 100;
 
         uint256 remainingBalanceForRetievalNodes = userContractBalance -
             seventyPercentBalance -
             twoPercentBalance;
-
         uint256 paymentOfEachNodesForseventyPercent = seventyPercentBalance /
-            getNodeAddressesForEqualPayments().length;
+            nodeAddressesForEqualPayments.length;
+        for (uint256 i = 0; i < nodeAddressesForEqualPayments.length; i++) {
+            address payable payee = payable(nodeAddressesForEqualPayments[i]);
 
-        for (
-            uint256 i = 0;
-            i < getNodeAddressesForEqualPayments().length;
-            i++
-        ) {
-            address payable payee = payable(
-                getNodeAddressesForEqualPayments()[i]
-            );
             userManager.transferEther(
                 payee,
                 paymentOfEachNodesForseventyPercent
             );
         }
 
-        deleteNodeAddressesForEqualPayments();
+        delete nodeAddressesForEqualPayments;
 
         uint256 paymentOfEachNodesForThirtyPercent = remainingBalanceForRetievalNodes /
-                getNodeAddressesForFileRetrievalPayments().length;
+                nodeAddressesForFileRetrivalPayments.length;
 
         for (
             uint256 i = 0;
-            i < getNodeAddressesForFileRetrievalPayments().length;
+            i < nodeAddressesForFileRetrivalPayments.length;
             i++
         ) {
             address payable payee = payable(
-                getNodeAddressesForFileRetrievalPayments()[i]
+                nodeAddressesForFileRetrivalPayments[i]
             );
             userManager.transferEther(
                 payee,
@@ -370,6 +347,6 @@ contract NodeManager {
             );
         }
 
-        deleteNodeAddressesForFileRetrievalPayments();
+        delete nodeAddressesForFileRetrivalPayments;
     }
 }
